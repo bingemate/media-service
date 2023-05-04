@@ -39,4 +39,4 @@ VOLUME /var/logs/app \
 USER 1000:100
 
 # Start the application
-CMD ["/app/main","-serve"]
+ENTRYPOINT ["/app/main"]

@@ -1,0 +1,9 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the API for the Media Service application\nThis help to give info about the media files and metadata\nThis also help to manage the media files for admins",
+        "title": "Media Service API",
+        "contact": {}
+    },
+    "paths": {}
+}
