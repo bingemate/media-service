@@ -15,7 +15,416 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/media/base-tmdb/{id}": {
+            "get": {
+                "description": "Get media info by TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data"
+                ],
+                "summary": "Get media info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/base/{id}": {
+            "get": {
+                "description": "Get media info by Media ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data"
+                ],
+                "summary": "Get media info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/file-info/{id}": {
+            "get": {
+                "description": "Get media file info by Media ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data"
+                ],
+                "summary": "Get media file info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaFileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/movie-tmdb/{id}": {
+            "get": {
+                "description": "Get Movie Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data"
+                ],
+                "summary": "Get Movie Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/movie/{id}": {
+            "get": {
+                "description": "Get Movie Metadata by media ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data"
+                ],
+                "summary": "Get Movie Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controllers.audioResponse": {
+            "type": "object",
+            "properties": {
+                "bitrate": {
+                    "type": "number"
+                },
+                "codec": {
+                    "type": "string"
+                },
+                "language": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.errorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.genre": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.mediaFileResponse": {
+            "type": "object",
+            "properties": {
+                "audios": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.audioResponse"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "number"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "mime_type": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                },
+                "subtitles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.subtitleResponse"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.mediaResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "media_type": {
+                    "type": "string"
+                },
+                "release_date": {
+                    "type": "string"
+                },
+                "tmdb_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.movieResponse": {
+            "type": "object",
+            "properties": {
+                "actors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.person"
+                    }
+                },
+                "backdrop_url": {
+                    "type": "string"
+                },
+                "crew": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.person"
+                    }
+                },
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.genre"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "overview": {
+                    "type": "string"
+                },
+                "poster_url": {
+                    "type": "string"
+                },
+                "release_date": {
+                    "type": "string"
+                },
+                "studios": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.studio"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "vote_average": {
+                    "type": "number"
+                },
+                "vote_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.person": {
+            "type": "object",
+            "properties": {
+                "character": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "profile_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.studio": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "logo_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.subtitleResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "language": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
