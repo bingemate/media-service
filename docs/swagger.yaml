@@ -1,3 +1,71 @@
+definitions:
+  controllers.errorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  controllers.genre:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  controllers.movieResponse:
+    properties:
+      actors:
+        items:
+          $ref: '#/definitions/controllers.person'
+        type: array
+      backdrop_url:
+        type: string
+      crew:
+        items:
+          $ref: '#/definitions/controllers.person'
+        type: array
+      genres:
+        items:
+          $ref: '#/definitions/controllers.genre'
+        type: array
+      id:
+        type: integer
+      overview:
+        type: string
+      poster_url:
+        type: string
+      release_date:
+        type: string
+      studios:
+        items:
+          $ref: '#/definitions/controllers.studio'
+        type: array
+      title:
+        type: string
+      vote_average:
+        type: number
+      vote_count:
+        type: integer
+    type: object
+  controllers.person:
+    properties:
+      character:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      profile_url:
+        type: string
+    type: object
+  controllers.studio:
+    properties:
+      id:
+        type: integer
+      logo_url:
+        type: string
+      name:
+        type: string
+    type: object
 info:
   contact: {}
   description: |-
@@ -5,5 +73,34 @@ info:
     This help to give info about the media files and metadata
     This also help to manage the media files for admins
   title: Media Service API
-paths: {}
+paths:
+  /media/movie/{id}:
+    get:
+      description: |-
+        Get Movie Metadata by TMDB ID
+        The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.movieResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get Movie Metadata
+      tags:
+      - Media Data
 swagger: "2.0"

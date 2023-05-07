@@ -5,5 +5,152 @@
         "title": "Media Service API",
         "contact": {}
     },
-    "paths": {}
+    "paths": {
+        "/media/movie/{id}": {
+            "get": {
+                "description": "Get Movie Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data"
+                ],
+                "summary": "Get Movie Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controllers.errorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.genre": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.movieResponse": {
+            "type": "object",
+            "properties": {
+                "actors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.person"
+                    }
+                },
+                "backdrop_url": {
+                    "type": "string"
+                },
+                "crew": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.person"
+                    }
+                },
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.genre"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "overview": {
+                    "type": "string"
+                },
+                "poster_url": {
+                    "type": "string"
+                },
+                "release_date": {
+                    "type": "string"
+                },
+                "studios": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.studio"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "vote_average": {
+                    "type": "number"
+                },
+                "vote_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.person": {
+            "type": "object",
+            "properties": {
+                "character": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "profile_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.studio": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "logo_url": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }
