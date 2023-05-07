@@ -1,4 +1,13 @@
 definitions:
+  controllers.audioResponse:
+    properties:
+      bitrate:
+        type: number
+      codec:
+        type: string
+      language:
+        type: string
+    type: object
   controllers.errorResponse:
     properties:
       error:
@@ -9,6 +18,46 @@ definitions:
       id:
         type: integer
       name:
+        type: string
+    type: object
+  controllers.mediaFileResponse:
+    properties:
+      audios:
+        items:
+          $ref: '#/definitions/controllers.audioResponse'
+        type: array
+      created_at:
+        type: string
+      duration:
+        type: number
+      filename:
+        type: string
+      id:
+        type: string
+      mime_type:
+        type: string
+      size:
+        type: number
+      subtitles:
+        items:
+          $ref: '#/definitions/controllers.subtitleResponse'
+        type: array
+      updated_at:
+        type: string
+    type: object
+  controllers.mediaResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      media_type:
+        type: string
+      release_date:
+        type: string
+      tmdb_id:
+        type: integer
+      updated_at:
         type: string
     type: object
   controllers.movieResponse:
@@ -66,6 +115,13 @@ definitions:
       name:
         type: string
     type: object
+  controllers.subtitleResponse:
+    properties:
+      code:
+        type: string
+      language:
+        type: string
+    type: object
 info:
   contact: {}
   description: |-
@@ -74,7 +130,96 @@ info:
     This also help to manage the media files for admins
   title: Media Service API
 paths:
-  /media/movie/{id}:
+  /media/base-tmdb/{id}:
+    get:
+      description: Get media info by TMDB ID
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.mediaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get media info
+      tags:
+      - Media Data
+  /media/base/{id}:
+    get:
+      description: Get media info by Media ID
+      parameters:
+      - description: Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.mediaResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get media info
+      tags:
+      - Media Data
+  /media/file-info/{id}:
+    get:
+      description: Get media file info by Media ID
+      parameters:
+      - description: Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.mediaFileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get media file info
+      tags:
+      - Media Data
+  /media/movie-tmdb/{id}:
     get:
       description: |-
         Get Movie Metadata by TMDB ID
@@ -94,6 +239,35 @@ paths:
             $ref: '#/definitions/controllers.movieResponse'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get Movie Metadata
+      tags:
+      - Media Data
+  /media/movie/{id}:
+    get:
+      description: |-
+        Get Movie Metadata by media ID
+        The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+      parameters:
+      - description: Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.movieResponse'
+        "404":
+          description: Not Found
           schema:
             $ref: '#/definitions/controllers.errorResponse'
         "500":
