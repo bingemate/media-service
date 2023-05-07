@@ -5,3 +5,4 @@ bin/
 log.txt
 .git
 *.log
+docker-compose*.yml
