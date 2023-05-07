@@ -40,5 +40,5 @@ func (m *MediaData) GetMovieInfo(tmdbID int) (*tmdb.Movie, error) {
 		movie.VoteAverage = voteAverage
 		movie.VoteCount = voteCount
 	}
-	return movie, err
+	return movie, nil
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/bingemate/media-go-pkg/tmdb"
+	"github.com/bingemate/media-service/internal/features"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -97,9 +98,9 @@ func toMovieResponse(movie tmdb.Movie) *movieResponse {
 	}
 }
 
-func InitMediaDataController(engine *gin.RouterGroup, mediaClient tmdb.MediaClient) {
+func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaData) {
 	engine.GET("/movie/:id", func(c *gin.Context) {
-		getMovie(c, mediaClient)
+		getMovie(c, mediaData)
 	})
 }
 
@@ -113,7 +114,7 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaClient tmdb.MediaClie
 // @Failure		400	{object} errorResponse
 // @Failure		500	{object} errorResponse
 // @Router			/media/movie/{id} [get]
-func getMovie(c *gin.Context, mediaClient tmdb.MediaClient) {
+func getMovie(c *gin.Context, mediaData *features.MediaData) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(400, errorResponse{
@@ -121,7 +122,7 @@ func getMovie(c *gin.Context, mediaClient tmdb.MediaClient) {
 		})
 		return
 	}
-	result, err := mediaClient.GetMovie(id)
+	result, err := mediaData.GetMovieInfo(id)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),

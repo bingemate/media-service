@@ -23,7 +23,7 @@ func (r *MediaRepository) GetMediaRating(tmdbID int) (float32, int, error) {
 	var rating []repository.Rating
 	err := r.db.Where("tmdb_id = ?", tmdbID).First(&media).Error
 	if err != nil {
-		return 0, 0, err
+		return 0, 0, errors.New("media not found")
 	}
 
 	err = r.db.Where("media_id = ?", media.ID).Find(&rating).Error
