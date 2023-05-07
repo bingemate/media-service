@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/bingemate/media-service/cmd"
 	"github.com/bingemate/media-service/initializers"
 	"log"
@@ -22,5 +21,4 @@ func main() {
 	defer logFile.Close()
 	log.Println("Starting server mode...")
 	cmd.Serve(env)
-	fmt.Println("Server stopped")
 }
