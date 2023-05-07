@@ -60,6 +60,7 @@ type mediaFileResponse struct {
 	Size      float64            `json:"size"`
 	Duration  float64            `json:"duration"`
 	MimeType  string             `json:"mime_type"`
+	Codec     string             `json:"codec"`
 	Audios    []audioResponse    `json:"audios"`
 	Subtitles []subtitleResponse `json:"subtitles"`
 }
@@ -153,6 +154,7 @@ func toMediaFileResponse(mediaFile *repository.MediaFile) *mediaFileResponse {
 		Size:      mediaFile.Size,
 		Duration:  mediaFile.Duration,
 		MimeType:  mediaFile.Mimetype,
+		Codec:     string(mediaFile.Codec),
 		Audios: func() []audioResponse {
 			var audios = make([]audioResponse, len(mediaFile.Audio))
 			for i, audio := range mediaFile.Audio {
@@ -184,13 +186,13 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/movie/:id", func(c *gin.Context) {
 		getMovieByID(c, mediaData)
 	})
-	engine.GET("/media/base-tmdb/:id", func(c *gin.Context) {
+	engine.GET("/base-tmdb/:id", func(c *gin.Context) {
 		getMediaByTMDB(c, mediaData)
 	})
-	engine.GET("/media/base/:id", func(c *gin.Context) {
+	engine.GET("/base/:id", func(c *gin.Context) {
 		getMediaByID(c, mediaData)
 	})
-	engine.GET("/media/file-info/:id", func(c *gin.Context) {
+	engine.GET("/file-info/:id", func(c *gin.Context) {
 		getMediaFileInfo(c, mediaData)
 	})
 }
@@ -344,5 +346,5 @@ func getMediaFileInfo(c *gin.Context, mediaData *features.MediaData) {
 		})
 		return
 	}
-	c.JSON(200, result)
+	c.JSON(200, toMediaFileResponse(result))
 }
