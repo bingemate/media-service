@@ -5,5 +5,931 @@
         "title": "Media Service API",
         "contact": {}
     },
-    "paths": {}
+    "paths": {
+        "/media-file/{id}": {
+            "get": {
+                "description": "Get media file info by Media ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media File"
+                ],
+                "summary": "Get media file info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaFileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/base-tmdb/{id}": {
+            "get": {
+                "description": "Get media info by TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data"
+                ],
+                "summary": "Get media info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/base/{id}": {
+            "get": {
+                "description": "Get media info by Media ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data"
+                ],
+                "summary": "Get media info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/movie-tmdb/{id}": {
+            "get": {
+                "description": "Get Movie Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "Movie"
+                ],
+                "summary": "Get Movie Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/movie/{id}": {
+            "get": {
+                "description": "Get Movie Metadata by media ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "Movie"
+                ],
+                "summary": "Get Movie Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/tvshow-episode-tmdb/{id}/{season}/{episode}": {
+            "get": {
+                "description": "Get TvShow Episode Metadata by TMDB ID, Season and Episode Number",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "TvEpisode"
+                ],
+                "summary": "Get TvShow Episode Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Season Number",
+                        "name": "season",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Episode Number",
+                        "name": "episode",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvEpisodeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/tvshow-episode/{id}": {
+            "get": {
+                "description": "Get TvShow Episode Metadata by media ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "TvEpisode"
+                ],
+                "summary": "Get TvShow Episode Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvEpisodeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/tvshow-season-episodes-tmdb/{id}/{season}": {
+            "get": {
+                "description": "Get TvShow Season Episodes Metadata by TMDB ID and Season Number",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "TvEpisode"
+                ],
+                "summary": "Get TvShow Season Episodes Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Season Number",
+                        "name": "season",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.tvEpisodeResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/tvshow-season-episodes/{id}/{season}": {
+            "get": {
+                "description": "Get TvShow Season Episodes Metadata by Media ID and Season Number",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "TvEpisode"
+                ],
+                "summary": "Get TvShow Season Episodes Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Season Number",
+                        "name": "season",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.tvEpisodeResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/tvshow-tmdb/{id}": {
+            "get": {
+                "description": "Get TvShow Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "TvShow"
+                ],
+                "summary": "Get TvShow Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvShowResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/tvshow/{id}": {
+            "get": {
+                "description": "Get TvShow Metadata by media ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "TvShow"
+                ],
+                "summary": "Get TvShow Metadata",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvShowResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ping": {
+            "get": {
+                "description": "Ping",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ping"
+                ],
+                "summary": "Ping",
+                "responses": {
+                    "200": {
+                        "description": "pong",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controllers.audioResponse": {
+            "type": "object",
+            "properties": {
+                "bitrate": {
+                    "type": "number",
+                    "example": 160
+                },
+                "codec": {
+                    "type": "string",
+                    "example": "AAC"
+                },
+                "language": {
+                    "type": "string",
+                    "example": "jpn"
+                }
+            }
+        },
+        "controllers.crew": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 24310
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Mitchell Amundsen"
+                },
+                "profile_url": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/zK4o3lfe6chC2qDHhxpuO1RJl2X.jpg"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "Director"
+                }
+            }
+        },
+        "controllers.errorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "media not found"
+                }
+            }
+        },
+        "controllers.genre": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 35
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Comédie"
+                }
+            }
+        },
+        "controllers.mediaFileResponse": {
+            "type": "object",
+            "properties": {
+                "audios": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.audioResponse"
+                    }
+                },
+                "codec": {
+                    "type": "string",
+                    "example": "H264"
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2023-05-07T20:31:28.327382+02:00"
+                },
+                "duration": {
+                    "type": "number",
+                    "example": 1450.76
+                },
+                "filename": {
+                    "type": "string",
+                    "example": "The Iceblade Sorcerer Shall Rule the World - S1E09.mkv"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
+                },
+                "mime_type": {
+                    "type": "string",
+                    "example": "video/x-matroska"
+                },
+                "size": {
+                    "type": "number",
+                    "example": 771367779
+                },
+                "subtitles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.subtitleResponse"
+                    }
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2023-05-07T20:31:28.327382+02:00"
+                }
+            }
+        },
+        "controllers.mediaResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2023-05-07T20:31:28.327382+02:00"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
+                },
+                "media_type": {
+                    "type": "string",
+                    "example": "TvShow"
+                },
+                "release_date": {
+                    "type": "string",
+                    "example": "2023-01-06"
+                },
+                "tmdb_id": {
+                    "type": "integer",
+                    "example": 200777
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2023-05-07T20:31:28.327382+02:00"
+                }
+            }
+        },
+        "controllers.movieResponse": {
+            "type": "object",
+            "properties": {
+                "actors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.person"
+                    }
+                },
+                "backdrop_url": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/e7FzphKs5gzoghDotAEp2FeP46u.jpg"
+                },
+                "crew": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.crew"
+                    }
+                },
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.genre"
+                    }
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 649609
+                },
+                "overview": {
+                    "type": "string",
+                    "example": "Le mal ne saurait survivre une éternité sans un petit coup de pouce.\r Dans cette version moderne du mythe de Dracula..."
+                },
+                "poster_url": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg"
+                },
+                "release_date": {
+                    "type": "string",
+                    "example": "2023-04-07"
+                },
+                "studios": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.studio"
+                    }
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Renfield"
+                },
+                "vote_average": {
+                    "type": "number",
+                    "example": 7.252
+                },
+                "vote_count": {
+                    "type": "integer",
+                    "example": 278
+                }
+            }
+        },
+        "controllers.person": {
+            "type": "object",
+            "properties": {
+                "character": {
+                    "type": "string",
+                    "example": "R.M. Renfield"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 3292
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Nicholas Hoult"
+                },
+                "profile_url": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"
+                }
+            }
+        },
+        "controllers.studio": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 33
+                },
+                "logo_url": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/8lvHyhjr8oUKOOy2dKXoALWKdp0.png"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Universal Pictures"
+                }
+            }
+        },
+        "controllers.subtitleResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "ASS"
+                },
+                "language": {
+                    "type": "string",
+                    "example": "fre"
+                }
+            }
+        },
+        "controllers.tvEpisodeResponse": {
+            "type": "object",
+            "properties": {
+                "air_date": {
+                    "type": "string",
+                    "example": "2023-03-24"
+                },
+                "episode_number": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 4137463
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Le plus puissant sorcier du monde révèle Akasha"
+                },
+                "overview": {
+                    "type": "string",
+                    "example": "Ray et ses amis volent au secours de Rebecca, qui montre des signes..."
+                },
+                "poster_url": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"
+                },
+                "season_number": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "tv_show_id": {
+                    "type": "integer",
+                    "example": 200777
+                }
+            }
+        },
+        "controllers.tvShowResponse": {
+            "type": "object",
+            "properties": {
+                "actors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.person"
+                    }
+                },
+                "backdrop_url": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"
+                },
+                "crew": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.crew"
+                    }
+                },
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.genre"
+                    }
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 200777
+                },
+                "next_episode": {
+                    "$ref": "#/definitions/controllers.tvEpisodeResponse"
+                },
+                "overview": {
+                    "type": "string",
+                    "example": "Ray White est un jeune homme venant d'entrer dans la populaire académie de magie Arnold. En tant que..."
+                },
+                "poster_url": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"
+                },
+                "release_date": {
+                    "type": "string",
+                    "example": "2023-01-06"
+                },
+                "seasons_count": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "status": {
+                    "type": "string",
+                    "example": "Ended"
+                },
+                "studios": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.studio"
+                    }
+                },
+                "title": {
+                    "type": "string",
+                    "example": "The Iceblade Sorcerer Shall Rule the World"
+                },
+                "vote_average": {
+                    "type": "number",
+                    "example": 6.7
+                },
+                "vote_count": {
+                    "type": "integer",
+                    "example": 11
+                }
+            }
+        }
+    }
 }

@@ -1,17 +1,21 @@
 package controllers
 
 import (
+	"github.com/bingemate/media-go-pkg/tmdb"
 	"github.com/bingemate/media-service/initializers"
-	"github.com/bingemate/media-service/pkg"
+	"github.com/bingemate/media-service/internal/features"
+	"github.com/bingemate/media-service/internal/repository"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-type errorResponse struct {
-	Error string `json:"error"`
-}
-
 func InitRouter(engine *gin.Engine, db *gorm.DB, env initializers.Env) {
-	var mediaClient = pkg.NewMediaClient(env.TMDBApiKey)
-	InitMediaDataController(engine.Group("/media"), mediaClient)
+	var mediaServiceGroup = engine.Group("/media-service")
+	var mediaClient = tmdb.NewMediaClient(env.TMDBApiKey)
+	var mediaRepository = repository.NewMediaRepository(db)
+	var mediaData = features.NewMediaData(mediaClient, mediaRepository)
+	var mediaFile = features.NewMediaFile(env.MovieTargetFolder, env.TvTargetFolder, mediaRepository)
+	InitMediaDataController(mediaServiceGroup.Group("/media"), mediaData)
+	InitFileInfoController(mediaServiceGroup.Group("/media-file"), mediaFile)
+	InitPingController(mediaServiceGroup.Group("/ping"))
 }

@@ -2,6 +2,7 @@ package initializers
 
 import (
 	"fmt"
+	"github.com/bingemate/media-go-pkg/repository"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
@@ -20,7 +21,7 @@ func ConnectToDB(env Env) (*gorm.DB, error) {
 	if env.DBSync {
 		log.Println("Syncing database...")
 		db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
-		err = db.AutoMigrate() // TODO: Add models here
+		err = repository.Migrate(db)
 		if err != nil {
 			return nil, err
 		}

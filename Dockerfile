@@ -18,7 +18,7 @@ COPY --from=build /app/main .
 # Define your environment variables here
 ENV TZ=Europe/Paris \
     PORT=8080 \
-    LOG_FILE=/var/logs/app/golang-app.log \
+    LOG_FILE=/app/logs/golang-app.log \
     MOVIE_TARGET_FOLDER=/app/movies-target \
     TV_TARGET_FOLDER=/app/tvshows-target \
     TMDB_API_KEY="" \
