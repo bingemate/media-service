@@ -26,6 +26,8 @@ definitions:
         items:
           $ref: '#/definitions/controllers.audioResponse'
         type: array
+      codec:
+        type: string
       created_at:
         type: string
       duration:
@@ -130,6 +132,37 @@ info:
     This also help to manage the media files for admins
   title: Media Service API
 paths:
+  /media-file/{id}:
+    get:
+      description: Get media file info by Media ID
+      parameters:
+      - description: Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.mediaFileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get media file info
+      tags:
+      - Media Data
   /media/base-tmdb/{id}:
     get:
       description: Get media info by TMDB ID
@@ -186,37 +219,6 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get media info
-      tags:
-      - Media Data
-  /media/file-info/{id}:
-    get:
-      description: Get media file info by Media ID
-      parameters:
-      - description: Media ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controllers.mediaFileResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-      summary: Get media file info
       tags:
       - Media Data
   /media/movie-tmdb/{id}:

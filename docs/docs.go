@@ -16,6 +16,53 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/media-file/{id}": {
+            "get": {
+                "description": "Get media file info by Media ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data"
+                ],
+                "summary": "Get media file info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Media ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaFileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/media/base-tmdb/{id}": {
             "get": {
                 "description": "Get media info by TMDB ID",
@@ -87,53 +134,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/controllers.mediaResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/media/file-info/{id}": {
-            "get": {
-                "description": "Get media file info by Media ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data"
-                ],
-                "summary": "Get media file info",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.mediaFileResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
                         }
                     },
                     "404": {
@@ -276,6 +276,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/controllers.audioResponse"
                     }
+                },
+                "codec": {
+                    "type": "string"
                 },
                 "created_at": {
                     "type": "string"
