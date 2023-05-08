@@ -59,6 +59,30 @@ func (r *MediaRepository) GetMediaByTmdbID(tmdbID int) (*repository.Media, error
 	return &media, nil
 }
 
+func (r *MediaRepository) GetEpisode(id string) (*repository.Episode, error) {
+	var episode repository.Episode
+	err := r.db.
+		Joins("Media").
+		Joins("TvShow").
+		Preload("TvShow.Media").
+		Where("id = ?", id).First(&episode).Error
+	if err != nil {
+		return nil, err
+	}
+	return &episode, nil
+}
+
+func (r *MediaRepository) GetTvShow(mediaId string) (*repository.TvShow, error) {
+	var tvShow repository.TvShow
+	err := r.db.
+		Joins("Media").
+		Where("media_id = ?", mediaId).First(&tvShow).Error
+	if err != nil {
+		return nil, err
+	}
+	return &tvShow, nil
+}
+
 func (r *MediaRepository) GetEpisodeFileInfo(mediaID string) (*repository.MediaFile, error) {
 	var mediaFile repository.Episode
 	err := r.db.
