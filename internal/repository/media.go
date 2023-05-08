@@ -59,13 +59,13 @@ func (r *MediaRepository) GetMediaByTmdbID(tmdbID int) (*repository.Media, error
 	return &media, nil
 }
 
-func (r *MediaRepository) GetEpisode(id string) (*repository.Episode, error) {
+func (r *MediaRepository) GetEpisode(mediaID string) (*repository.Episode, error) {
 	var episode repository.Episode
 	err := r.db.
 		Joins("Media").
 		Joins("TvShow").
 		Preload("TvShow.Media").
-		Where("id = ?", id).First(&episode).Error
+		Where(`"Media".id = ?`, mediaID).First(&episode).Error
 	if err != nil {
 		return nil, err
 	}
