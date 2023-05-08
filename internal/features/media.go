@@ -8,25 +8,13 @@ import (
 	"gorm.io/gorm"
 )
 
-var MediaNotFoundError = errors.New("media not found")
-var InvalidMediaTypeError = errors.New("invalid media type")
-
-type Rating struct {
-	Rating float32 `json:"rating"`
-	Count  int     `json:"count"`
-}
-
 type MediaData struct {
-	moviePath       string
-	tvPath          string
 	mediaClient     tmdb.MediaClient
 	mediaRepository *repository.MediaRepository
 }
 
-func NewMediaData(moviePath, tvPath string, mediaClient tmdb.MediaClient, movieRepository *repository.MediaRepository) *MediaData {
+func NewMediaData(mediaClient tmdb.MediaClient, movieRepository *repository.MediaRepository) *MediaData {
 	return &MediaData{
-		moviePath:       moviePath,
-		tvPath:          tvPath,
 		mediaClient:     mediaClient,
 		mediaRepository: movieRepository,
 	}
@@ -36,7 +24,7 @@ func (m *MediaData) GetMediaByTmdbID(tmdbID int) (*repository2.Media, error) {
 	media, err := m.mediaRepository.GetMediaByTmdbID(tmdbID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, MediaNotFoundError
+			return nil, ErrMediaNotFound
 		}
 		return nil, err
 	}
@@ -47,7 +35,7 @@ func (m *MediaData) GetMediaByID(id string) (*repository2.Media, error) {
 	media, err := m.mediaRepository.GetMedia(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, MediaNotFoundError
+			return nil, ErrMediaNotFound
 		}
 		return nil, err
 	}
@@ -72,29 +60,88 @@ func (m *MediaData) GetMovieInfo(mediaID string) (*tmdb.Movie, error) {
 	media, err := m.mediaRepository.GetMedia(mediaID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, MediaNotFoundError
+			return nil, ErrMediaNotFound
 		}
 		return nil, err
+	}
+	if media.MediaType != repository2.MediaTypeMovie {
+		return nil, ErrInvalidMediaType
 	}
 	return m.GetMovieInfoByTMDB(media.TmdbID)
 }
 
-func (m *MediaData) GetMediaFileInfo(mediaID string) (*repository2.MediaFile, error) {
+func (m *MediaData) GetEpisodeInfoByTMDB(tvTmdbID, season, episodeNumber int) (*tmdb.TVEpisode, error) {
+	episode, err := m.mediaClient.GetTVEpisode(tvTmdbID, season, episodeNumber)
+	if err != nil {
+		return nil, err
+	}
+	return episode, nil
+}
+
+func (m *MediaData) GetEpisodeInfo(mediaID string) (*tmdb.TVEpisode, error) {
 	media, err := m.mediaRepository.GetMedia(mediaID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, MediaNotFoundError
+			return nil, ErrMediaNotFound
 		}
 		return nil, err
 	}
-	if media.MediaType == repository2.MediaTypeTvShow {
-		return nil, InvalidMediaTypeError
+	if media.MediaType != repository2.MediaTypeEpisode {
+		return nil, ErrInvalidMediaType
 	}
-	if media.MediaType == repository2.MediaTypeMovie {
-		return m.mediaRepository.GetMovieFileInfo(mediaID)
+	episode, err := m.mediaRepository.GetEpisode(mediaID)
+	if err != nil {
+		return nil, err
 	}
-	if media.MediaType == repository2.MediaTypeEpisode {
-		return m.mediaRepository.GetEpisodeFileInfo(mediaID)
+	return m.GetEpisodeInfoByTMDB(episode.TvShow.Media.TmdbID, episode.NbSeason, episode.NbEpisode)
+}
+
+func (m *MediaData) GetTvShowInfoByTMDB(tmdbID int) (*tmdb.TVShow, error) {
+	tvShow, err := m.mediaClient.GetTVShow(tmdbID)
+	if err != nil {
+		return nil, err
 	}
-	return nil, InvalidMediaTypeError
+	voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(tmdbID)
+	if err == nil {
+		tvShow.VoteAverage = voteAverage
+		tvShow.VoteCount = voteCount
+	}
+	return tvShow, nil
+}
+
+func (m *MediaData) GetTvShowInfo(mediaID string) (*tmdb.TVShow, error) {
+	media, err := m.mediaRepository.GetMedia(mediaID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrMediaNotFound
+		}
+		return nil, err
+	}
+	if media.MediaType != repository2.MediaTypeTvShow {
+		return nil, ErrInvalidMediaType
+	}
+	return m.GetTvShowInfoByTMDB(media.TmdbID)
+}
+
+func (m *MediaData) GetSeasonEpisodesByTMDB(tvTmdbID, season int) (*[]tmdb.TVEpisode, error) {
+	episodes, err := m.mediaClient.GetTVSeasonEpisodes(tvTmdbID, season)
+	if err != nil {
+		return nil, err
+	}
+	return episodes, nil
+}
+
+func (m *MediaData) GetSeasonEpisodes(tvMediaID string, season int) (*[]tmdb.TVEpisode, error) {
+	media, err := m.mediaRepository.GetMedia(tvMediaID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrMediaNotFound
+		}
+		return nil, err
+	}
+	if media.MediaType != repository2.MediaTypeTvShow {
+		return nil, ErrInvalidMediaType
+	}
+
+	return m.GetSeasonEpisodesByTMDB(media.TmdbID, season)
 }

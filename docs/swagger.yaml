@@ -26,6 +26,8 @@ definitions:
         items:
           $ref: '#/definitions/controllers.audioResponse'
         type: array
+      codec:
+        type: string
       created_at:
         type: string
       duration:
@@ -122,6 +124,66 @@ definitions:
       language:
         type: string
     type: object
+  controllers.tvEpisodeResponse:
+    properties:
+      air_date:
+        type: string
+      episode_number:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      overview:
+        type: string
+      poster_url:
+        type: string
+      season_number:
+        type: integer
+      tv_show_id:
+        type: integer
+    type: object
+  controllers.tvShowResponse:
+    properties:
+      actors:
+        items:
+          $ref: '#/definitions/controllers.person'
+        type: array
+      backdrop_url:
+        type: string
+      crew:
+        items:
+          $ref: '#/definitions/controllers.person'
+        type: array
+      genres:
+        items:
+          $ref: '#/definitions/controllers.genre'
+        type: array
+      id:
+        type: integer
+      next_episode:
+        $ref: '#/definitions/controllers.tvEpisodeResponse'
+      overview:
+        type: string
+      poster_url:
+        type: string
+      release_date:
+        type: string
+      seasons_count:
+        type: integer
+      status:
+        type: string
+      studios:
+        items:
+          $ref: '#/definitions/controllers.studio'
+        type: array
+      title:
+        type: string
+      vote_average:
+        type: number
+      vote_count:
+        type: integer
+    type: object
 info:
   contact: {}
   description: |-
@@ -130,6 +192,37 @@ info:
     This also help to manage the media files for admins
   title: Media Service API
 paths:
+  /media-file/{id}:
+    get:
+      description: Get media file info by Media ID
+      parameters:
+      - description: Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.mediaFileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get media file info
+      tags:
+      - Media File
   /media/base-tmdb/{id}:
     get:
       description: Get media info by TMDB ID
@@ -188,37 +281,6 @@ paths:
       summary: Get media info
       tags:
       - Media Data
-  /media/file-info/{id}:
-    get:
-      description: Get media file info by Media ID
-      parameters:
-      - description: Media ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controllers.mediaFileResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-      summary: Get media file info
-      tags:
-      - Media Data
   /media/movie-tmdb/{id}:
     get:
       description: |-
@@ -248,6 +310,7 @@ paths:
       summary: Get Movie Metadata
       tags:
       - Media Data
+      - Movie
   /media/movie/{id}:
     get:
       description: |-
@@ -266,6 +329,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/controllers.movieResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
         "404":
           description: Not Found
           schema:
@@ -277,4 +344,221 @@ paths:
       summary: Get Movie Metadata
       tags:
       - Media Data
+      - Movie
+  /media/tvshow-episode-tmdb/{id}/{season}/{episode}:
+    get:
+      description: Get TvShow Episode Metadata by TMDB ID, Season and Episode Number
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Season Number
+        in: path
+        name: season
+        required: true
+        type: integer
+      - description: Episode Number
+        in: path
+        name: episode
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.tvEpisodeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Episode Metadata
+      tags:
+      - Media Data
+      - TvEpisode
+  /media/tvshow-episode/{id}:
+    get:
+      description: Get TvShow Episode Metadata by media ID
+      parameters:
+      - description: Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.tvEpisodeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Episode Metadata
+      tags:
+      - Media Data
+      - TvEpisode
+  /media/tvshow-season-episodes-tmdb/{id}/{season}:
+    get:
+      description: Get TvShow Season Episodes Metadata by TMDB ID and Season Number
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Season Number
+        in: path
+        name: season
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.tvEpisodeResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Season Episodes Metadata
+      tags:
+      - Media Data
+      - TvEpisode
+  /media/tvshow-season-episodes/{id}/{season}:
+    get:
+      description: Get TvShow Season Episodes Metadata by Media ID and Season Number
+      parameters:
+      - description: Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Season Number
+        in: path
+        name: season
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.tvEpisodeResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Season Episodes Metadata
+      tags:
+      - Media Data
+      - TvEpisode
+  /media/tvshow-tmdb/{id}:
+    get:
+      description: |-
+        Get TvShow Metadata by TMDB ID
+        The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.tvShowResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Metadata
+      tags:
+      - Media Data
+      - TvShow
+  /media/tvshow/{id}:
+    get:
+      description: |-
+        Get TvShow Metadata by media ID
+        The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+      parameters:
+      - description: Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.tvShowResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Metadata
+      tags:
+      - Media Data
+      - TvShow
 swagger: "2.0"
