@@ -633,4 +633,19 @@ paths:
       tags:
       - Media Data
       - TvShow
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: Ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: pong
+          schema:
+            type: string
+      summary: Ping
+      tags:
+      - Ping
 swagger: "2.0"
