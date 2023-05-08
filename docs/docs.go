@@ -563,13 +563,37 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "bitrate": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 160
                 },
                 "codec": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "AAC"
                 },
                 "language": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "jpn"
+                }
+            }
+        },
+        "controllers.crew": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 24310
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Mitchell Amundsen"
+                },
+                "profile_url": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/zK4o3lfe6chC2qDHhxpuO1RJl2X.jpg"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "Director"
                 }
             }
         },
@@ -577,7 +601,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "media not found"
                 }
             }
         },
@@ -585,10 +610,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 35
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Comédie"
                 }
             }
         },
@@ -602,25 +629,32 @@ const docTemplate = `{
                     }
                 },
                 "codec": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "H264"
                 },
                 "created_at": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2023-05-07T20:31:28.327382+02:00"
                 },
                 "duration": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 1450.76
                 },
                 "filename": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "The Iceblade Sorcerer Shall Rule the World - S1E09.mkv"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
                 },
                 "mime_type": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "video/x-matroska"
                 },
                 "size": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 771367779
                 },
                 "subtitles": {
                     "type": "array",
@@ -629,7 +663,8 @@ const docTemplate = `{
                     }
                 },
                 "updated_at": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2023-05-07T20:31:28.327382+02:00"
                 }
             }
         },
@@ -637,22 +672,28 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "created_at": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2023-05-07T20:31:28.327382+02:00"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
                 },
                 "media_type": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "TvShow"
                 },
                 "release_date": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2023-01-06"
                 },
                 "tmdb_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 200777
                 },
                 "updated_at": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2023-05-07T20:31:28.327382+02:00"
                 }
             }
         },
@@ -666,12 +707,13 @@ const docTemplate = `{
                     }
                 },
                 "backdrop_url": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/e7FzphKs5gzoghDotAEp2FeP46u.jpg"
                 },
                 "crew": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/controllers.person"
+                        "$ref": "#/definitions/controllers.crew"
                     }
                 },
                 "genres": {
@@ -681,16 +723,20 @@ const docTemplate = `{
                     }
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 649609
                 },
                 "overview": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Le mal ne saurait survivre une éternité sans un petit coup de pouce.\r Dans cette version moderne du mythe de Dracula..."
                 },
                 "poster_url": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg"
                 },
                 "release_date": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2023-04-07"
                 },
                 "studios": {
                     "type": "array",
@@ -699,13 +745,16 @@ const docTemplate = `{
                     }
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Renfield"
                 },
                 "vote_average": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 7.252
                 },
                 "vote_count": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 278
                 }
             }
         },
@@ -713,16 +762,20 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "character": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "R.M. Renfield"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 3292
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Nicholas Hoult"
                 },
                 "profile_url": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"
                 }
             }
         },
@@ -730,13 +783,16 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 33
                 },
                 "logo_url": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/8lvHyhjr8oUKOOy2dKXoALWKdp0.png"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Universal Pictures"
                 }
             }
         },
@@ -744,10 +800,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "ASS"
                 },
                 "language": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "fre"
                 }
             }
         },
@@ -755,28 +813,36 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "air_date": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2023-03-24"
                 },
                 "episode_number": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 12
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 4137463
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Le plus puissant sorcier du monde révèle Akasha"
                 },
                 "overview": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Ray et ses amis volent au secours de Rebecca, qui montre des signes..."
                 },
                 "poster_url": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"
                 },
                 "season_number": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "tv_show_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 200777
                 }
             }
         },
@@ -790,12 +856,13 @@ const docTemplate = `{
                     }
                 },
                 "backdrop_url": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"
                 },
                 "crew": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/controllers.person"
+                        "$ref": "#/definitions/controllers.crew"
                     }
                 },
                 "genres": {
@@ -805,25 +872,31 @@ const docTemplate = `{
                     }
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 200777
                 },
                 "next_episode": {
                     "$ref": "#/definitions/controllers.tvEpisodeResponse"
                 },
                 "overview": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Ray White est un jeune homme venant d'entrer dans la populaire académie de magie Arnold. En tant que..."
                 },
                 "poster_url": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"
                 },
                 "release_date": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2023-01-06"
                 },
                 "seasons_count": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "status": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Ended"
                 },
                 "studios": {
                     "type": "array",
@@ -832,13 +905,16 @@ const docTemplate = `{
                     }
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "The Iceblade Sorcerer Shall Rule the World"
                 },
                 "vote_average": {
-                    "type": "number"
+                    "type": "number",
+                    "example": 6.7
                 },
                 "vote_count": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 11
                 }
             }
         }

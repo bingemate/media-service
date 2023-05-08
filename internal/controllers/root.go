@@ -9,10 +9,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type errorResponse struct {
-	Error string `json:"error"`
-}
-
 func InitRouter(engine *gin.Engine, db *gorm.DB, env initializers.Env) {
 	var mediaServiceGroup = engine.Group("/media-service")
 	var mediaClient = tmdb.NewMediaClient(env.TMDBApiKey)
