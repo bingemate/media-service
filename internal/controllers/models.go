@@ -39,6 +39,35 @@ type movieResponse struct {
 	VoteCount   int      `json:"vote_count"`
 }
 
+type tvShowResponse struct {
+	ID           int                `json:"id"`
+	Actors       []person           `json:"actors"`
+	BackdropURL  string             `json:"backdrop_url"`
+	Crew         []person           `json:"crew"`
+	Genres       []genre            `json:"genres"`
+	Overview     string             `json:"overview"`
+	PosterURL    string             `json:"poster_url"`
+	ReleaseDate  string             `json:"release_date"`
+	Studios      []studio           `json:"studios"`
+	Status       string             `json:"status"`
+	NextEpisode  *tvEpisodeResponse `json:"next_episode"`
+	Title        string             `json:"title"`
+	SeasonsCount int                `json:"seasons_count"`
+	VoteAverage  float32            `json:"vote_average"`
+	VoteCount    int                `json:"vote_count"`
+}
+
+type tvEpisodeResponse struct {
+	ID            int    `json:"id"`
+	TVShowID      int    `json:"tv_show_id"`
+	PosterURL     string `json:"poster_url"`
+	EpisodeNumber int    `json:"episode_number"`
+	SeasonNumber  int    `json:"season_number"`
+	Name          string `json:"name"`
+	Overview      string `json:"overview"`
+	AirDate       string `json:"air_date"`
+}
+
 type mediaResponse struct {
 	ID          string    `json:"id"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -128,6 +157,94 @@ func toMovieResponse(movie *tmdb.Movie) *movieResponse {
 		VoteAverage: movie.VoteAverage,
 		VoteCount:   movie.VoteCount,
 	}
+}
+
+func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
+	return &tvShowResponse{
+		ID: tvShow.ID,
+		Actors: func() []person {
+			var actors = make([]person, len(tvShow.Actors))
+			for i, actor := range tvShow.Actors {
+				actors[i] = person{
+					ID:         actor.ID,
+					Character:  actor.Character,
+					Name:       actor.Name,
+					ProfileURL: actor.ProfileURL,
+				}
+			}
+			return actors
+		}(),
+		BackdropURL: tvShow.BackdropURL,
+		Crew: func() []person {
+			var crew = make([]person, len(tvShow.Crew))
+			for i, crewP := range tvShow.Crew {
+				crew[i] = person{
+					ID:         crewP.ID,
+					Character:  crewP.Character,
+					Name:       crewP.Name,
+					ProfileURL: crewP.ProfileURL,
+				}
+			}
+			return crew
+		}(),
+		Genres: func() []genre {
+			var genres = make([]genre, len(tvShow.Genres))
+			for i, genreP := range tvShow.Genres {
+				genres[i] = genre{
+					ID:   genreP.ID,
+					Name: genreP.Name,
+				}
+			}
+			return genres
+		}(),
+		Overview:    tvShow.Overview,
+		PosterURL:   tvShow.PosterURL,
+		ReleaseDate: tvShow.ReleaseDate,
+		Studios: func() []studio {
+			var studios = make([]studio, len(tvShow.Studios))
+			for i, studioP := range tvShow.Studios {
+				studios[i] = studio{
+					ID:      studioP.ID,
+					Name:    studioP.Name,
+					LogoURL: studioP.LogoURL,
+				}
+			}
+			return studios
+		}(),
+		Title: tvShow.Title,
+		NextEpisode: func() *tvEpisodeResponse {
+			if tvShow.NextEpisode == nil {
+				return nil
+			}
+			return toTVEpisodeResponse(tvShow.NextEpisode)
+		}(),
+		SeasonsCount: tvShow.SeasonsCount,
+		Status:       tvShow.Status,
+		VoteAverage:  tvShow.VoteAverage,
+		VoteCount:    tvShow.VoteCount,
+	}
+}
+
+func toTVEpisodeResponse(tvEpisode *tmdb.TVEpisode) *tvEpisodeResponse {
+	return &tvEpisodeResponse{
+		ID:            tvEpisode.ID,
+		TVShowID:      tvEpisode.TVShowID,
+		PosterURL:     tvEpisode.PosterURL,
+		EpisodeNumber: tvEpisode.EpisodeNumber,
+		SeasonNumber:  tvEpisode.SeasonNumber,
+		Name:          tvEpisode.Name,
+		Overview:      tvEpisode.Overview,
+		AirDate:       tvEpisode.AirDate,
+	}
+}
+
+func toTVEpisodesResponse(tvEpisodes *[]tmdb.TVEpisode) *[]tvEpisodeResponse {
+	var tvEpisodesResponse = make([]tvEpisodeResponse, len(*tvEpisodes))
+	for i, tvEpisode := range *tvEpisodes {
+		var episode = tvEpisode
+		tvEpisodesResponse[i] = *toTVEpisodeResponse(&episode)
+	}
+	return &tvEpisodesResponse
 }
 
 func toMediaResponse(media *repository.Media) *mediaResponse {
