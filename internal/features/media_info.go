@@ -13,10 +13,10 @@ type MediaData struct {
 	mediaRepository *repository.MediaRepository
 }
 
-func NewMediaData(mediaClient tmdb.MediaClient, movieRepository *repository.MediaRepository) *MediaData {
+func NewMediaData(mediaClient tmdb.MediaClient, mediaRepository *repository.MediaRepository) *MediaData {
 	return &MediaData{
 		mediaClient:     mediaClient,
-		mediaRepository: movieRepository,
+		mediaRepository: mediaRepository,
 	}
 }
 
