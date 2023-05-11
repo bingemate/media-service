@@ -123,7 +123,7 @@ func (m *MediaData) GetTvShowInfo(mediaID string) (*tmdb.TVShow, error) {
 	return m.GetTvShowInfoByTMDB(media.TmdbID)
 }
 
-func (m *MediaData) GetSeasonEpisodesByTMDB(tvTmdbID, season int) (*[]tmdb.TVEpisode, error) {
+func (m *MediaData) GetSeasonEpisodesByTMDB(tvTmdbID, season int) ([]*tmdb.TVEpisode, error) {
 	episodes, err := m.mediaClient.GetTVSeasonEpisodes(tvTmdbID, season)
 	if err != nil {
 		return nil, err
@@ -131,7 +131,7 @@ func (m *MediaData) GetSeasonEpisodesByTMDB(tvTmdbID, season int) (*[]tmdb.TVEpi
 	return episodes, nil
 }
 
-func (m *MediaData) GetSeasonEpisodes(tvMediaID string, season int) (*[]tmdb.TVEpisode, error) {
+func (m *MediaData) GetSeasonEpisodes(tvMediaID string, season int) ([]*tmdb.TVEpisode, error) {
 	media, err := m.mediaRepository.GetMedia(tvMediaID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

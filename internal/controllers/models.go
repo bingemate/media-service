@@ -19,82 +19,82 @@ type person struct {
 	ID         int    `json:"id" example:"3292"`
 	Character  string `json:"character" example:"R.M. Renfield"`
 	Name       string `json:"name" example:"Nicholas Hoult"`
-	ProfileURL string `json:"profile_url" example:"https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"`
+	ProfileURL string `json:"profileUrl" example:"https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"`
 }
 
 type crew struct {
 	ID         int    `json:"id" example:"24310"`
 	Role       string `json:"role" example:"Director"`
 	Name       string `json:"name" example:"Mitchell Amundsen"`
-	ProfileURL string `json:"profile_url" example:"https://image.tmdb.org/t/p/original/zK4o3lfe6chC2qDHhxpuO1RJl2X.jpg"`
+	ProfileURL string `json:"profileUrl" example:"https://image.tmdb.org/t/p/original/zK4o3lfe6chC2qDHhxpuO1RJl2X.jpg"`
 }
 
 type studio struct {
 	ID      int    `json:"id" example:"33"`
 	Name    string `json:"name" example:"Universal Pictures"`
-	LogoURL string `json:"logo_url" example:"https://image.tmdb.org/t/p/original/8lvHyhjr8oUKOOy2dKXoALWKdp0.png"`
+	LogoURL string `json:"logoUrl" example:"https://image.tmdb.org/t/p/original/8lvHyhjr8oUKOOy2dKXoALWKdp0.png"`
 }
 
 type movieResponse struct {
 	ID          int      `json:"id" example:"649609"`
 	Actors      []person `json:"actors"`
-	BackdropURL string   `json:"backdrop_url" example:"https://image.tmdb.org/t/p/original/e7FzphKs5gzoghDotAEp2FeP46u.jpg"`
+	BackdropURL string   `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/e7FzphKs5gzoghDotAEp2FeP46u.jpg"`
 	Crew        []crew   `json:"crew"`
 	Genres      []genre  `json:"genres"`
 	Overview    string   `json:"overview" example:"Le mal ne saurait survivre une éternité sans un petit coup de pouce.\r Dans cette version moderne du mythe de Dracula..."`
-	PosterURL   string   `json:"poster_url" example:"https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg"`
-	ReleaseDate string   `json:"release_date" example:"2023-04-07"`
+	PosterURL   string   `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg"`
+	ReleaseDate string   `json:"releaseDate" example:"2023-04-07"`
 	Studios     []studio `json:"studios"`
 	Title       string   `json:"title" example:"Renfield"`
-	VoteAverage float32  `json:"vote_average" example:"7.252"`
-	VoteCount   int      `json:"vote_count" example:"278"`
+	VoteAverage float32  `json:"voteAverage" example:"7.252"`
+	VoteCount   int      `json:"voteCount" example:"278"`
 }
 
 type tvShowResponse struct {
 	ID           int                `json:"id" example:"200777"`
 	Actors       []person           `json:"actors"`
-	BackdropURL  string             `json:"backdrop_url" example:"https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"`
+	BackdropURL  string             `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"`
 	Crew         []crew             `json:"crew"`
 	Genres       []genre            `json:"genres"`
 	Overview     string             `json:"overview" example:"Ray White est un jeune homme venant d'entrer dans la populaire académie de magie Arnold. En tant que..."`
-	PosterURL    string             `json:"poster_url" example:"https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"`
-	ReleaseDate  string             `json:"release_date" example:"2023-01-06"`
-	Studios      []studio           `json:"studios"`
+	PosterURL    string             `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"`
+	ReleaseDate  string             `json:"releaseDate" example:"2023-01-06"`
+	Networks     []studio           `json:"networks"`
 	Status       string             `json:"status" example:"Ended"`
-	NextEpisode  *tvEpisodeResponse `json:"next_episode"`
+	NextEpisode  *tvEpisodeResponse `json:"nextEpisode"`
 	Title        string             `json:"title" example:"The Iceblade Sorcerer Shall Rule the World"`
-	SeasonsCount int                `json:"seasons_count" example:"1"`
-	VoteAverage  float32            `json:"vote_average" example:"6.7"`
-	VoteCount    int                `json:"vote_count" example:"11"`
+	SeasonsCount int                `json:"seasonsCount" example:"1"`
+	VoteAverage  float32            `json:"voteAverage" example:"6.7"`
+	VoteCount    int                `json:"voteCount" example:"11"`
 }
 
 type tvEpisodeResponse struct {
 	ID            int    `json:"id" example:"4137463"`
-	TVShowID      int    `json:"tv_show_id" example:"200777"`
-	PosterURL     string `json:"poster_url" example:"https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"`
-	EpisodeNumber int    `json:"episode_number" example:"12"`
-	SeasonNumber  int    `json:"season_number" example:"1"`
+	TVShowID      int    `json:"tvShowId" example:"200777"`
+	PosterURL     string `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"`
+	EpisodeNumber int    `json:"episodeNumber" example:"12"`
+	SeasonNumber  int    `json:"seasonNumber" example:"1"`
 	Name          string `json:"name" example:"Le plus puissant sorcier du monde révèle Akasha"`
 	Overview      string `json:"overview" example:"Ray et ses amis volent au secours de Rebecca, qui montre des signes..."`
-	AirDate       string `json:"air_date" example:"2023-03-24"`
+	AirDate       string `json:"airDate" example:"2023-03-24"`
 }
 
 type mediaResponse struct {
 	ID          string    `json:"id" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
-	CreatedAt   time.Time `json:"created_at" example:"2023-05-07T20:31:28.327382+02:00"`
-	UpdatedAt   time.Time `json:"updated_at" example:"2023-05-07T20:31:28.327382+02:00"`
-	MediaType   string    `json:"media_type" example:"TvShow"`
-	TmdbID      int       `json:"tmdb_id" example:"200777"`
-	ReleaseDate string    `json:"release_date" example:"2023-01-06"`
+	CreatedAt   time.Time `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	UpdatedAt   time.Time `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	MediaType   string    `json:"mediaType" example:"TvShow"`
+	TmdbID      int       `json:"tmdbId" example:"200777"`
+	ReleaseDate string    `json:"releaseDate" example:"2023-01-06"`
 }
 type mediaFileResponse struct {
 	ID        string             `json:"id" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
-	CreatedAt time.Time          `json:"created_at" example:"2023-05-07T20:31:28.327382+02:00"`
-	UpdatedAt time.Time          `json:"updated_at" example:"2023-05-07T20:31:28.327382+02:00"`
+	CreatedAt time.Time          `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	UpdatedAt time.Time          `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	Filename  string             `json:"filename" example:"The Iceblade Sorcerer Shall Rule the World - S1E09.mkv"`
 	Size      float64            `json:"size" example:"771367779"`
 	Duration  float64            `json:"duration" example:"1450.76"`
-	MimeType  string             `json:"mime_type" example:"video/x-matroska"`
+	MimeType  string             `json:"mimeType" example:"video/x-matroska"`
 	Codec     string             `json:"codec" example:"H264"`
 	Audios    []audioResponse    `json:"audios"`
 	Subtitles []subtitleResponse `json:"subtitles"`
@@ -109,6 +109,18 @@ type audioResponse struct {
 type subtitleResponse struct {
 	Codec    string `json:"code" example:"ASS"`
 	Language string `json:"language" example:"fre"`
+}
+
+type tvShowResults struct {
+	Results     []*tvShowResponse `json:"results"`
+	TotalPage   int               `json:"totalPage" example:"71"`
+	TotalResult int               `json:"totalResult" example:"1412"`
+}
+
+type movieResults struct {
+	Results     []*movieResponse `json:"results"`
+	TotalPage   int              `json:"totalPage" example:"71"`
+	TotalResult int              `json:"totalResult" example:"1412"`
 }
 
 func toMovieResponse(movie *tmdb.Movie) *movieResponse {
@@ -210,9 +222,9 @@ func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
 		Overview:    tvShow.Overview,
 		PosterURL:   tvShow.PosterURL,
 		ReleaseDate: tvShow.ReleaseDate,
-		Studios: func() []studio {
-			var studios = make([]studio, len(tvShow.Studios))
-			for i, studioP := range tvShow.Studios {
+		Networks: func() []studio {
+			var studios = make([]studio, len(tvShow.Networks))
+			for i, studioP := range tvShow.Networks {
 				studios[i] = studio{
 					ID:      studioP.ID,
 					Name:    studioP.Name,
@@ -248,13 +260,12 @@ func toTVEpisodeResponse(tvEpisode *tmdb.TVEpisode) *tvEpisodeResponse {
 	}
 }
 
-func toTVEpisodesResponse(tvEpisodes *[]tmdb.TVEpisode) *[]tvEpisodeResponse {
-	var tvEpisodesResponse = make([]tvEpisodeResponse, len(*tvEpisodes))
-	for i, tvEpisode := range *tvEpisodes {
-		var episode = tvEpisode
-		tvEpisodesResponse[i] = *toTVEpisodeResponse(&episode)
+func toTVEpisodesResponse(tvEpisodes []*tmdb.TVEpisode) []*tvEpisodeResponse {
+	var tvEpisodesResponse = make([]*tvEpisodeResponse, len(tvEpisodes))
+	for i, tvEpisode := range tvEpisodes {
+		tvEpisodesResponse[i] = toTVEpisodeResponse(tvEpisode)
 	}
-	return &tvEpisodesResponse
+	return tvEpisodesResponse
 }
 
 func toMediaResponse(media *repository.Media) *mediaResponse {
