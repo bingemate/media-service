@@ -7,7 +7,7 @@ import (
 )
 
 type errorResponse struct {
-	Error string `json:"error" example:"media not found"`
+	Error string `json:"error" example:"error message"`
 }
 
 type genre struct {
@@ -181,6 +181,14 @@ func toMovieResponse(movie *tmdb.Movie) *movieResponse {
 	}
 }
 
+func toMoviesResponse(movies []*tmdb.Movie) []*movieResponse {
+	var moviesResponse = make([]*movieResponse, len(movies))
+	for i, movie := range movies {
+		moviesResponse[i] = toMovieResponse(movie)
+	}
+	return moviesResponse
+}
+
 func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
 	return &tvShowResponse{
 		ID: tvShow.ID,
@@ -245,6 +253,14 @@ func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
 		VoteAverage:  tvShow.VoteAverage,
 		VoteCount:    tvShow.VoteCount,
 	}
+}
+
+func toTVShowsResponse(tvShows []*tmdb.TVShow) []*tvShowResponse {
+	var tvShowsResponse = make([]*tvShowResponse, len(tvShows))
+	for i, tvShow := range tvShows {
+		tvShowsResponse[i] = toTVShowResponse(tvShow)
+	}
+	return tvShowsResponse
 }
 
 func toTVEpisodeResponse(tvEpisode *tmdb.TVEpisode) *tvEpisodeResponse {
