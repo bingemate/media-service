@@ -3,7 +3,7 @@ module github.com/bingemate/media-service
 go 1.20
 
 require (
-	github.com/bingemate/media-go-pkg v0.1.8
+	github.com/bingemate/media-go-pkg v0.3.3
 	github.com/caarlos0/env/v8 v8.0.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/joho/godotenv v1.5.1

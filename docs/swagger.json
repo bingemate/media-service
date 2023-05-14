@@ -6,7 +6,658 @@
         "contact": {}
     },
     "paths": {
-        "/media-file/{id}": {
+        "/discover/movie/actor": {
+            "get": {
+                "description": "Get movies by actor",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Movie"
+                ],
+                "summary": "Get movies by actor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Actor id",
+                        "name": "actor",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/movie/director": {
+            "get": {
+                "description": "Get movies by director",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Movie"
+                ],
+                "summary": "Get movies by director",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Director id",
+                        "name": "director",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/movie/genre": {
+            "get": {
+                "description": "Get movies by genre",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Movie"
+                ],
+                "summary": "Get movies by genre",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Genre id",
+                        "name": "genre",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/movie/popular": {
+            "get": {
+                "description": "Get popular movies",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Movie"
+                ],
+                "summary": "Get popular movies",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResults"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/movie/recent": {
+            "get": {
+                "description": "Get recent movies",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Movie"
+                ],
+                "summary": "Get recent movies",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.movieResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/movie/recommendations/{movie}": {
+            "get": {
+                "description": "Get movie's recommendations",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Movie"
+                ],
+                "summary": "Get movie's recommendations",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Movie id",
+                        "name": "movie",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.movieResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/movie/search": {
+            "get": {
+                "description": "Search movies by query",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Movie"
+                ],
+                "summary": "Search movies",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/movie/studio": {
+            "get": {
+                "description": "Get movies by studio",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Movie"
+                ],
+                "summary": "Get movies by studio",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Studio id",
+                        "name": "studio",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/tv/genre": {
+            "get": {
+                "description": "Get tv shows by genre",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "TvShow"
+                ],
+                "summary": "Get tv shows by genre",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Genre id",
+                        "name": "genre",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvShowResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/tv/network": {
+            "get": {
+                "description": "Get tv shows by network",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "TvShow"
+                ],
+                "summary": "Get tv shows by network",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Network id",
+                        "name": "network",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvShowResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/tv/popular": {
+            "get": {
+                "description": "Get popular tv shows",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "TvShow"
+                ],
+                "summary": "Get popular tv shows",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvShowResults"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/tv/recent": {
+            "get": {
+                "description": "Get recent tv shows",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "TvShow"
+                ],
+                "summary": "Get recent tv shows",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.tvShowResponse"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/tv/recommendations/{tv}": {
+            "get": {
+                "description": "Get tv show's recommendations",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "TvShow"
+                ],
+                "summary": "Get tv show's recommendations",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Show id",
+                        "name": "show",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.tvShowResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/tv/search": {
+            "get": {
+                "description": "Search tv shows by query",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "TvShow"
+                ],
+                "summary": "Search tv shows",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvShowResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media-file/file-tmdb/{id}": {
+            "get": {
+                "description": "Get media file info by TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media File"
+                ],
+                "summary": "Get media file info by TMDB ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaFileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media-file/file/{id}": {
             "get": {
                 "description": "Get media file info by Media ID",
                 "produces": [
@@ -600,7 +1251,7 @@
                     "type": "string",
                     "example": "Mitchell Amundsen"
                 },
-                "profile_url": {
+                "profileUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/zK4o3lfe6chC2qDHhxpuO1RJl2X.jpg"
                 },
@@ -615,7 +1266,7 @@
             "properties": {
                 "error": {
                     "type": "string",
-                    "example": "media not found"
+                    "example": "error message"
                 }
             }
         },
@@ -645,7 +1296,7 @@
                     "type": "string",
                     "example": "H264"
                 },
-                "created_at": {
+                "createdAt": {
                     "type": "string",
                     "example": "2023-05-07T20:31:28.327382+02:00"
                 },
@@ -661,7 +1312,7 @@
                     "type": "string",
                     "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
                 },
-                "mime_type": {
+                "mimeType": {
                     "type": "string",
                     "example": "video/x-matroska"
                 },
@@ -675,7 +1326,7 @@
                         "$ref": "#/definitions/controllers.subtitleResponse"
                     }
                 },
-                "updated_at": {
+                "updatedAt": {
                     "type": "string",
                     "example": "2023-05-07T20:31:28.327382+02:00"
                 }
@@ -684,7 +1335,7 @@
         "controllers.mediaResponse": {
             "type": "object",
             "properties": {
-                "created_at": {
+                "createdAt": {
                     "type": "string",
                     "example": "2023-05-07T20:31:28.327382+02:00"
                 },
@@ -692,19 +1343,19 @@
                     "type": "string",
                     "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
                 },
-                "media_type": {
+                "mediaType": {
                     "type": "string",
                     "example": "TvShow"
                 },
-                "release_date": {
+                "releaseDate": {
                     "type": "string",
                     "example": "2023-01-06"
                 },
-                "tmdb_id": {
+                "tmdbId": {
                     "type": "integer",
                     "example": 200777
                 },
-                "updated_at": {
+                "updatedAt": {
                     "type": "string",
                     "example": "2023-05-07T20:31:28.327382+02:00"
                 }
@@ -719,7 +1370,7 @@
                         "$ref": "#/definitions/controllers.person"
                     }
                 },
-                "backdrop_url": {
+                "backdropUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/e7FzphKs5gzoghDotAEp2FeP46u.jpg"
                 },
@@ -743,11 +1394,11 @@
                     "type": "string",
                     "example": "Le mal ne saurait survivre une éternité sans un petit coup de pouce.\r Dans cette version moderne du mythe de Dracula..."
                 },
-                "poster_url": {
+                "posterUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg"
                 },
-                "release_date": {
+                "releaseDate": {
                     "type": "string",
                     "example": "2023-04-07"
                 },
@@ -761,13 +1412,32 @@
                     "type": "string",
                     "example": "Renfield"
                 },
-                "vote_average": {
+                "voteAverage": {
                     "type": "number",
                     "example": 7.252
                 },
-                "vote_count": {
+                "voteCount": {
                     "type": "integer",
                     "example": 278
+                }
+            }
+        },
+        "controllers.movieResults": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.movieResponse"
+                    }
+                },
+                "totalPage": {
+                    "type": "integer",
+                    "example": 71
+                },
+                "totalResult": {
+                    "type": "integer",
+                    "example": 1412
                 }
             }
         },
@@ -786,7 +1456,7 @@
                     "type": "string",
                     "example": "Nicholas Hoult"
                 },
-                "profile_url": {
+                "profileUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"
                 }
@@ -799,7 +1469,7 @@
                     "type": "integer",
                     "example": 33
                 },
-                "logo_url": {
+                "logoUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/8lvHyhjr8oUKOOy2dKXoALWKdp0.png"
                 },
@@ -825,11 +1495,11 @@
         "controllers.tvEpisodeResponse": {
             "type": "object",
             "properties": {
-                "air_date": {
+                "airDate": {
                     "type": "string",
                     "example": "2023-03-24"
                 },
-                "episode_number": {
+                "episodeNumber": {
                     "type": "integer",
                     "example": 12
                 },
@@ -845,15 +1515,15 @@
                     "type": "string",
                     "example": "Ray et ses amis volent au secours de Rebecca, qui montre des signes..."
                 },
-                "poster_url": {
+                "posterUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"
                 },
-                "season_number": {
+                "seasonNumber": {
                     "type": "integer",
                     "example": 1
                 },
-                "tv_show_id": {
+                "tvShowId": {
                     "type": "integer",
                     "example": 200777
                 }
@@ -868,7 +1538,7 @@
                         "$ref": "#/definitions/controllers.person"
                     }
                 },
-                "backdrop_url": {
+                "backdropUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"
                 },
@@ -888,22 +1558,28 @@
                     "type": "integer",
                     "example": 200777
                 },
-                "next_episode": {
+                "networks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.studio"
+                    }
+                },
+                "nextEpisode": {
                     "$ref": "#/definitions/controllers.tvEpisodeResponse"
                 },
                 "overview": {
                     "type": "string",
                     "example": "Ray White est un jeune homme venant d'entrer dans la populaire académie de magie Arnold. En tant que..."
                 },
-                "poster_url": {
+                "posterUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"
                 },
-                "release_date": {
+                "releaseDate": {
                     "type": "string",
                     "example": "2023-01-06"
                 },
-                "seasons_count": {
+                "seasonsCount": {
                     "type": "integer",
                     "example": 1
                 },
@@ -911,23 +1587,36 @@
                     "type": "string",
                     "example": "Ended"
                 },
-                "studios": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/controllers.studio"
-                    }
-                },
                 "title": {
                     "type": "string",
                     "example": "The Iceblade Sorcerer Shall Rule the World"
                 },
-                "vote_average": {
+                "voteAverage": {
                     "type": "number",
                     "example": 6.7
                 },
-                "vote_count": {
+                "voteCount": {
                     "type": "integer",
                     "example": 11
+                }
+            }
+        },
+        "controllers.tvShowResults": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.tvShowResponse"
+                    }
+                },
+                "totalPage": {
+                    "type": "integer",
+                    "example": 71
+                },
+                "totalResult": {
+                    "type": "integer",
+                    "example": 1412
                 }
             }
         }
