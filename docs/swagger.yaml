@@ -321,6 +321,7 @@ paths:
       summary: Get movies by actor
       tags:
       - Discover
+      - Movie
   /discover/movie/director:
     get:
       description: Get movies by director
@@ -352,6 +353,7 @@ paths:
       summary: Get movies by director
       tags:
       - Discover
+      - Movie
   /discover/movie/genre:
     get:
       description: Get movies by genre
@@ -383,6 +385,7 @@ paths:
       summary: Get movies by genre
       tags:
       - Discover
+      - Movie
   /discover/movie/popular:
     get:
       description: Get popular movies
@@ -405,6 +408,7 @@ paths:
       summary: Get popular movies
       tags:
       - Discover
+      - Movie
   /discover/movie/recent:
     get:
       description: Get recent movies
@@ -424,6 +428,7 @@ paths:
       summary: Get recent movies
       tags:
       - Discover
+      - Movie
   /discover/movie/recommendations/{movie}:
     get:
       description: Get movie's recommendations
@@ -453,6 +458,7 @@ paths:
       summary: Get movie's recommendations
       tags:
       - Discover
+      - Movie
   /discover/movie/search:
     get:
       description: Search movies by query
@@ -484,6 +490,7 @@ paths:
       summary: Search movies
       tags:
       - Discover
+      - Movie
   /discover/movie/studio:
     get:
       description: Get movies by studio
@@ -515,68 +522,7 @@ paths:
       summary: Get movies by studio
       tags:
       - Discover
-  /discover/tv/actor:
-    get:
-      description: Get tv shows by actor
-      parameters:
-      - description: Actor id
-        in: query
-        name: actor
-        required: true
-        type: integer
-      - description: Page number
-        in: query
-        name: page
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controllers.tvShowResults'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-      summary: Get tv shows by actor
-      tags:
-      - Discover
-  /discover/tv/director:
-    get:
-      description: Get tv shows by director
-      parameters:
-      - description: Director id
-        in: query
-        name: director
-        required: true
-        type: integer
-      - description: Page number
-        in: query
-        name: page
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controllers.tvShowResults'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-      summary: Get tv shows by director
-      tags:
-      - Discover
+      - Movie
   /discover/tv/genre:
     get:
       description: Get tv shows by genre
@@ -608,6 +554,7 @@ paths:
       summary: Get tv shows by genre
       tags:
       - Discover
+      - TvShow
   /discover/tv/network:
     get:
       description: Get tv shows by network
@@ -639,6 +586,7 @@ paths:
       summary: Get tv shows by network
       tags:
       - Discover
+      - TvShow
   /discover/tv/popular:
     get:
       description: Get popular tv shows
@@ -661,6 +609,7 @@ paths:
       summary: Get popular tv shows
       tags:
       - Discover
+      - TvShow
   /discover/tv/recent:
     get:
       description: Get recent tv shows
@@ -680,7 +629,8 @@ paths:
       summary: Get recent tv shows
       tags:
       - Discover
-  /discover/tv/recommendations/{show}:
+      - TvShow
+  /discover/tv/recommendations/{tv}:
     get:
       description: Get tv show's recommendations
       parameters:
@@ -709,6 +659,7 @@ paths:
       summary: Get tv show's recommendations
       tags:
       - Discover
+      - TvShow
   /discover/tv/search:
     get:
       description: Search tv shows by query
@@ -740,38 +691,8 @@ paths:
       summary: Search tv shows
       tags:
       - Discover
-  /media-file/{id}:
-    get:
-      description: Get media file info by Media ID
-      parameters:
-      - description: Media ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controllers.mediaFileResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
-      summary: Get media file info
-      tags:
-      - Media File
-  /media-file/tmdb/{id}:
+      - TvShow
+  /media-file/file-tmdb/{id}:
     get:
       description: Get media file info by TMDB ID
       parameters:
@@ -800,6 +721,37 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get media file info by TMDB ID
+      tags:
+      - Media File
+  /media-file/file/{id}:
+    get:
+      description: Get media file info by Media ID
+      parameters:
+      - description: Media ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.mediaFileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get media file info
       tags:
       - Media File
   /media/base-tmdb/{id}:

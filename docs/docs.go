@@ -23,7 +23,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "Movie"
                 ],
                 "summary": "Get movies by actor",
                 "parameters": [
@@ -70,7 +71,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "Movie"
                 ],
                 "summary": "Get movies by director",
                 "parameters": [
@@ -117,7 +119,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "Movie"
                 ],
                 "summary": "Get movies by genre",
                 "parameters": [
@@ -164,7 +167,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "Movie"
                 ],
                 "summary": "Get popular movies",
                 "parameters": [
@@ -198,7 +202,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "Movie"
                 ],
                 "summary": "Get recent movies",
                 "responses": {
@@ -227,7 +232,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "Movie"
                 ],
                 "summary": "Get movie's recommendations",
                 "parameters": [
@@ -271,7 +277,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "Movie"
                 ],
                 "summary": "Search movies",
                 "parameters": [
@@ -318,7 +325,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "Movie"
                 ],
                 "summary": "Get movies by studio",
                 "parameters": [
@@ -358,100 +366,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/discover/tv/actor": {
-            "get": {
-                "description": "Get tv shows by actor",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Discover"
-                ],
-                "summary": "Get tv shows by actor",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Actor id",
-                        "name": "actor",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.tvShowResults"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/discover/tv/director": {
-            "get": {
-                "description": "Get tv shows by director",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Discover"
-                ],
-                "summary": "Get tv shows by director",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Director id",
-                        "name": "director",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.tvShowResults"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/discover/tv/genre": {
             "get": {
                 "description": "Get tv shows by genre",
@@ -459,7 +373,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "TvShow"
                 ],
                 "summary": "Get tv shows by genre",
                 "parameters": [
@@ -506,7 +421,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "TvShow"
                 ],
                 "summary": "Get tv shows by network",
                 "parameters": [
@@ -553,7 +469,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "TvShow"
                 ],
                 "summary": "Get popular tv shows",
                 "parameters": [
@@ -587,7 +504,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "TvShow"
                 ],
                 "summary": "Get recent tv shows",
                 "responses": {
@@ -609,14 +527,15 @@ const docTemplate = `{
                 }
             }
         },
-        "/discover/tv/recommendations/{show}": {
+        "/discover/tv/recommendations/{tv}": {
             "get": {
                 "description": "Get tv show's recommendations",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "TvShow"
                 ],
                 "summary": "Get tv show's recommendations",
                 "parameters": [
@@ -660,7 +579,8 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Discover"
+                    "Discover",
+                    "TvShow"
                 ],
                 "summary": "Search tv shows",
                 "parameters": [
@@ -700,7 +620,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/media-file/tmdb/{id}": {
+        "/media-file/file-tmdb/{id}": {
             "get": {
                 "description": "Get media file info by TMDB ID",
                 "produces": [
@@ -747,7 +667,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/media-file/{id}": {
+        "/media-file/file/{id}": {
             "get": {
                 "description": "Get media file info by Media ID",
                 "produces": [
