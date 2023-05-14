@@ -18,6 +18,6 @@ func InitRouter(engine *gin.Engine, db *gorm.DB, env initializers.Env) {
 	var mediaDiscover = features.NewMediaDiscovery(mediaClient, mediaRepository)
 	InitMediaDataController(mediaServiceGroup.Group("/media"), mediaData)
 	InitFileInfoController(mediaServiceGroup.Group("/media-file"), mediaFile)
-	InitDiscoverController(mediaServiceGroup.Group("/media-discover"), mediaDiscover)
+	InitDiscoverController(mediaServiceGroup.Group("/discover"), mediaDiscover)
 	InitPingController(mediaServiceGroup.Group("/ping"))
 }
