@@ -3,7 +3,6 @@ package features
 import (
 	"github.com/bingemate/media-go-pkg/tmdb"
 	"github.com/bingemate/media-service/internal/repository"
-	"time"
 )
 
 type MediaDiscovery struct {
@@ -258,7 +257,8 @@ func (m *MediaDiscovery) GetShowRecommendations(showID int) ([]*tmdb.TVShow, err
 	return shows, nil
 }
 
-func (m *MediaDiscovery) GetTVShowsReleases(tvIds []int, startDate string, endDate string) ([]*tmdb.TVEpisodeRelease, error) {
+// Add in another service
+/*func (m *MediaDiscovery) GetTVShowsReleases(tvIds []int, startDate string, endDate string) ([]*tmdb.TVEpisodeRelease, error) {
 	start, err := time.Parse("2006-01-02", startDate)
 	if err != nil {
 		return nil, err
@@ -280,4 +280,4 @@ func (m *MediaDiscovery) GetMovieReleases(movieIds []int, startDate string, endD
 		return nil, err
 	}
 	return m.mediaClient.GetMoviesReleases(movieIds, start, end)
-}
+}*/
