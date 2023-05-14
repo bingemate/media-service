@@ -6,19 +6,19 @@ import (
 	"time"
 )
 
-type MediaInfo struct {
+type MediaDiscovery struct {
 	mediaClient     tmdb.MediaClient
 	mediaRepository *repository.MediaRepository
 }
 
-func NewMediaInfo(mediaClient tmdb.MediaClient, mediaRepository *repository.MediaRepository) *MediaInfo {
-	return &MediaInfo{
+func NewMediaDiscovery(mediaClient tmdb.MediaClient, mediaRepository *repository.MediaRepository) *MediaDiscovery {
+	return &MediaDiscovery{
 		mediaClient:     mediaClient,
 		mediaRepository: mediaRepository,
 	}
 }
 
-func (m *MediaInfo) SearchMovie(query string, page int) (*tmdb.PaginatedMovieResults, error) {
+func (m *MediaDiscovery) SearchMovie(query string, page int) (*tmdb.PaginatedMovieResults, error) {
 	movies, err := m.mediaClient.SearchMovies(query, page)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (m *MediaInfo) SearchMovie(query string, page int) (*tmdb.PaginatedMovieRes
 	return movies, nil
 }
 
-func (m *MediaInfo) SearchShow(query string, page int) (*tmdb.PaginatedTVShowResults, error) {
+func (m *MediaDiscovery) SearchShow(query string, page int) (*tmdb.PaginatedTVShowResults, error) {
 	shows, err := m.mediaClient.SearchTVShows(query, page)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (m *MediaInfo) SearchShow(query string, page int) (*tmdb.PaginatedTVShowRes
 	return shows, nil
 }
 
-func (m *MediaInfo) GetPopularMovies(page int) (*tmdb.PaginatedMovieResults, error) {
+func (m *MediaDiscovery) GetPopularMovies(page int) (*tmdb.PaginatedMovieResults, error) {
 	movies, err := m.mediaClient.GetPopularMovies(page)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func (m *MediaInfo) GetPopularMovies(page int) (*tmdb.PaginatedMovieResults, err
 	return movies, nil
 }
 
-func (m *MediaInfo) GetPopularShows(page int) (*tmdb.PaginatedTVShowResults, error) {
+func (m *MediaDiscovery) GetPopularShows(page int) (*tmdb.PaginatedTVShowResults, error) {
 	shows, err := m.mediaClient.GetPopularTVShows(page)
 	if err != nil {
 		return nil, err
@@ -78,7 +78,7 @@ func (m *MediaInfo) GetPopularShows(page int) (*tmdb.PaginatedTVShowResults, err
 	return shows, nil
 }
 
-func (m *MediaInfo) GetRecentMovies() ([]*tmdb.Movie, error) {
+func (m *MediaDiscovery) GetRecentMovies() ([]*tmdb.Movie, error) {
 	movies, err := m.mediaClient.GetRecentMovies()
 	if err != nil {
 		return nil, err
@@ -93,7 +93,7 @@ func (m *MediaInfo) GetRecentMovies() ([]*tmdb.Movie, error) {
 	return movies, nil
 }
 
-func (m *MediaInfo) GetRecentShows() ([]*tmdb.TVShow, error) {
+func (m *MediaDiscovery) GetRecentShows() ([]*tmdb.TVShow, error) {
 	shows, err := m.mediaClient.GetRecentTVShows()
 	if err != nil {
 		return nil, err
@@ -108,7 +108,7 @@ func (m *MediaInfo) GetRecentShows() ([]*tmdb.TVShow, error) {
 	return shows, nil
 }
 
-func (m *MediaInfo) GetMoviesByGenre(genreID int, page int) (*tmdb.PaginatedMovieResults, error) {
+func (m *MediaDiscovery) GetMoviesByGenre(genreID int, page int) (*tmdb.PaginatedMovieResults, error) {
 	movies, err := m.mediaClient.GetMoviesByGenre(genreID, page)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func (m *MediaInfo) GetMoviesByGenre(genreID int, page int) (*tmdb.PaginatedMovi
 	return movies, nil
 }
 
-func (m *MediaInfo) GetShowsByGenre(genreID int, page int) (*tmdb.PaginatedTVShowResults, error) {
+func (m *MediaDiscovery) GetShowsByGenre(genreID int, page int) (*tmdb.PaginatedTVShowResults, error) {
 	shows, err := m.mediaClient.GetTVShowsByGenre(genreID, page)
 	if err != nil {
 		return nil, err
@@ -138,7 +138,7 @@ func (m *MediaInfo) GetShowsByGenre(genreID int, page int) (*tmdb.PaginatedTVSho
 	return shows, nil
 }
 
-func (m *MediaInfo) GetMoviesByActor(actorID int, page int) (*tmdb.PaginatedMovieResults, error) {
+func (m *MediaDiscovery) GetMoviesByActor(actorID int, page int) (*tmdb.PaginatedMovieResults, error) {
 	movies, err := m.mediaClient.GetMoviesByActor(actorID, page)
 	if err != nil {
 		return nil, err
@@ -153,7 +153,7 @@ func (m *MediaInfo) GetMoviesByActor(actorID int, page int) (*tmdb.PaginatedMovi
 	return movies, nil
 }
 
-func (m *MediaInfo) GetShowsByActor(actorID int, page int) (*tmdb.PaginatedTVShowResults, error) {
+func (m *MediaDiscovery) GetShowsByActor(actorID int, page int) (*tmdb.PaginatedTVShowResults, error) {
 	shows, err := m.mediaClient.GetTVShowsByActor(actorID, page)
 	if err != nil {
 		return nil, err
@@ -168,7 +168,7 @@ func (m *MediaInfo) GetShowsByActor(actorID int, page int) (*tmdb.PaginatedTVSho
 	return shows, nil
 }
 
-func (m *MediaInfo) GetMoviesByDirector(directorID int, page int) (*tmdb.PaginatedMovieResults, error) {
+func (m *MediaDiscovery) GetMoviesByDirector(directorID int, page int) (*tmdb.PaginatedMovieResults, error) {
 	movies, err := m.mediaClient.GetMoviesByDirector(directorID, page)
 	if err != nil {
 		return nil, err
@@ -183,7 +183,7 @@ func (m *MediaInfo) GetMoviesByDirector(directorID int, page int) (*tmdb.Paginat
 	return movies, nil
 }
 
-func (m *MediaInfo) GetShowsByDirector(directorID int, page int) (*tmdb.PaginatedTVShowResults, error) {
+func (m *MediaDiscovery) GetShowsByDirector(directorID int, page int) (*tmdb.PaginatedTVShowResults, error) {
 	shows, err := m.mediaClient.GetTVShowsByDirector(directorID, page)
 	if err != nil {
 		return nil, err
@@ -198,7 +198,7 @@ func (m *MediaInfo) GetShowsByDirector(directorID int, page int) (*tmdb.Paginate
 	return shows, nil
 }
 
-func (m *MediaInfo) GetMoviesByStudio(studioID int, page int) (*tmdb.PaginatedMovieResults, error) {
+func (m *MediaDiscovery) GetMoviesByStudio(studioID int, page int) (*tmdb.PaginatedMovieResults, error) {
 	movies, err := m.mediaClient.GetMoviesByStudio(studioID, page)
 	if err != nil {
 		return nil, err
@@ -213,7 +213,7 @@ func (m *MediaInfo) GetMoviesByStudio(studioID int, page int) (*tmdb.PaginatedMo
 	return movies, nil
 }
 
-func (m *MediaInfo) GetShowsByNetwork(networkID int, page int) (*tmdb.PaginatedTVShowResults, error) {
+func (m *MediaDiscovery) GetShowsByNetwork(networkID int, page int) (*tmdb.PaginatedTVShowResults, error) {
 	shows, err := m.mediaClient.GetTVShowsByNetwork(networkID, page)
 	if err != nil {
 		return nil, err
@@ -228,7 +228,7 @@ func (m *MediaInfo) GetShowsByNetwork(networkID int, page int) (*tmdb.PaginatedT
 	return shows, nil
 }
 
-func (m *MediaInfo) GetMovieRecommendations(movieID int) ([]*tmdb.Movie, error) {
+func (m *MediaDiscovery) GetMovieRecommendations(movieID int) ([]*tmdb.Movie, error) {
 	movies, err := m.mediaClient.GetMovieRecommendations(movieID)
 	if err != nil {
 		return nil, err
@@ -243,7 +243,7 @@ func (m *MediaInfo) GetMovieRecommendations(movieID int) ([]*tmdb.Movie, error) 
 	return movies, nil
 }
 
-func (m *MediaInfo) GetShowRecommendations(showID int) ([]*tmdb.TVShow, error) {
+func (m *MediaDiscovery) GetShowRecommendations(showID int) ([]*tmdb.TVShow, error) {
 	shows, err := m.mediaClient.GetTVShowRecommendations(showID)
 	if err != nil {
 		return nil, err
@@ -258,7 +258,7 @@ func (m *MediaInfo) GetShowRecommendations(showID int) ([]*tmdb.TVShow, error) {
 	return shows, nil
 }
 
-func (m *MediaInfo) GetTVShowsReleases(tvIds []int, startDate string, endDate string) ([]*tmdb.TVEpisodeRelease, error) {
+func (m *MediaDiscovery) GetTVShowsReleases(tvIds []int, startDate string, endDate string) ([]*tmdb.TVEpisodeRelease, error) {
 	start, err := time.Parse("2006-01-02", startDate)
 	if err != nil {
 		return nil, err
@@ -270,7 +270,7 @@ func (m *MediaInfo) GetTVShowsReleases(tvIds []int, startDate string, endDate st
 	return m.mediaClient.GetTVShowsReleases(tvIds, start, end)
 }
 
-func (m *MediaInfo) GetMovieReleases(movieIds []int, startDate string, endDate string) ([]*tmdb.MovieRelease, error) {
+func (m *MediaDiscovery) GetMovieReleases(movieIds []int, startDate string, endDate string) ([]*tmdb.MovieRelease, error) {
 	start, err := time.Parse("2006-01-02", startDate)
 	if err != nil {
 		return nil, err
