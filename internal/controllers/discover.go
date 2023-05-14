@@ -35,14 +35,8 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 	engine.GET("movie/actor", func(c *gin.Context) {
 		getMoviesByActor(c, mediaDiscover)
 	})
-	engine.GET("tv/actor", func(c *gin.Context) {
-		getTvShowsByActor(c, mediaDiscover)
-	})
 	engine.GET("movie/director", func(c *gin.Context) {
 		getMoviesByDirector(c, mediaDiscover)
-	})
-	engine.GET("tv/director", func(c *gin.Context) {
-		getTvShowsByDirector(c, mediaDiscover)
 	})
 	engine.GET("movie/studio", func(c *gin.Context) {
 		getMoviesByStudio(c, mediaDiscover)
@@ -61,6 +55,7 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 // @Summary		Search movies
 // @Description	Search movies by query
 // @Tags			Discover
+// @Tags			Movie
 // @Param			query query string true "Search query"
 // @Param			page query int false "Page number"
 // @Produce		json
@@ -97,6 +92,7 @@ func searchMovie(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Summary		Search tv shows
 // @Description	Search tv shows by query
 // @Tags			Discover
+// @Tags			TvShow
 // @Param			query query string true "Search query"
 // @Param			page query int false "Page number"
 // @Produce		json
@@ -133,6 +129,7 @@ func searchTv(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Summary		Get popular movies
 // @Description	Get popular movies
 // @Tags			Discover
+// @Tags			Movie
 // @Param			page query int false "Page number"
 // @Produce		json
 // @Success		200	{object} movieResults
@@ -160,6 +157,7 @@ func getPopularMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Summary		Get popular tv shows
 // @Description	Get popular tv shows
 // @Tags			Discover
+// @Tags			TvShow
 // @Param			page query int false "Page number"
 // @Produce		json
 // @Success		200	{object} tvShowResults
@@ -187,6 +185,7 @@ func getPopularTvShows(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Summary		Get recent movies
 // @Description	Get recent movies
 // @Tags			Discover
+// @Tags			Movie
 // @Produce		json
 // @Success		200	{array} movieResponse
 // @Failure		500	{object} errorResponse
@@ -205,6 +204,7 @@ func getRecentMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Summary		Get recent tv shows
 // @Description	Get recent tv shows
 // @Tags			Discover
+// @Tags			TvShow
 // @Produce		json
 // @Success		200	{array} tvShowResponse
 // @Failure		500	{object} errorResponse
@@ -223,6 +223,7 @@ func getRecentTvShows(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Summary		Get movies by genre
 // @Description	Get movies by genre
 // @Tags			Discover
+// @Tags			Movie
 // @Param			genre query int true "Genre id"
 // @Param			page query int false "Page number"
 // @Produce		json
@@ -259,6 +260,7 @@ func getMoviesByGenre(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Summary		Get tv shows by genre
 // @Description	Get tv shows by genre
 // @Tags			Discover
+// @Tags			TvShow
 // @Param			genre query int true "Genre id"
 // @Param			page query int false "Page number"
 // @Produce		json
@@ -295,6 +297,7 @@ func getTvShowsByGenre(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Summary		Get movies by actor
 // @Description	Get movies by actor
 // @Tags			Discover
+// @Tags			Movie
 // @Param			actor query int true "Actor id"
 // @Param			page query int false "Page number"
 // @Produce		json
@@ -328,45 +331,10 @@ func getMoviesByActor(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	})
 }
 
-// @Summary		Get tv shows by actor
-// @Description	Get tv shows by actor
-// @Tags			Discover
-// @Param			actor query int true "Actor id"
-// @Param			page query int false "Page number"
-// @Produce		json
-// @Success		200	{object} tvShowResults
-// @Failure		400	{object} errorResponse
-// @Failure		500	{object} errorResponse
-// @Router			/discover/tv/actor [get]
-func getTvShowsByActor(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
-	actor, err := strconv.Atoi(c.Query("actor"))
-	if err != nil {
-		c.JSON(400, errorResponse{
-			Error: "actor is required",
-		})
-		return
-	}
-	page, err := strconv.Atoi(c.Query("page"))
-	if err != nil {
-		page = 1
-	}
-	result, err := mediaDiscover.GetShowsByActor(actor, page)
-	if err != nil {
-		c.JSON(500, errorResponse{
-			Error: err.Error(),
-		})
-		return
-	}
-	c.JSON(200, tvShowResults{
-		TotalPage:   result.TotalPage,
-		TotalResult: result.TotalResult,
-		Results:     toTVShowsResponse(result.Results),
-	})
-}
-
 // @Summary		Get movies by director
 // @Description	Get movies by director
 // @Tags			Discover
+// @Tags			Movie
 // @Param			director query int true "Director id"
 // @Param			page query int false "Page number"
 // @Produce		json
@@ -400,45 +368,10 @@ func getMoviesByDirector(c *gin.Context, mediaDiscover *features.MediaDiscovery)
 	})
 }
 
-// @Summary		Get tv shows by director
-// @Description	Get tv shows by director
-// @Tags			Discover
-// @Param			director query int true "Director id"
-// @Param			page query int false "Page number"
-// @Produce		json
-// @Success		200	{object} tvShowResults
-// @Failure		400	{object} errorResponse
-// @Failure		500	{object} errorResponse
-// @Router			/discover/tv/director [get]
-func getTvShowsByDirector(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
-	director, err := strconv.Atoi(c.Query("director"))
-	if err != nil {
-		c.JSON(400, errorResponse{
-			Error: "director is required",
-		})
-		return
-	}
-	page, err := strconv.Atoi(c.Query("page"))
-	if err != nil {
-		page = 1
-	}
-	result, err := mediaDiscover.GetShowsByDirector(director, page)
-	if err != nil {
-		c.JSON(500, errorResponse{
-			Error: err.Error(),
-		})
-		return
-	}
-	c.JSON(200, tvShowResults{
-		TotalPage:   result.TotalPage,
-		TotalResult: result.TotalResult,
-		Results:     toTVShowsResponse(result.Results),
-	})
-}
-
 // @Summary		Get movies by studio
 // @Description	Get movies by studio
 // @Tags			Discover
+// @Tags			Movie
 // @Param			studio query int true "Studio id"
 // @Param			page query int false "Page number"
 // @Produce		json
@@ -475,6 +408,7 @@ func getMoviesByStudio(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Summary		Get tv shows by network
 // @Description	Get tv shows by network
 // @Tags			Discover
+// @Tags			TvShow
 // @Param			network query int true "Network id"
 // @Param			page query int false "Page number"
 // @Produce		json
@@ -511,6 +445,7 @@ func getTvShowsByNetwork(c *gin.Context, mediaDiscover *features.MediaDiscovery)
 // @Summary		Get movie's recommendations
 // @Description	Get movie's recommendations
 // @Tags			Discover
+// @Tags			Movie
 // @Param			movie path int true "Movie id"
 // @Produce		json
 // @Success		200	{array} movieResponse
@@ -538,17 +473,18 @@ func getMovieRecommendations(c *gin.Context, mediaDiscover *features.MediaDiscov
 // @Summary		Get tv show's recommendations
 // @Description	Get tv show's recommendations
 // @Tags			Discover
+// @Tags			TvShow
 // @Param			show path int true "Show id"
 // @Produce		json
 // @Success		200	{array} tvShowResponse
 // @Failure		400	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/discover/tv/recommendations/{show} [get]
+// @Router			/discover/tv/recommendations/{tv} [get]
 func getTvShowRecommendations(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
-	show, err := strconv.Atoi(c.Param("show"))
+	show, err := strconv.Atoi(c.Param("tv"))
 	if err != nil {
 		c.JSON(400, errorResponse{
-			Error: "show is required",
+			Error: "tv is required",
 		})
 		return
 	}

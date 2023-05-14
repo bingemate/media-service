@@ -152,21 +152,6 @@ func (m *MediaDiscovery) GetMoviesByActor(actorID int, page int) (*tmdb.Paginate
 	return movies, nil
 }
 
-func (m *MediaDiscovery) GetShowsByActor(actorID int, page int) (*tmdb.PaginatedTVShowResults, error) {
-	shows, err := m.mediaClient.GetTVShowsByActor(actorID, page)
-	if err != nil {
-		return nil, err
-	}
-	for _, show := range shows.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
-		if err == nil {
-			show.VoteAverage = voteAverage
-			show.VoteCount = voteCount
-		}
-	}
-	return shows, nil
-}
-
 func (m *MediaDiscovery) GetMoviesByDirector(directorID int, page int) (*tmdb.PaginatedMovieResults, error) {
 	movies, err := m.mediaClient.GetMoviesByDirector(directorID, page)
 	if err != nil {
@@ -180,21 +165,6 @@ func (m *MediaDiscovery) GetMoviesByDirector(directorID int, page int) (*tmdb.Pa
 		}
 	}
 	return movies, nil
-}
-
-func (m *MediaDiscovery) GetShowsByDirector(directorID int, page int) (*tmdb.PaginatedTVShowResults, error) {
-	shows, err := m.mediaClient.GetTVShowsByDirector(directorID, page)
-	if err != nil {
-		return nil, err
-	}
-	for _, show := range shows.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
-		if err == nil {
-			show.VoteAverage = voteAverage
-			show.VoteCount = voteCount
-		}
-	}
-	return shows, nil
 }
 
 func (m *MediaDiscovery) GetMoviesByStudio(studioID int, page int) (*tmdb.PaginatedMovieResults, error) {
