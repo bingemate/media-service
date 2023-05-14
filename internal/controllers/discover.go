@@ -14,7 +14,48 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 	engine.GET("tv/search", func(c *gin.Context) {
 		searchTv(c, mediaDiscover)
 	})
-
+	engine.GET("movie/popular", func(c *gin.Context) {
+		getPopularMovies(c, mediaDiscover)
+	})
+	engine.GET("tv/popular", func(c *gin.Context) {
+		getPopularTvShows(c, mediaDiscover)
+	})
+	engine.GET("movie/recent", func(c *gin.Context) {
+		getRecentMovies(c, mediaDiscover)
+	})
+	engine.GET("tv/recent", func(c *gin.Context) {
+		getRecentTvShows(c, mediaDiscover)
+	})
+	engine.GET("movie/genre", func(c *gin.Context) {
+		getMoviesByGenre(c, mediaDiscover)
+	})
+	engine.GET("tv/genre", func(c *gin.Context) {
+		getTvShowsByGenre(c, mediaDiscover)
+	})
+	engine.GET("movie/actor", func(c *gin.Context) {
+		getMoviesByActor(c, mediaDiscover)
+	})
+	engine.GET("tv/actor", func(c *gin.Context) {
+		getTvShowsByActor(c, mediaDiscover)
+	})
+	engine.GET("movie/director", func(c *gin.Context) {
+		getMoviesByDirector(c, mediaDiscover)
+	})
+	engine.GET("tv/director", func(c *gin.Context) {
+		getTvShowsByDirector(c, mediaDiscover)
+	})
+	engine.GET("movie/studio", func(c *gin.Context) {
+		getMoviesByStudio(c, mediaDiscover)
+	})
+	engine.GET("tv/network", func(c *gin.Context) {
+		getTvShowsByNetwork(c, mediaDiscover)
+	})
+	engine.GET("movie/recommendations/:movie", func(c *gin.Context) {
+		getMovieRecommendations(c, mediaDiscover)
+	})
+	engine.GET("tv/recommendations/:tv", func(c *gin.Context) {
+		getTvShowRecommendations(c, mediaDiscover)
+	})
 }
 
 // @Summary		Search movies
