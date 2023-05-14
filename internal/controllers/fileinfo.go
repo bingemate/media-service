@@ -25,7 +25,7 @@ func InitFileInfoController(engine *gin.RouterGroup, fileInfo *features.MediaFil
 // @Failure		400	{object} errorResponse
 // @Failure		404	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/media-file/{id} [get]
+// @Router			/media-file/file/{id} [get]
 func getMediaFileInfo(c *gin.Context, mediaData *features.MediaFile) {
 	id := c.Param("id")
 	result, err := mediaData.GetMediaFileInfo(id)
@@ -59,7 +59,7 @@ func getMediaFileInfo(c *gin.Context, mediaData *features.MediaFile) {
 // @Failure		400	{object} errorResponse
 // @Failure		404	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/media-file/tmdb/{id} [get]
+// @Router			/media-file/file-tmdb/{id} [get]
 func getMediaFileInfoTmdb(c *gin.Context, mediaData *features.MediaFile) {
 	tmdbID, err := strconv.Atoi(c.Param("id"))
 	result, err := mediaData.GetMediaByTmdbID(tmdbID)
