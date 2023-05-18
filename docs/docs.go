@@ -1236,13 +1236,9 @@ const docTemplate = `{
         "controllers.audioResponse": {
             "type": "object",
             "properties": {
-                "bitrate": {
-                    "type": "number",
-                    "example": 160
-                },
-                "codec": {
+                "filename": {
                     "type": "string",
-                    "example": "AAC"
+                    "example": "audio_1.m3u8"
                 },
                 "language": {
                     "type": "string",
@@ -1302,10 +1298,6 @@ const docTemplate = `{
                         "$ref": "#/definitions/controllers.audioResponse"
                     }
                 },
-                "codec": {
-                    "type": "string",
-                    "example": "H264"
-                },
                 "createdAt": {
                     "type": "string",
                     "example": "2023-05-07T20:31:28.327382+02:00"
@@ -1321,14 +1313,6 @@ const docTemplate = `{
                 "id": {
                     "type": "string",
                     "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
-                },
-                "mimeType": {
-                    "type": "string",
-                    "example": "video/x-matroska"
-                },
-                "size": {
-                    "type": "number",
-                    "example": 771367779
                 },
                 "subtitles": {
                     "type": "array",
@@ -1492,9 +1476,9 @@ const docTemplate = `{
         "controllers.subtitleResponse": {
             "type": "object",
             "properties": {
-                "code": {
+                "filename": {
                     "type": "string",
-                    "example": "ASS"
+                    "example": "subtitle_1.vtt"
                 },
                 "language": {
                     "type": "string",

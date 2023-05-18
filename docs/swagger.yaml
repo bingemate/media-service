@@ -1,11 +1,8 @@
 definitions:
   controllers.audioResponse:
     properties:
-      bitrate:
-        example: 160
-        type: number
-      codec:
-        example: AAC
+      filename:
+        example: audio_1.m3u8
         type: string
       language:
         example: jpn
@@ -47,9 +44,6 @@ definitions:
         items:
           $ref: '#/definitions/controllers.audioResponse'
         type: array
-      codec:
-        example: H264
-        type: string
       createdAt:
         example: "2023-05-07T20:31:28.327382+02:00"
         type: string
@@ -62,12 +56,6 @@ definitions:
       id:
         example: eec1d6b7-97c9-47e9-846b-6817d0e3d4ed
         type: string
-      mimeType:
-        example: video/x-matroska
-        type: string
-      size:
-        example: 771367779
-        type: number
       subtitles:
         items:
           $ref: '#/definitions/controllers.subtitleResponse'
@@ -183,8 +171,8 @@ definitions:
     type: object
   controllers.subtitleResponse:
     properties:
-      code:
-        example: ASS
+      filename:
+        example: subtitle_1.vtt
         type: string
       language:
         example: fre
