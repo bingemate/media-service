@@ -92,23 +92,19 @@ type mediaFileResponse struct {
 	CreatedAt time.Time          `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	UpdatedAt time.Time          `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	Filename  string             `json:"filename" example:"The Iceblade Sorcerer Shall Rule the World - S1E09.mkv"`
-	Size      float64            `json:"size" example:"771367779"`
 	Duration  float64            `json:"duration" example:"1450.76"`
-	MimeType  string             `json:"mimeType" example:"video/x-matroska"`
-	Codec     string             `json:"codec" example:"H264"`
 	Audios    []audioResponse    `json:"audios"`
 	Subtitles []subtitleResponse `json:"subtitles"`
 }
 
 type audioResponse struct {
-	Codec    string  `json:"codec" example:"AAC"`
-	Language string  `json:"language" example:"jpn"`
-	Bitrate  float64 `json:"bitrate" example:"160"`
+	Language string `json:"language" example:"jpn"`
+	Filename string `json:"filename" example:"audio_1.m3u8"`
 }
 
 type subtitleResponse struct {
-	Codec    string `json:"code" example:"ASS"`
 	Language string `json:"language" example:"fre"`
+	Filename string `json:"filename" example:"subtitle_1.vtt"`
 }
 
 type tvShowResults struct {
@@ -301,17 +297,13 @@ func toMediaFileResponse(mediaFile *repository.MediaFile) *mediaFileResponse {
 		CreatedAt: mediaFile.CreatedAt,
 		UpdatedAt: mediaFile.UpdatedAt,
 		Filename:  mediaFile.Filename,
-		Size:      mediaFile.Size,
 		Duration:  mediaFile.Duration,
-		MimeType:  mediaFile.Mimetype,
-		Codec:     string(mediaFile.Codec),
 		Audios: func() []audioResponse {
 			var audios = make([]audioResponse, len(mediaFile.Audio))
 			for i, audio := range mediaFile.Audio {
 				audios[i] = audioResponse{
-					Codec:    string(audio.Codec),
+					Filename: audio.Filename,
 					Language: audio.Language,
-					Bitrate:  audio.Bitrate,
 				}
 			}
 			return audios
@@ -320,7 +312,7 @@ func toMediaFileResponse(mediaFile *repository.MediaFile) *mediaFileResponse {
 			var subtitles = make([]subtitleResponse, len(mediaFile.Subtitles))
 			for i, subtitle := range mediaFile.Subtitles {
 				subtitles[i] = subtitleResponse{
-					Codec:    string(subtitle.Codec),
+					Filename: subtitle.Filename,
 					Language: subtitle.Language,
 				}
 			}
