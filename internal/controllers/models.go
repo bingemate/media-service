@@ -80,11 +80,10 @@ type tvEpisodeResponse struct {
 }
 
 type mediaResponse struct {
-	ID          string    `json:"id" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
+	ID          int       `json:"id" example:"134564"`
 	CreatedAt   time.Time `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	UpdatedAt   time.Time `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	MediaType   string    `json:"mediaType" example:"TvShow"`
-	TmdbID      int       `json:"tmdbId" example:"200777"`
 	ReleaseDate string    `json:"releaseDate" example:"2023-01-06"`
 }
 type mediaFileResponse struct {
@@ -286,7 +285,6 @@ func toMediaResponse(media *repository.Media) *mediaResponse {
 		CreatedAt:   media.CreatedAt,
 		UpdatedAt:   media.UpdatedAt,
 		MediaType:   string(media.MediaType),
-		TmdbID:      media.TmdbID,
 		ReleaseDate: media.ReleaseDate.Format("2006-01-02"),
 	}
 }
