@@ -622,65 +622,18 @@ const docTemplate = `{
         },
         "/media-file/file-tmdb/{id}": {
             "get": {
-                "description": "Get media file info by TMDB ID",
+                "description": "Get media file info by its Media TMDB ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Media File"
                 ],
-                "summary": "Get media file info by TMDB ID",
+                "summary": "Get media file info by its Media TMDB ID",
                 "parameters": [
                     {
                         "type": "integer",
                         "description": "TMDB ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.mediaFileResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/media-file/file/{id}": {
-            "get": {
-                "description": "Get media file info by Media ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media File"
-                ],
-                "summary": "Get media file info",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -761,47 +714,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/media/base/{id}": {
-            "get": {
-                "description": "Get media info by Media ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data"
-                ],
-                "summary": "Get media info",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.mediaResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/media/movie-tmdb/{id}": {
             "get": {
                 "description": "Get Movie Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
@@ -844,57 +756,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/media/movie/{id}": {
-            "get": {
-                "description": "Get Movie Metadata by media ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data",
-                    "Movie"
-                ],
-                "summary": "Get Movie Metadata",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.movieResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/media/tvshow-episode-tmdb/{id}/{season}/{episode}": {
             "get": {
-                "description": "Get TvShow Episode Metadata by TMDB ID, Season and Episode Number",
+                "description": "Get TvShow Episode Metadata by TvShow TMDB ID, Season and Episode Number",
                 "produces": [
                     "application/json"
                 ],
@@ -906,7 +770,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "TMDB ID",
+                        "description": "TvShow TMDB ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -954,57 +818,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/media/tvshow-episode/{id}": {
-            "get": {
-                "description": "Get TvShow Episode Metadata by media ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data",
-                    "TvEpisode"
-                ],
-                "summary": "Get TvShow Episode Metadata",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.tvEpisodeResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/media/tvshow-season-episodes-tmdb/{id}/{season}": {
             "get": {
-                "description": "Get TvShow Season Episodes Metadata by TMDB ID and Season Number",
+                "description": "Get TvShow Season Episodes Metadata by TvShow TMDB ID and Season Number",
                 "produces": [
                     "application/json"
                 ],
@@ -1016,65 +832,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "TMDB ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Season Number",
-                        "name": "season",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/controllers.tvEpisodeResponse"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/media/tvshow-season-episodes/{id}/{season}": {
-            "get": {
-                "description": "Get TvShow Season Episodes Metadata by Media ID and Season Number",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data",
-                    "TvEpisode"
-                ],
-                "summary": "Get TvShow Season Episodes Metadata",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
+                        "description": "TvShow TMDB ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1147,54 +905,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/media/tvshow/{id}": {
-            "get": {
-                "description": "Get TvShow Metadata by media ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data",
-                    "TvShow"
-                ],
-                "summary": "Get TvShow Metadata",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.tvShowResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/controllers.errorResponse"
                         }
@@ -1334,8 +1044,8 @@ const docTemplate = `{
                     "example": "2023-05-07T20:31:28.327382+02:00"
                 },
                 "id": {
-                    "type": "string",
-                    "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
+                    "type": "integer",
+                    "example": 134564
                 },
                 "mediaType": {
                     "type": "string",
@@ -1344,10 +1054,6 @@ const docTemplate = `{
                 "releaseDate": {
                     "type": "string",
                     "example": "2023-01-06"
-                },
-                "tmdbId": {
-                    "type": "integer",
-                    "example": 200777
                 },
                 "updatedAt": {
                     "type": "string",
