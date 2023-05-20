@@ -84,13 +84,14 @@ type mediaResponse struct {
 	CreatedAt   time.Time `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	UpdatedAt   time.Time `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	MediaType   string    `json:"mediaType" example:"TvShow"`
+	Name        string    `json:"name" example:"The Iceblade Sorcerer Shall Rule the World"`
 	ReleaseDate string    `json:"releaseDate" example:"2023-01-06"`
 }
 type mediaFileResponse struct {
 	ID        string             `json:"id" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
 	CreatedAt time.Time          `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	UpdatedAt time.Time          `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
-	Filename  string             `json:"filename" example:"The Iceblade Sorcerer Shall Rule the World - S1E09.mkv"`
+	Filename  string             `json:"filename" example:"index.m3u8"`
 	Duration  float64            `json:"duration" example:"1450.76"`
 	Audios    []audioResponse    `json:"audios"`
 	Subtitles []subtitleResponse `json:"subtitles"`
@@ -284,6 +285,7 @@ func toMediaResponse(media *repository.Media) *mediaResponse {
 		ID:          media.ID,
 		CreatedAt:   media.CreatedAt,
 		UpdatedAt:   media.UpdatedAt,
+		Name:        media.Name,
 		MediaType:   string(media.MediaType),
 		ReleaseDate: media.ReleaseDate.Format("2006-01-02"),
 	}
