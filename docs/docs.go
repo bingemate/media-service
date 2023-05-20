@@ -1018,7 +1018,7 @@ const docTemplate = `{
                 },
                 "filename": {
                     "type": "string",
-                    "example": "The Iceblade Sorcerer Shall Rule the World - S1E09.mkv"
+                    "example": "index.m3u8"
                 },
                 "id": {
                     "type": "string",
@@ -1050,6 +1050,10 @@ const docTemplate = `{
                 "mediaType": {
                     "type": "string",
                     "example": "TvShow"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "The Iceblade Sorcerer Shall Rule the World"
                 },
                 "releaseDate": {
                     "type": "string",

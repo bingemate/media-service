@@ -51,7 +51,7 @@ definitions:
         example: 1450.76
         type: number
       filename:
-        example: The Iceblade Sorcerer Shall Rule the World - S1E09.mkv
+        example: index.m3u8
         type: string
       id:
         example: eec1d6b7-97c9-47e9-846b-6817d0e3d4ed
@@ -74,6 +74,9 @@ definitions:
         type: integer
       mediaType:
         example: TvShow
+        type: string
+      name:
+        example: The Iceblade Sorcerer Shall Rule the World
         type: string
       releaseDate:
         example: "2023-01-06"
