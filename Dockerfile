@@ -33,8 +33,7 @@ ENV TZ=Europe/Paris \
 EXPOSE $PORT
 
 VOLUME /var/logs/app \
-         /app/movies-target \
-         /app/tvshows-target
+         /app/media-target
 
 USER 1000:100
 
