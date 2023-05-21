@@ -44,14 +44,14 @@ func getMovieByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		})
 		return
 	}
-	result, err := mediaData.GetMovieInfo(id)
+	result, presence, err := mediaData.GetMovieInfo(id)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
 		})
 		return
 	}
-	c.JSON(200, toMovieResponse(result))
+	c.JSON(200, toMovieResponse(result, presence))
 }
 
 // @Summary		Get TvShow Metadata
@@ -73,14 +73,14 @@ func getTvShowByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		})
 		return
 	}
-	result, err := mediaData.GetTvShowInfo(id)
+	result, presence, err := mediaData.GetTvShowInfo(id)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
 		})
 		return
 	}
-	c.JSON(200, toTVShowResponse(result))
+	c.JSON(200, toTVShowResponse(result, presence))
 }
 
 // @Summary		Get TvShow Episode Metadata
@@ -118,7 +118,7 @@ func getTvShowEpisodeByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		})
 		return
 	}
-	result, err := mediaData.GetEpisodeInfo(id, season, episode)
+	result, presence, err := mediaData.GetEpisodeInfo(id, season, episode)
 	if err != nil {
 		if errors.Is(err, features.ErrMediaNotFound) {
 			c.JSON(404, errorResponse{
@@ -137,7 +137,7 @@ func getTvShowEpisodeByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		})
 		return
 	}
-	c.JSON(200, toTVEpisodeResponse(result))
+	c.JSON(200, toTVEpisodeResponse(result, presence))
 }
 
 // @Summary		Get TvShow Season Episodes Metadata
@@ -167,7 +167,7 @@ func getTvShowSeasonEpisodesByTMDB(c *gin.Context, mediaData *features.MediaData
 		})
 		return
 	}
-	result, err := mediaData.GetSeasonEpisodes(id, season)
+	result, presence, err := mediaData.GetSeasonEpisodes(id, season)
 	if err != nil {
 		if errors.Is(err, features.ErrMediaNotFound) {
 			c.JSON(404, errorResponse{
@@ -186,7 +186,7 @@ func getTvShowSeasonEpisodesByTMDB(c *gin.Context, mediaData *features.MediaData
 		})
 		return
 	}
-	c.JSON(200, toTVEpisodesResponse(result))
+	c.JSON(200, toTVEpisodesResponse(result, presence))
 }
 
 // @Summary		Get media info
