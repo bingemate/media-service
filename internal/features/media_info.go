@@ -33,47 +33,51 @@ func (m *MediaData) GetMediaByID(id int) (*repository2.Media, error) {
 }
 
 // GetMovieInfo returns a movie given the mediaID (TMDB ID)
-func (m *MediaData) GetMovieInfo(id int) (*tmdb.Movie, error) {
+func (m *MediaData) GetMovieInfo(id int) (*tmdb.Movie, bool, error) {
 	movie, err := m.mediaClient.GetMovie(id)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(id)
 	if err == nil {
 		movie.VoteAverage = voteAverage
 		movie.VoteCount = voteCount
 	}
-	return movie, nil
+	return movie, m.mediaRepository.IsMediaPresent(id), nil
 }
 
 // GetEpisodeInfo returns an episode info given the tvID (TMDB ID), season and episode number
-func (m *MediaData) GetEpisodeInfo(tvID, season, episodeNumber int) (*tmdb.TVEpisode, error) {
+func (m *MediaData) GetEpisodeInfo(tvID, season, episodeNumber int) (*tmdb.TVEpisode, bool, error) {
 	episode, err := m.mediaClient.GetTVEpisode(tvID, season, episodeNumber)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	return episode, nil
+	return episode, m.mediaRepository.IsMediaPresent(episode.ID), nil
 }
 
 // GetTvShowInfo returns a tv show given the mediaID (TMDB ID)
-func (m *MediaData) GetTvShowInfo(mediaID int) (*tmdb.TVShow, error) {
+func (m *MediaData) GetTvShowInfo(mediaID int) (*tmdb.TVShow, bool, error) {
 	tvShow, err := m.mediaClient.GetTVShow(mediaID)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 	voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(mediaID)
 	if err == nil {
 		tvShow.VoteAverage = voteAverage
 		tvShow.VoteCount = voteCount
 	}
-	return tvShow, nil
+	return tvShow, m.mediaRepository.IsMediaPresent(mediaID), nil
 }
 
 // GetSeasonEpisodes returns a list of episodes given the tvID (TMDB ID) and season number
-func (m *MediaData) GetSeasonEpisodes(tvID, season int) ([]*tmdb.TVEpisode, error) {
+func (m *MediaData) GetSeasonEpisodes(tvID, season int) ([]*tmdb.TVEpisode, *[]bool, error) {
 	episodes, err := m.mediaClient.GetTVSeasonEpisodes(tvID, season)
+	presence := make([]bool, len(episodes))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return episodes, nil
+	for i, episode := range episodes {
+		presence[i] = m.mediaRepository.IsMediaPresent(episode.ID)
+	}
+	return episodes, &presence, nil
 }
