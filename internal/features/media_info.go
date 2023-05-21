@@ -55,6 +55,18 @@ func (m *MediaData) GetEpisodeInfo(tvID, season, episodeNumber int) (*tmdb.TVEpi
 	return episode, m.mediaRepository.IsMediaPresent(episode.ID), nil
 }
 
+// GetEpisodeInfoByID returns an episode info given the episodeID (TMDB ID)
+func (m *MediaData) GetEpisodeInfoByID(episodeID int) (*tmdb.TVEpisode, bool, error) {
+	episode, err := m.mediaRepository.GetEpisode(episodeID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, false, ErrMediaNotFound
+		}
+		return nil, false, err
+	}
+	return m.GetEpisodeInfo(episode.TvShow.Media.ID, episode.NbSeason, episode.NbEpisode)
+}
+
 // GetTvShowInfo returns a tv show given the mediaID (TMDB ID)
 func (m *MediaData) GetTvShowInfo(mediaID int) (*tmdb.TVShow, bool, error) {
 	tvShow, err := m.mediaClient.GetTVShow(mediaID)
