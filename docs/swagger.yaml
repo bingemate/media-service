@@ -1,4 +1,23 @@
 definitions:
+  controllers.actor:
+    properties:
+      id:
+        example: 3292
+        type: integer
+      name:
+        example: Nicholas Hoult
+        type: string
+      overview:
+        example: Nicholas Caradoc Hoult (born 7 December 1989) is an English actor.
+          His body of work includes supporting work in big-budget mainstream productions
+          and starring roles in independent projects in both the American and the
+          British film industries. He has been nominated for awards such as a British
+          Academy Film Award and a Critics Choice Award for his work.
+        type: string
+      profileUrl:
+        example: https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg
+        type: string
+    type: object
   controllers.audioResponse:
     properties:
       filename:
@@ -287,6 +306,185 @@ info:
     This also help to manage the media files for admins
   title: Media Service API
 paths:
+  /assets/actor/{id}:
+    get:
+      description: Get actor by id
+      parameters:
+      - description: Actor ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.actor'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get actor
+      tags:
+      - Media Assets
+  /assets/movie-genre/{id}:
+    get:
+      description: Get movie genre by id
+      parameters:
+      - description: Genre ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.genre'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get movie genre
+      tags:
+      - Media Assets
+      - Movie
+  /assets/movie-genres:
+    get:
+      description: Get all movie genres
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.genre'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get movie genres
+      tags:
+      - Media Assets
+      - Movie
+  /assets/network/{id}:
+    get:
+      description: Get network by id
+      parameters:
+      - description: Network ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.studio'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get network
+      tags:
+      - Media Assets
+      - TvShow
+  /assets/studio/{id}:
+    get:
+      description: Get studio by id
+      parameters:
+      - description: Studio ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.studio'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get studio
+      tags:
+      - Media Assets
+      - Movie
+  /assets/tv-genre/{id}:
+    get:
+      description: Get tv genre by id
+      parameters:
+      - description: Genre ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.genre'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get tv genre
+      tags:
+      - Media Assets
+      - TvShow
+  /assets/tv-genres:
+    get:
+      description: Get all tv genres
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.genre'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get tv genres
+      tags:
+      - Media Assets
+      - TvShow
   /discover/movie/actor:
     get:
       description: Get movies by actor
@@ -751,6 +949,38 @@ paths:
       summary: Get media info
       tags:
       - Media Data
+  /media/episode-tmdb/{id}:
+    get:
+      description: Get TvShow Episode Metadata by TMDB ID
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.tvEpisodeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Episode Metadata by TMDB ID
+      tags:
+      - Media Data
+      - TvEpisode
   /media/movie-tmdb/{id}:
     get:
       description: |-

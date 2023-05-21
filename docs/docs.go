@@ -16,6 +16,275 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/assets/actor/{id}": {
+            "get": {
+                "description": "Get actor by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets"
+                ],
+                "summary": "Get actor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Actor ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.actor"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/movie-genre/{id}": {
+            "get": {
+                "description": "Get movie genre by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "Movie"
+                ],
+                "summary": "Get movie genre",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Genre ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.genre"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/movie-genres": {
+            "get": {
+                "description": "Get all movie genres",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "Movie"
+                ],
+                "summary": "Get movie genres",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.genre"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/network/{id}": {
+            "get": {
+                "description": "Get network by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "TvShow"
+                ],
+                "summary": "Get network",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Network ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.studio"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/studio/{id}": {
+            "get": {
+                "description": "Get studio by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "Movie"
+                ],
+                "summary": "Get studio",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Studio ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.studio"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/tv-genre/{id}": {
+            "get": {
+                "description": "Get tv genre by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "TvShow"
+                ],
+                "summary": "Get tv genre",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Genre ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.genre"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/tv-genres": {
+            "get": {
+                "description": "Get all tv genres",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "TvShow"
+                ],
+                "summary": "Get tv genres",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.genre"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/discover/movie/actor": {
             "get": {
                 "description": "Get movies by actor",
@@ -714,6 +983,54 @@ const docTemplate = `{
                 }
             }
         },
+        "/media/episode-tmdb/{id}": {
+            "get": {
+                "description": "Get TvShow Episode Metadata by TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "TvEpisode"
+                ],
+                "summary": "Get TvShow Episode Metadata by TMDB ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvEpisodeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/media/movie-tmdb/{id}": {
             "get": {
                 "description": "Get Movie Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
@@ -943,6 +1260,27 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controllers.actor": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 3292
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Nicholas Hoult"
+                },
+                "overview": {
+                    "type": "string",
+                    "example": "Nicholas Caradoc Hoult (born 7 December 1989) is an English actor. His body of work includes supporting work in big-budget mainstream productions and starring roles in independent projects in both the American and the British film industries. He has been nominated for awards such as a British Academy Film Award and a Critics Choice Award for his work."
+                },
+                "profileUrl": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"
+                }
+            }
+        },
         "controllers.audioResponse": {
             "type": "object",
             "properties": {
