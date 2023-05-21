@@ -22,6 +22,13 @@ type person struct {
 	ProfileURL string `json:"profileUrl" example:"https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"`
 }
 
+type actor struct {
+	ID         int    `json:"id" example:"3292"`
+	Name       string `json:"name" example:"Nicholas Hoult"`
+	ProfileURL string `json:"profileUrl" example:"https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"`
+	Overview   string `json:"overview" example:"Nicholas Caradoc Hoult (born 7 December 1989) is an English actor. His body of work includes supporting work in big-budget mainstream productions and starring roles in independent projects in both the American and the British film industries. He has been nominated for awards such as a British Academy Film Award and a Critics Choice Award for his work."`
+}
+
 type crew struct {
 	ID         int    `json:"id" example:"24310"`
 	Role       string `json:"role" example:"Director"`
@@ -324,5 +331,37 @@ func toMediaFileResponse(mediaFile *repository.MediaFile) *mediaFileResponse {
 			}
 			return subtitles
 		}(),
+	}
+}
+
+func toGenreResponse(tmdbGenre *tmdb.Genre) *genre {
+	return &genre{
+		ID:   tmdbGenre.ID,
+		Name: tmdbGenre.Name,
+	}
+}
+
+func toGenresResponse(tmdbGenres []*tmdb.Genre) []*genre {
+	var genres = make([]*genre, len(tmdbGenres))
+	for i, tmdbGenre := range tmdbGenres {
+		genres[i] = toGenreResponse(tmdbGenre)
+	}
+	return genres
+}
+
+func toStudioResponse(tmdbStudio *tmdb.Studio) *studio {
+	return &studio{
+		ID:      tmdbStudio.ID,
+		Name:    tmdbStudio.Name,
+		LogoURL: tmdbStudio.LogoURL,
+	}
+}
+
+func toActorResponse(tmdbActor *tmdb.Actor) *actor {
+	return &actor{
+		ID:         tmdbActor.ID,
+		Name:       tmdbActor.Name,
+		ProfileURL: tmdbActor.ProfileURL,
+		Overview:   tmdbActor.Overview,
 	}
 }
