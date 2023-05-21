@@ -112,3 +112,9 @@ func (r *MediaRepository) GetMovieFileInfo(mediaID int) (*repository.MediaFile, 
 	}
 	return &mediaFile.MediaFile, nil
 }
+
+func (r *MediaRepository) IsMediaPresent(mediaID int) bool {
+	var count int64
+	r.db.Model(&repository.Media{}).Where("id = ?", mediaID).Count(&count)
+	return count > 0
+}
