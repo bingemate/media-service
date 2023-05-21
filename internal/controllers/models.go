@@ -37,6 +37,7 @@ type studio struct {
 
 type movieResponse struct {
 	ID          int      `json:"id" example:"649609"`
+	Present     bool     `json:"present" example:"true"`
 	Actors      []person `json:"actors"`
 	BackdropURL string   `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/e7FzphKs5gzoghDotAEp2FeP46u.jpg"`
 	Crew        []crew   `json:"crew"`
@@ -52,6 +53,7 @@ type movieResponse struct {
 
 type tvShowResponse struct {
 	ID           int                `json:"id" example:"200777"`
+	Present      bool               `json:"present" example:"true"`
 	Actors       []person           `json:"actors"`
 	BackdropURL  string             `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"`
 	Crew         []crew             `json:"crew"`
@@ -70,6 +72,7 @@ type tvShowResponse struct {
 
 type tvEpisodeResponse struct {
 	ID            int    `json:"id" example:"4137463"`
+	Present       bool   `json:"present" example:"true"`
 	TVShowID      int    `json:"tvShowId" example:"200777"`
 	PosterURL     string `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"`
 	EpisodeNumber int    `json:"episodeNumber" example:"12"`
@@ -119,9 +122,10 @@ type movieResults struct {
 	TotalResult int              `json:"totalResult" example:"1412"`
 }
 
-func toMovieResponse(movie *tmdb.Movie) *movieResponse {
+func toMovieResponse(movie *tmdb.Movie, present bool) *movieResponse {
 	return &movieResponse{
-		ID: movie.ID,
+		ID:      movie.ID,
+		Present: present,
 		Actors: func() []person {
 			var actors = make([]person, len(movie.Actors))
 			for i, actor := range movie.Actors {
@@ -177,17 +181,18 @@ func toMovieResponse(movie *tmdb.Movie) *movieResponse {
 	}
 }
 
-func toMoviesResponse(movies []*tmdb.Movie) []*movieResponse {
+func toMoviesResponse(movies []*tmdb.Movie, presence *[]bool) []*movieResponse {
 	var moviesResponse = make([]*movieResponse, len(movies))
 	for i, movie := range movies {
-		moviesResponse[i] = toMovieResponse(movie)
+		moviesResponse[i] = toMovieResponse(movie, (*presence)[i])
 	}
 	return moviesResponse
 }
 
-func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
+func toTVShowResponse(tvShow *tmdb.TVShow, present bool) *tvShowResponse {
 	return &tvShowResponse{
-		ID: tvShow.ID,
+		ID:      tvShow.ID,
+		Present: present,
 		Actors: func() []person {
 			var actors = make([]person, len(tvShow.Actors))
 			for i, actor := range tvShow.Actors {
@@ -242,7 +247,7 @@ func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
 			if tvShow.NextEpisode == nil {
 				return nil
 			}
-			return toTVEpisodeResponse(tvShow.NextEpisode)
+			return toTVEpisodeResponse(tvShow.NextEpisode, false)
 		}(),
 		SeasonsCount: tvShow.SeasonsCount,
 		Status:       tvShow.Status,
@@ -251,17 +256,18 @@ func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
 	}
 }
 
-func toTVShowsResponse(tvShows []*tmdb.TVShow) []*tvShowResponse {
+func toTVShowsResponse(tvShows []*tmdb.TVShow, presence *[]bool) []*tvShowResponse {
 	var tvShowsResponse = make([]*tvShowResponse, len(tvShows))
 	for i, tvShow := range tvShows {
-		tvShowsResponse[i] = toTVShowResponse(tvShow)
+		tvShowsResponse[i] = toTVShowResponse(tvShow, (*presence)[i])
 	}
 	return tvShowsResponse
 }
 
-func toTVEpisodeResponse(tvEpisode *tmdb.TVEpisode) *tvEpisodeResponse {
+func toTVEpisodeResponse(tvEpisode *tmdb.TVEpisode, present bool) *tvEpisodeResponse {
 	return &tvEpisodeResponse{
 		ID:            tvEpisode.ID,
+		Present:       present,
 		TVShowID:      tvEpisode.TVShowID,
 		PosterURL:     tvEpisode.PosterURL,
 		EpisodeNumber: tvEpisode.EpisodeNumber,
@@ -272,10 +278,10 @@ func toTVEpisodeResponse(tvEpisode *tmdb.TVEpisode) *tvEpisodeResponse {
 	}
 }
 
-func toTVEpisodesResponse(tvEpisodes []*tmdb.TVEpisode) []*tvEpisodeResponse {
+func toTVEpisodesResponse(tvEpisodes []*tmdb.TVEpisode, presence *[]bool) []*tvEpisodeResponse {
 	var tvEpisodesResponse = make([]*tvEpisodeResponse, len(tvEpisodes))
 	for i, tvEpisode := range tvEpisodes {
-		tvEpisodesResponse[i] = toTVEpisodeResponse(tvEpisode)
+		tvEpisodesResponse[i] = toTVEpisodeResponse(tvEpisode, (*presence)[i])
 	}
 	return tvEpisodesResponse
 }
