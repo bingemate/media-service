@@ -112,6 +112,9 @@ definitions:
       posterUrl:
         example: https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg
         type: string
+      present:
+        example: true
+        type: boolean
       releaseDate:
         example: "2023-04-07"
         type: string
@@ -198,6 +201,9 @@ definitions:
       posterUrl:
         example: https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg
         type: string
+      present:
+        example: true
+        type: boolean
       seasonNumber:
         example: 1
         type: integer
@@ -238,6 +244,9 @@ definitions:
       posterUrl:
         example: https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg
         type: string
+      present:
+        example: true
+        type: boolean
       releaseDate:
         example: "2023-01-06"
         type: string

@@ -1102,6 +1102,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg"
                 },
+                "present": {
+                    "type": "boolean",
+                    "example": true
+                },
                 "releaseDate": {
                     "type": "string",
                     "example": "2023-04-07"
@@ -1223,6 +1227,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"
                 },
+                "present": {
+                    "type": "boolean",
+                    "example": true
+                },
                 "seasonNumber": {
                     "type": "integer",
                     "example": 1
@@ -1278,6 +1286,10 @@ const docTemplate = `{
                 "posterUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"
+                },
+                "present": {
+                    "type": "boolean",
+                    "example": true
                 },
                 "releaseDate": {
                     "type": "string",
