@@ -20,6 +20,9 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/tvshow-season-episodes-tmdb/:id/:season", func(c *gin.Context) {
 		getTvShowSeasonEpisodesByTMDB(c, mediaData)
 	})
+	engine.GET("/episode-tmdb/:id", func(c *gin.Context) {
+		getEpisodeByTMDB(c, mediaData)
+	})
 	engine.GET("/base-tmdb/:id", func(c *gin.Context) {
 		getMediaByTMDB(c, mediaData)
 	})
@@ -119,6 +122,47 @@ func getTvShowEpisodeByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		return
 	}
 	result, presence, err := mediaData.GetEpisodeInfo(id, season, episode)
+	if err != nil {
+		if errors.Is(err, features.ErrMediaNotFound) {
+			c.JSON(404, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		if errors.Is(err, features.ErrInvalidMediaType) {
+			c.JSON(400, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, toTVEpisodeResponse(result, presence))
+}
+
+// @Summary Get TvShow Episode Metadata by TMDB ID
+// @Description Get TvShow Episode Metadata by TMDB ID
+// @Tags Media Data
+// @Tags TvEpisode
+// @Param id path int true "TMDB ID"
+// @Produce json
+// @Success 200 {object} tvEpisodeResponse
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /media/episode-tmdb/{id} [get]
+func getEpisodeByTMDB(c *gin.Context, mediaData *features.MediaData) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	result, presence, err := mediaData.GetEpisodeInfoByID(id)
 	if err != nil {
 		if errors.Is(err, features.ErrMediaNotFound) {
 			c.JSON(404, errorResponse{
