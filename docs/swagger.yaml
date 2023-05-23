@@ -718,6 +718,38 @@ paths:
       tags:
       - Discover
       - Movie
+  /discover/tv/actor:
+    get:
+      description: Get tv shows by actor
+      parameters:
+      - description: Actor id
+        in: query
+        name: actor
+        required: true
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.tvShowResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get tv shows by actor
+      tags:
+      - Discover
+      - TvShow
   /discover/tv/genre:
     get:
       description: Get tv shows by genre

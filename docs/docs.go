@@ -635,6 +635,54 @@ const docTemplate = `{
                 }
             }
         },
+        "/discover/tv/actor": {
+            "get": {
+                "description": "Get tv shows by actor",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "TvShow"
+                ],
+                "summary": "Get tv shows by actor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Actor id",
+                        "name": "actor",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvShowResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/discover/tv/genre": {
             "get": {
                 "description": "Get tv shows by genre",
