@@ -170,6 +170,23 @@ func (m *MediaDiscovery) GetMoviesByActor(actorID int, page int) (*tmdb.Paginate
 	return movies, &presence, nil
 }
 
+func (m *MediaDiscovery) GetShowsByActor(actorID int, page int) (*tmdb.PaginatedTVShowResults, *[]bool, error) {
+	shows, err := m.mediaClient.GetTVShowsByActor(actorID, page)
+	presence := make([]bool, len(shows.Results))
+	if err != nil {
+		return nil, nil, err
+	}
+	for i, show := range shows.Results {
+		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
+		if err == nil {
+			show.VoteAverage = voteAverage
+			show.VoteCount = voteCount
+		}
+		presence[i] = m.mediaRepository.IsMediaPresent(show.ID)
+	}
+	return shows, &presence, nil
+}
+
 func (m *MediaDiscovery) GetMoviesByDirector(directorID int, page int) (*tmdb.PaginatedMovieResults, *[]bool, error) {
 	movies, err := m.mediaClient.GetMoviesByDirector(directorID, page)
 	presence := make([]bool, len(movies.Results))

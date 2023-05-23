@@ -35,6 +35,9 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 	engine.GET("movie/actor", func(c *gin.Context) {
 		getMoviesByActor(c, mediaDiscover)
 	})
+	engine.GET("tv/actor", func(c *gin.Context) {
+		getTvShowsByActor(c, mediaDiscover)
+	})
 	engine.GET("movie/director", func(c *gin.Context) {
 		getMoviesByDirector(c, mediaDiscover)
 	})
@@ -328,6 +331,43 @@ func getMoviesByActor(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
 		Results:     toMoviesResponse(result.Results, presence),
+	})
+}
+
+// @Summary		Get tv shows by actor
+// @Description	Get tv shows by actor
+// @Tags			Discover
+// @Tags			TvShow
+// @Param			actor query int true "Actor id"
+// @Param			page query int false "Page number"
+// @Produce		json
+// @Success		200	{object} tvShowResults
+// @Failure		400	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/discover/tv/actor [get]
+func getTvShowsByActor(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
+	actor, err := strconv.Atoi(c.Query("actor"))
+	if err != nil {
+		c.JSON(400, errorResponse{
+			Error: "actor is required",
+		})
+		return
+	}
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		page = 1
+	}
+	result, presence, err := mediaDiscover.GetShowsByActor(actor, page)
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, tvShowResults{
+		TotalPage:   result.TotalPage,
+		TotalResult: result.TotalResult,
+		Results:     toTVShowsResponse(result.Results, presence),
 	})
 }
 
