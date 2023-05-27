@@ -5,6 +5,7 @@ import (
 	"github.com/bingemate/media-go-pkg/repository"
 	"gorm.io/gorm"
 	"log"
+	"time"
 )
 
 type MediaRepository struct {
@@ -113,8 +114,142 @@ func (r *MediaRepository) GetMovieFileInfo(mediaID int) (*repository.MediaFile, 
 	return &mediaFile.MediaFile, nil
 }
 
+// IsMediaPresent returns true if the media is present in the database
 func (r *MediaRepository) IsMediaPresent(mediaID int) bool {
 	var count int64
 	r.db.Model(&repository.Media{}).Where("id = ?", mediaID).Count(&count)
 	return count > 0
+}
+
+// GetMoviesByRating returns a list of movies ordered by rating
+// Return also the total number of results
+func (r *MediaRepository) GetMoviesByRating(page, limit, days int) ([]repository.Movie, int, error) {
+	var movies []repository.Movie
+	offset := (page - 1) * limit
+
+	var count int64
+	result := r.db.Table("movies").
+		Select("movies.*, AVG(ratings.rating) as average_rating").
+		Joins("LEFT JOIN ratings ON ratings.media_id = movies.media_id AND ratings.created_at > ?", time.Now().AddDate(0, 0, -days)).
+		Group("movies.media_id").
+		Count(&count).
+		Order("average_rating DESC").
+		Offset(offset).
+		Limit(limit).
+		Find(&movies)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return movies, int(count), nil
+}
+
+// GetTvShowsByRating returns a list of tv shows ordered by rating
+// Return also the total number of results
+func (r *MediaRepository) GetTvShowsByRating(page, limit, days int) ([]repository.TvShow, int, error) {
+	var tvShows []repository.TvShow
+	offset := (page - 1) * limit
+	var count int64
+	result := r.db.Table("tv_shows").
+		Select("tv_shows.*, AVG(ratings.rating) as average_rating").
+		Joins("LEFT JOIN ratings ON ratings.media_id = tv_shows.media_id AND ratings.created_at > ?", time.Now().AddDate(0, 0, -days)).
+		Group("tv_shows.media_id").
+		Count(&count).
+		Order("average_rating DESC").
+		Offset(offset).
+		Limit(limit).
+		Find(&tvShows)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return tvShows, int(count), nil
+}
+
+// SearchMovies returns a list of movies matching the search query
+// Return also the total number of results
+// Results are ordered by pertinence and / or rating
+func (r *MediaRepository) SearchMovies(page, limit int, query string) ([]repository.Movie, int, error) {
+	var movies []repository.Movie
+	offset := (page - 1) * limit
+
+	var count int64
+	result := r.db.Table("movies").
+		Select("movies.*, AVG(ratings.rating) as average_rating").
+		Joins("LEFT JOIN ratings ON ratings.media_id = movies.media_id").
+		Where("movies.title ILIKE ?", "%"+query+"%").
+		Group("movies.media_id").
+		Count(&count).
+		Order("average_rating DESC, movies.name ASC").
+		Offset(offset).
+		Limit(limit).
+		Find(&movies)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return movies, int(count), nil
+}
+
+// SearchTvShows returns a list of tv shows matching the search query
+// Return also the total number of results
+// Results are ordered by pertinence and / or rating
+func (r *MediaRepository) SearchTvShows(page, limit int, query string) ([]repository.TvShow, int, error) {
+	var tvShows []repository.TvShow
+	offset := (page - 1) * limit
+
+	var count int64
+	result := r.db.Table("tv_shows").
+		Select("tv_shows.*, AVG(ratings.rating) as average_rating").
+		Joins("LEFT JOIN ratings ON ratings.media_id = tv_shows.media_id").
+		Where("tv_shows.name ILIKE ?", "%"+query+"%").
+		Group("tv_shows.media_id").
+		Count(&count).
+		Order("average_rating DESC, tv_shows.name ASC").
+		Offset(offset).
+		Limit(limit).
+		Find(&tvShows)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return tvShows, int(count), nil
+}
+
+// GetRecentMovies returns a list of recently added movies
+func (r *MediaRepository) GetRecentMovies(page, limit int) ([]repository.Movie, int, error) {
+	var movies []repository.Movie
+	offset := (page - 1) * limit
+	var count int64
+	result := r.db.Table("movies").
+		Select("movies.*").
+		Count(&count).
+		Order("movies.created_at DESC, movies.updated_at DESC").
+		Offset(offset).
+		Limit(limit).
+		Find(&movies)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return movies, int(count), nil
+}
+
+// GetRecentTvShows returns a list of recently added tv shows
+func (r *MediaRepository) GetRecentTvShows(page, limit int) ([]repository.TvShow, int, error) {
+	var tvShows []repository.TvShow
+	offset := (page - 1) * limit
+	var count int64
+	result := r.db.Table("tv_shows").
+		Select("tv_shows.*").
+		Count(&count).
+		Order("tv_shows.created_at DESC, tv_shows.updated_at DESC").
+		Offset(offset).
+		Limit(limit).
+		Find(&tvShows)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return tvShows, int(count), nil
 }
