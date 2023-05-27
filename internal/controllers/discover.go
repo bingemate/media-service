@@ -35,6 +35,9 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 	engine.GET("movie/actor", func(c *gin.Context) {
 		getMoviesByActor(c, mediaDiscover)
 	})
+	engine.GET("tv/actor", func(c *gin.Context) {
+		getTvShowsByActor(c, mediaDiscover)
+	})
 	engine.GET("movie/director", func(c *gin.Context) {
 		getMoviesByDirector(c, mediaDiscover)
 	})
@@ -75,7 +78,7 @@ func searchMovie(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 		})
 		return
 	}
-	result, err := mediaDiscover.SearchMovie(query, page)
+	result, presence, err := mediaDiscover.SearchMovie(query, page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -85,7 +88,7 @@ func searchMovie(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	c.JSON(200, movieResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toMoviesResponse(result.Results),
+		Results:     toMoviesResponse(result.Results, presence),
 	})
 }
 
@@ -112,7 +115,7 @@ func searchTv(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 		})
 		return
 	}
-	result, err := mediaDiscover.SearchShow(query, page)
+	result, presence, err := mediaDiscover.SearchShow(query, page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -122,7 +125,7 @@ func searchTv(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	c.JSON(200, tvShowResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toTVShowsResponse(result.Results),
+		Results:     toTVShowsResponse(result.Results, presence),
 	})
 }
 
@@ -140,7 +143,7 @@ func getPopularMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
-	result, err := mediaDiscover.GetPopularMovies(page)
+	result, presence, err := mediaDiscover.GetPopularMovies(page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -150,7 +153,7 @@ func getPopularMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	c.JSON(200, movieResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toMoviesResponse(result.Results),
+		Results:     toMoviesResponse(result.Results, presence),
 	})
 }
 
@@ -168,7 +171,7 @@ func getPopularTvShows(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
-	result, err := mediaDiscover.GetPopularShows(page)
+	result, presence, err := mediaDiscover.GetPopularShows(page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -178,7 +181,7 @@ func getPopularTvShows(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	c.JSON(200, tvShowResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toTVShowsResponse(result.Results),
+		Results:     toTVShowsResponse(result.Results, presence),
 	})
 }
 
@@ -191,14 +194,14 @@ func getPopularTvShows(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Failure		500	{object} errorResponse
 // @Router			/discover/movie/recent [get]
 func getRecentMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
-	result, err := mediaDiscover.GetRecentMovies()
+	result, presence, err := mediaDiscover.GetRecentMovies()
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
 		})
 		return
 	}
-	c.JSON(200, toMoviesResponse(result))
+	c.JSON(200, toMoviesResponse(result, presence))
 }
 
 // @Summary		Get recent tv shows
@@ -210,14 +213,14 @@ func getRecentMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Failure		500	{object} errorResponse
 // @Router			/discover/tv/recent [get]
 func getRecentTvShows(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
-	result, err := mediaDiscover.GetRecentShows()
+	result, presence, err := mediaDiscover.GetRecentShows()
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
 		})
 		return
 	}
-	c.JSON(200, toTVShowsResponse(result))
+	c.JSON(200, toTVShowsResponse(result, presence))
 }
 
 // @Summary		Get movies by genre
@@ -243,7 +246,7 @@ func getMoviesByGenre(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
-	result, err := mediaDiscover.GetMoviesByGenre(genre, page)
+	result, presence, err := mediaDiscover.GetMoviesByGenre(genre, page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -253,7 +256,7 @@ func getMoviesByGenre(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	c.JSON(200, movieResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toMoviesResponse(result.Results),
+		Results:     toMoviesResponse(result.Results, presence),
 	})
 }
 
@@ -280,7 +283,7 @@ func getTvShowsByGenre(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
-	result, err := mediaDiscover.GetShowsByGenre(genre, page)
+	result, presence, err := mediaDiscover.GetShowsByGenre(genre, page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -290,7 +293,7 @@ func getTvShowsByGenre(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	c.JSON(200, tvShowResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toTVShowsResponse(result.Results),
+		Results:     toTVShowsResponse(result.Results, presence),
 	})
 }
 
@@ -317,7 +320,7 @@ func getMoviesByActor(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
-	result, err := mediaDiscover.GetMoviesByActor(actor, page)
+	result, presence, err := mediaDiscover.GetMoviesByActor(actor, page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -327,7 +330,44 @@ func getMoviesByActor(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	c.JSON(200, movieResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toMoviesResponse(result.Results),
+		Results:     toMoviesResponse(result.Results, presence),
+	})
+}
+
+// @Summary		Get tv shows by actor
+// @Description	Get tv shows by actor
+// @Tags			Discover
+// @Tags			TvShow
+// @Param			actor query int true "Actor id"
+// @Param			page query int false "Page number"
+// @Produce		json
+// @Success		200	{object} tvShowResults
+// @Failure		400	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/discover/tv/actor [get]
+func getTvShowsByActor(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
+	actor, err := strconv.Atoi(c.Query("actor"))
+	if err != nil {
+		c.JSON(400, errorResponse{
+			Error: "actor is required",
+		})
+		return
+	}
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		page = 1
+	}
+	result, presence, err := mediaDiscover.GetShowsByActor(actor, page)
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, tvShowResults{
+		TotalPage:   result.TotalPage,
+		TotalResult: result.TotalResult,
+		Results:     toTVShowsResponse(result.Results, presence),
 	})
 }
 
@@ -354,7 +394,7 @@ func getMoviesByDirector(c *gin.Context, mediaDiscover *features.MediaDiscovery)
 	if err != nil {
 		page = 1
 	}
-	result, err := mediaDiscover.GetMoviesByDirector(director, page)
+	result, presence, err := mediaDiscover.GetMoviesByDirector(director, page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -364,7 +404,7 @@ func getMoviesByDirector(c *gin.Context, mediaDiscover *features.MediaDiscovery)
 	c.JSON(200, movieResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toMoviesResponse(result.Results),
+		Results:     toMoviesResponse(result.Results, presence),
 	})
 }
 
@@ -391,7 +431,7 @@ func getMoviesByStudio(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
-	result, err := mediaDiscover.GetMoviesByStudio(studio, page)
+	result, presence, err := mediaDiscover.GetMoviesByStudio(studio, page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -401,7 +441,7 @@ func getMoviesByStudio(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	c.JSON(200, movieResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toMoviesResponse(result.Results),
+		Results:     toMoviesResponse(result.Results, presence),
 	})
 }
 
@@ -428,7 +468,7 @@ func getTvShowsByNetwork(c *gin.Context, mediaDiscover *features.MediaDiscovery)
 	if err != nil {
 		page = 1
 	}
-	result, err := mediaDiscover.GetShowsByNetwork(network, page)
+	result, presence, err := mediaDiscover.GetShowsByNetwork(network, page)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -438,7 +478,7 @@ func getTvShowsByNetwork(c *gin.Context, mediaDiscover *features.MediaDiscovery)
 	c.JSON(200, tvShowResults{
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
-		Results:     toTVShowsResponse(result.Results),
+		Results:     toTVShowsResponse(result.Results, presence),
 	})
 }
 
@@ -460,14 +500,14 @@ func getMovieRecommendations(c *gin.Context, mediaDiscover *features.MediaDiscov
 		})
 		return
 	}
-	result, err := mediaDiscover.GetMovieRecommendations(movie)
+	result, presence, err := mediaDiscover.GetMovieRecommendations(movie)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
 		})
 		return
 	}
-	c.JSON(200, toMoviesResponse(result))
+	c.JSON(200, toMoviesResponse(result, presence))
 }
 
 // @Summary		Get tv show's recommendations
@@ -488,12 +528,12 @@ func getTvShowRecommendations(c *gin.Context, mediaDiscover *features.MediaDisco
 		})
 		return
 	}
-	result, err := mediaDiscover.GetShowRecommendations(show)
+	result, presence, err := mediaDiscover.GetShowRecommendations(show)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
 		})
 		return
 	}
-	c.JSON(200, toTVShowsResponse(result))
+	c.JSON(200, toTVShowsResponse(result, presence))
 }

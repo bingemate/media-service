@@ -16,6 +16,275 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/assets/actor/{id}": {
+            "get": {
+                "description": "Get actor by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets"
+                ],
+                "summary": "Get actor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Actor ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.actor"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/movie-genre/{id}": {
+            "get": {
+                "description": "Get movie genre by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "Movie"
+                ],
+                "summary": "Get movie genre",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Genre ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.genre"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/movie-genres": {
+            "get": {
+                "description": "Get all movie genres",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "Movie"
+                ],
+                "summary": "Get movie genres",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.genre"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/network/{id}": {
+            "get": {
+                "description": "Get network by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "TvShow"
+                ],
+                "summary": "Get network",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Network ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.studio"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/studio/{id}": {
+            "get": {
+                "description": "Get studio by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "Movie"
+                ],
+                "summary": "Get studio",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Studio ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.studio"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/tv-genre/{id}": {
+            "get": {
+                "description": "Get tv genre by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "TvShow"
+                ],
+                "summary": "Get tv genre",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Genre ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.genre"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/assets/tv-genres": {
+            "get": {
+                "description": "Get all tv genres",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Assets",
+                    "TvShow"
+                ],
+                "summary": "Get tv genres",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.genre"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/discover/movie/actor": {
             "get": {
                 "description": "Get movies by actor",
@@ -366,6 +635,54 @@ const docTemplate = `{
                 }
             }
         },
+        "/discover/tv/actor": {
+            "get": {
+                "description": "Get tv shows by actor",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "TvShow"
+                ],
+                "summary": "Get tv shows by actor",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Actor id",
+                        "name": "actor",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.tvShowResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/discover/tv/genre": {
             "get": {
                 "description": "Get tv shows by genre",
@@ -622,65 +939,18 @@ const docTemplate = `{
         },
         "/media-file/file-tmdb/{id}": {
             "get": {
-                "description": "Get media file info by TMDB ID",
+                "description": "Get media file info by its Media TMDB ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Media File"
                 ],
-                "summary": "Get media file info by TMDB ID",
+                "summary": "Get media file info by its Media TMDB ID",
                 "parameters": [
                     {
                         "type": "integer",
                         "description": "TMDB ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.mediaFileResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/media-file/file/{id}": {
-            "get": {
-                "description": "Get media file info by Media ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media File"
-                ],
-                "summary": "Get media file info",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -761,20 +1031,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/media/base/{id}": {
+        "/media/episode-tmdb/{id}": {
             "get": {
-                "description": "Get media info by Media ID",
+                "description": "Get TvShow Episode Metadata by TMDB ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Media Data"
+                    "Media Data",
+                    "TvEpisode"
                 ],
-                "summary": "Get media info",
+                "summary": "Get TvShow Episode Metadata by TMDB ID",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Media ID",
+                        "description": "TMDB ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -784,7 +1055,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.mediaResponse"
+                            "$ref": "#/definitions/controllers.tvEpisodeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
                         }
                     },
                     "404": {
@@ -844,57 +1121,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/media/movie/{id}": {
-            "get": {
-                "description": "Get Movie Metadata by media ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data",
-                    "Movie"
-                ],
-                "summary": "Get Movie Metadata",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.movieResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/media/tvshow-episode-tmdb/{id}/{season}/{episode}": {
             "get": {
-                "description": "Get TvShow Episode Metadata by TMDB ID, Season and Episode Number",
+                "description": "Get TvShow Episode Metadata by TvShow TMDB ID, Season and Episode Number",
                 "produces": [
                     "application/json"
                 ],
@@ -906,7 +1135,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "TMDB ID",
+                        "description": "TvShow TMDB ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -954,57 +1183,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/media/tvshow-episode/{id}": {
-            "get": {
-                "description": "Get TvShow Episode Metadata by media ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data",
-                    "TvEpisode"
-                ],
-                "summary": "Get TvShow Episode Metadata",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.tvEpisodeResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/media/tvshow-season-episodes-tmdb/{id}/{season}": {
             "get": {
-                "description": "Get TvShow Season Episodes Metadata by TMDB ID and Season Number",
+                "description": "Get TvShow Season Episodes Metadata by TvShow TMDB ID and Season Number",
                 "produces": [
                     "application/json"
                 ],
@@ -1016,65 +1197,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "TMDB ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Season Number",
-                        "name": "season",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/controllers.tvEpisodeResponse"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/media/tvshow-season-episodes/{id}/{season}": {
-            "get": {
-                "description": "Get TvShow Season Episodes Metadata by Media ID and Season Number",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data",
-                    "TvEpisode"
-                ],
-                "summary": "Get TvShow Season Episodes Metadata",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
+                        "description": "TvShow TMDB ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1160,54 +1283,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/media/tvshow/{id}": {
-            "get": {
-                "description": "Get TvShow Metadata by media ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Media Data",
-                    "TvShow"
-                ],
-                "summary": "Get TvShow Metadata",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.tvShowResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/ping": {
             "get": {
                 "description": "Ping",
@@ -1233,6 +1308,27 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controllers.actor": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 3292
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Nicholas Hoult"
+                },
+                "overview": {
+                    "type": "string",
+                    "example": "Nicholas Caradoc Hoult (born 7 December 1989) is an English actor. His body of work includes supporting work in big-budget mainstream productions and starring roles in independent projects in both the American and the British film industries. He has been nominated for awards such as a British Academy Film Award and a Critics Choice Award for his work."
+                },
+                "profileUrl": {
+                    "type": "string",
+                    "example": "https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"
+                }
+            }
+        },
         "controllers.audioResponse": {
             "type": "object",
             "properties": {
@@ -1308,7 +1404,7 @@ const docTemplate = `{
                 },
                 "filename": {
                     "type": "string",
-                    "example": "The Iceblade Sorcerer Shall Rule the World - S1E09.mkv"
+                    "example": "index.m3u8"
                 },
                 "id": {
                     "type": "string",
@@ -1334,20 +1430,20 @@ const docTemplate = `{
                     "example": "2023-05-07T20:31:28.327382+02:00"
                 },
                 "id": {
-                    "type": "string",
-                    "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
+                    "type": "integer",
+                    "example": 134564
                 },
                 "mediaType": {
                     "type": "string",
                     "example": "TvShow"
                 },
+                "name": {
+                    "type": "string",
+                    "example": "The Iceblade Sorcerer Shall Rule the World"
+                },
                 "releaseDate": {
                     "type": "string",
                     "example": "2023-01-06"
-                },
-                "tmdbId": {
-                    "type": "integer",
-                    "example": 200777
                 },
                 "updatedAt": {
                     "type": "string",
@@ -1391,6 +1487,10 @@ const docTemplate = `{
                 "posterUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg"
+                },
+                "present": {
+                    "type": "boolean",
+                    "example": true
                 },
                 "releaseDate": {
                     "type": "string",
@@ -1513,6 +1613,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"
                 },
+                "present": {
+                    "type": "boolean",
+                    "example": true
+                },
                 "seasonNumber": {
                     "type": "integer",
                     "example": 1
@@ -1568,6 +1672,10 @@ const docTemplate = `{
                 "posterUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"
+                },
+                "present": {
+                    "type": "boolean",
+                    "example": true
                 },
                 "releaseDate": {
                     "type": "string",

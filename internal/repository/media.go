@@ -18,48 +18,45 @@ func NewMediaRepository(db *gorm.DB) *MediaRepository {
 	return &MediaRepository{db}
 }
 
-func (r *MediaRepository) GetMediaRating(tmdbID int) (float32, int, error) {
-	var media repository.Media
-	var rating []repository.Rating
-	err := r.db.Where("tmdb_id = ?", tmdbID).First(&media).Error
+// GetMediaRating returns the average rating and the number of ratings for a media given the mediaID (TMDB ID)
+func (r *MediaRepository) GetMediaRating(mediaID int) (float32, int, error) {
+	var (
+		media repository.Media
+		sum   float32
+		count int64
+	)
+	err := r.db.Where("id = ?", mediaID).First(&media).Error
 	if err != nil {
 		return 0, 0, errors.New("media not found")
 	}
 
-	err = r.db.Where("media_id = ?", media.ID).Find(&rating).Error
+	err = r.db.Model(&repository.Rating{}).Where("media_id = ?", mediaID).Count(&count).Error
 	if err != nil {
 		return 0, 0, err
 	}
-	var count = len(rating)
 	if count == 0 {
 		return 0, 0, errors.New("no rating found")
 	}
-	var sum float32
-	for _, r := range rating {
-		sum += float32(r.Rating)
+	err = r.db.Table("ratings").Select("SUM(rating) as total").Where("media_id = ?", mediaID).Scan(&sum).Error
+	if err != nil {
+		return 0, 0, err
 	}
-	return sum / float32(count), count, nil
+	return sum / float32(count), int(count), nil
+
 }
 
-func (r *MediaRepository) GetMedia(id string) (*repository.Media, error) {
+// GetMedia returns a media given the mediaID (TMDB ID)
+func (r *MediaRepository) GetMedia(mediaID int) (*repository.Media, error) {
 	var media repository.Media
-	err := r.db.Where("id = ?", id).First(&media).Error
+	err := r.db.Where("id = ?", mediaID).First(&media).Error
 	if err != nil {
 		return nil, err
 	}
 	return &media, nil
 }
 
-func (r *MediaRepository) GetMediaByTmdbID(tmdbID int) (*repository.Media, error) {
-	var media repository.Media
-	err := r.db.Where("tmdb_id = ?", tmdbID).First(&media).Error
-	if err != nil {
-		return nil, err
-	}
-	return &media, nil
-}
-
-func (r *MediaRepository) GetEpisode(mediaID string) (*repository.Episode, error) {
+// GetEpisode returns an episode given the mediaID (TMDB ID)
+func (r *MediaRepository) GetEpisode(mediaID int) (*repository.Episode, error) {
 	var episode repository.Episode
 	err := r.db.
 		Joins("Media").
@@ -72,18 +69,20 @@ func (r *MediaRepository) GetEpisode(mediaID string) (*repository.Episode, error
 	return &episode, nil
 }
 
-func (r *MediaRepository) GetTvShow(mediaId string) (*repository.TvShow, error) {
+// GetTvShow returns a tv show given the mediaID (TMDB ID)
+func (r *MediaRepository) GetTvShow(mediaID int) (*repository.TvShow, error) {
 	var tvShow repository.TvShow
 	err := r.db.
 		Joins("Media").
-		Where("media_id = ?", mediaId).First(&tvShow).Error
+		Where("media_id = ?", mediaID).First(&tvShow).Error
 	if err != nil {
 		return nil, err
 	}
 	return &tvShow, nil
 }
 
-func (r *MediaRepository) GetEpisodeFileInfo(mediaID string) (*repository.MediaFile, error) {
+// GetEpisodeFileInfo returns the file info for an episode given the mediaID (TMDB ID)
+func (r *MediaRepository) GetEpisodeFileInfo(mediaID int) (*repository.MediaFile, error) {
 	var mediaFile repository.Episode
 	err := r.db.
 		Joins("Media").
@@ -98,7 +97,8 @@ func (r *MediaRepository) GetEpisodeFileInfo(mediaID string) (*repository.MediaF
 	return &mediaFile.MediaFile, nil
 }
 
-func (r *MediaRepository) GetMovieFileInfo(mediaID string) (*repository.MediaFile, error) {
+// GetMovieFileInfo returns the file info for a movie given the mediaID (TMDB ID)
+func (r *MediaRepository) GetMovieFileInfo(mediaID int) (*repository.MediaFile, error) {
 	var mediaFile repository.Movie
 	err := r.db.
 		Joins("Media").
@@ -111,4 +111,10 @@ func (r *MediaRepository) GetMovieFileInfo(mediaID string) (*repository.MediaFil
 		return nil, err
 	}
 	return &mediaFile.MediaFile, nil
+}
+
+func (r *MediaRepository) IsMediaPresent(mediaID int) bool {
+	var count int64
+	r.db.Model(&repository.Media{}).Where("id = ?", mediaID).Count(&count)
+	return count > 0
 }
