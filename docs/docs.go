@@ -446,6 +446,12 @@ const docTemplate = `{
                         "description": "Page number",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Only available movies",
+                        "name": "available",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -475,6 +481,14 @@ const docTemplate = `{
                     "Movie"
                 ],
                 "summary": "Get recent movies",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Only available movies",
+                        "name": "available",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -562,6 +576,12 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Page number",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Only available movies",
+                        "name": "available",
                         "in": "query"
                     }
                 ],
@@ -796,6 +816,12 @@ const docTemplate = `{
                         "description": "Page number",
                         "name": "page",
                         "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Only available tv shows",
+                        "name": "available",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -825,6 +851,14 @@ const docTemplate = `{
                     "TvShow"
                 ],
                 "summary": "Get recent tv shows",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Only available tv shows",
+                        "name": "available",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -912,6 +946,12 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Page number",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Only available tv shows",
+                        "name": "available",
                         "in": "query"
                     }
                 ],
