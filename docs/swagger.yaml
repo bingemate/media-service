@@ -589,6 +589,10 @@ paths:
         in: query
         name: page
         type: integer
+      - description: Only available movies
+        in: query
+        name: available
+        type: boolean
       produces:
       - application/json
       responses:
@@ -607,6 +611,11 @@ paths:
   /discover/movie/recent:
     get:
       description: Get recent movies
+      parameters:
+      - description: Only available movies
+        in: query
+        name: available
+        type: boolean
       produces:
       - application/json
       responses:
@@ -667,6 +676,10 @@ paths:
         in: query
         name: page
         type: integer
+      - description: Only available movies
+        in: query
+        name: available
+        type: boolean
       produces:
       - application/json
       responses:
@@ -822,6 +835,10 @@ paths:
         in: query
         name: page
         type: integer
+      - description: Only available tv shows
+        in: query
+        name: available
+        type: boolean
       produces:
       - application/json
       responses:
@@ -840,6 +857,11 @@ paths:
   /discover/tv/recent:
     get:
       description: Get recent tv shows
+      parameters:
+      - description: Only available tv shows
+        in: query
+        name: available
+        type: boolean
       produces:
       - application/json
       responses:
@@ -900,6 +922,10 @@ paths:
         in: query
         name: page
         type: integer
+      - description: Only available tv shows
+        in: query
+        name: available
+        type: boolean
       produces:
       - application/json
       responses:
