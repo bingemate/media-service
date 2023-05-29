@@ -131,7 +131,7 @@ func (r *MediaRepository) GetMoviesByRating(page, limit, days int) ([]repository
 	result := r.db.Table("movies").
 		Select("movies.*, AVG(ratings.rating) as average_rating").
 		Joins("LEFT JOIN ratings ON ratings.media_id = movies.media_id AND ratings.created_at > ?", time.Now().AddDate(0, 0, -days)).
-		Group("movies.media_id").
+		Group("movies.id,movies.media_id").
 		Count(&count).
 		Order("average_rating DESC").
 		Offset(offset).
@@ -153,7 +153,7 @@ func (r *MediaRepository) GetTvShowsByRating(page, limit, days int) ([]repositor
 	result := r.db.Table("tv_shows").
 		Select("tv_shows.*, AVG(ratings.rating) as average_rating").
 		Joins("LEFT JOIN ratings ON ratings.media_id = tv_shows.media_id AND ratings.created_at > ?", time.Now().AddDate(0, 0, -days)).
-		Group("tv_shows.media_id").
+		Group("tv_shows.id,tv_shows.media_id").
 		Count(&count).
 		Order("average_rating DESC").
 		Offset(offset).
@@ -177,8 +177,8 @@ func (r *MediaRepository) SearchMovies(page, limit int, query string) ([]reposit
 	result := r.db.Table("movies").
 		Select("movies.*, AVG(ratings.rating) as average_rating").
 		Joins("LEFT JOIN ratings ON ratings.media_id = movies.media_id").
-		Where("movies.title ILIKE ?", "%"+query+"%").
-		Group("movies.media_id").
+		Where("movies.name ILIKE ?", "%"+query+"%").
+		Group("movies.id,movies.media_id").
 		Count(&count).
 		Order("average_rating DESC, movies.name ASC").
 		Offset(offset).
@@ -203,7 +203,7 @@ func (r *MediaRepository) SearchTvShows(page, limit int, query string) ([]reposi
 		Select("tv_shows.*, AVG(ratings.rating) as average_rating").
 		Joins("LEFT JOIN ratings ON ratings.media_id = tv_shows.media_id").
 		Where("tv_shows.name ILIKE ?", "%"+query+"%").
-		Group("tv_shows.media_id").
+		Group("tv_shows.id,tv_shows.media_id").
 		Count(&count).
 		Order("average_rating DESC, tv_shows.name ASC").
 		Offset(offset).
@@ -222,7 +222,7 @@ func (r *MediaRepository) GetRecentMovies(page, limit int) ([]repository.Movie, 
 	offset := (page - 1) * limit
 	var count int64
 	result := r.db.Table("movies").
-		Select("movies.*").
+		Select("*").
 		Count(&count).
 		Order("movies.created_at DESC, movies.updated_at DESC").
 		Offset(offset).
@@ -241,7 +241,7 @@ func (r *MediaRepository) GetRecentTvShows(page, limit int) ([]repository.TvShow
 	offset := (page - 1) * limit
 	var count int64
 	result := r.db.Table("tv_shows").
-		Select("tv_shows.*").
+		Select("*").
 		Count(&count).
 		Order("tv_shows.created_at DESC, tv_shows.updated_at DESC").
 		Offset(offset).
