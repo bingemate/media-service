@@ -19,8 +19,8 @@ COPY --from=build /app/main .
 ENV TZ=Europe/Paris \
     PORT=8080 \
     LOG_FILE=/app/logs/golang-app.log \
-    MOVIE_TARGET_FOLDER=/app/movies-target \
-    TV_TARGET_FOLDER=/app/tvshows-target \
+    MOVIE_TARGET_FOLDER=/app/media-target \
+    TV_TARGET_FOLDER=/app/media-target \
     TMDB_API_KEY="" \
     DB_SYNC=true \
     DB_HOST=127.0.0.1 \
@@ -33,8 +33,7 @@ ENV TZ=Europe/Paris \
 EXPOSE $PORT
 
 VOLUME /var/logs/app \
-         /app/movies-target \
-         /app/tvshows-target
+         /app/media-target
 
 USER 1000:100
 

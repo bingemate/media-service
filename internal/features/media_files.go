@@ -21,7 +21,8 @@ func NewMediaFile(moviePath string, tvPath string, mediaRepository *repository.M
 	}
 }
 
-func (m *MediaFile) GetMediaFileInfo(mediaID string) (*repository2.MediaFile, error) {
+// GetMediaFileInfo returns a media file info given the mediaID (TMDB ID)
+func (m *MediaFile) GetMediaFileInfo(mediaID int) (*repository2.MediaFile, error) {
 	media, err := m.mediaRepository.GetMedia(mediaID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

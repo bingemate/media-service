@@ -7,7 +7,7 @@ import (
 )
 
 type errorResponse struct {
-	Error string `json:"error" example:"media not found"`
+	Error string `json:"error" example:"error message"`
 }
 
 type genre struct {
@@ -19,101 +19,120 @@ type person struct {
 	ID         int    `json:"id" example:"3292"`
 	Character  string `json:"character" example:"R.M. Renfield"`
 	Name       string `json:"name" example:"Nicholas Hoult"`
-	ProfileURL string `json:"profile_url" example:"https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"`
+	ProfileURL string `json:"profileUrl" example:"https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"`
+}
+
+type actor struct {
+	ID         int    `json:"id" example:"3292"`
+	Name       string `json:"name" example:"Nicholas Hoult"`
+	ProfileURL string `json:"profileUrl" example:"https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"`
+	Overview   string `json:"overview" example:"Nicholas Caradoc Hoult (born 7 December 1989) is an English actor. His body of work includes supporting work in big-budget mainstream productions and starring roles in independent projects in both the American and the British film industries. He has been nominated for awards such as a British Academy Film Award and a Critics Choice Award for his work."`
 }
 
 type crew struct {
 	ID         int    `json:"id" example:"24310"`
 	Role       string `json:"role" example:"Director"`
 	Name       string `json:"name" example:"Mitchell Amundsen"`
-	ProfileURL string `json:"profile_url" example:"https://image.tmdb.org/t/p/original/zK4o3lfe6chC2qDHhxpuO1RJl2X.jpg"`
+	ProfileURL string `json:"profileUrl" example:"https://image.tmdb.org/t/p/original/zK4o3lfe6chC2qDHhxpuO1RJl2X.jpg"`
 }
 
 type studio struct {
 	ID      int    `json:"id" example:"33"`
 	Name    string `json:"name" example:"Universal Pictures"`
-	LogoURL string `json:"logo_url" example:"https://image.tmdb.org/t/p/original/8lvHyhjr8oUKOOy2dKXoALWKdp0.png"`
+	LogoURL string `json:"logoUrl" example:"https://image.tmdb.org/t/p/original/8lvHyhjr8oUKOOy2dKXoALWKdp0.png"`
 }
 
 type movieResponse struct {
 	ID          int      `json:"id" example:"649609"`
+	Present     bool     `json:"present" example:"true"`
 	Actors      []person `json:"actors"`
-	BackdropURL string   `json:"backdrop_url" example:"https://image.tmdb.org/t/p/original/e7FzphKs5gzoghDotAEp2FeP46u.jpg"`
+	BackdropURL string   `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/e7FzphKs5gzoghDotAEp2FeP46u.jpg"`
 	Crew        []crew   `json:"crew"`
 	Genres      []genre  `json:"genres"`
 	Overview    string   `json:"overview" example:"Le mal ne saurait survivre une éternité sans un petit coup de pouce.\r Dans cette version moderne du mythe de Dracula..."`
-	PosterURL   string   `json:"poster_url" example:"https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg"`
-	ReleaseDate string   `json:"release_date" example:"2023-04-07"`
+	PosterURL   string   `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/lm3y4RNPu4aRDePsX5CkB9ndEdQ.jpg"`
+	ReleaseDate string   `json:"releaseDate" example:"2023-04-07"`
 	Studios     []studio `json:"studios"`
 	Title       string   `json:"title" example:"Renfield"`
-	VoteAverage float32  `json:"vote_average" example:"7.252"`
-	VoteCount   int      `json:"vote_count" example:"278"`
+	VoteAverage float32  `json:"voteAverage" example:"7.252"`
+	VoteCount   int      `json:"voteCount" example:"278"`
 }
 
 type tvShowResponse struct {
 	ID           int                `json:"id" example:"200777"`
+	Present      bool               `json:"present" example:"true"`
 	Actors       []person           `json:"actors"`
-	BackdropURL  string             `json:"backdrop_url" example:"https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"`
+	BackdropURL  string             `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"`
 	Crew         []crew             `json:"crew"`
 	Genres       []genre            `json:"genres"`
 	Overview     string             `json:"overview" example:"Ray White est un jeune homme venant d'entrer dans la populaire académie de magie Arnold. En tant que..."`
-	PosterURL    string             `json:"poster_url" example:"https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"`
-	ReleaseDate  string             `json:"release_date" example:"2023-01-06"`
-	Studios      []studio           `json:"studios"`
+	PosterURL    string             `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"`
+	ReleaseDate  string             `json:"releaseDate" example:"2023-01-06"`
+	Networks     []studio           `json:"networks"`
 	Status       string             `json:"status" example:"Ended"`
-	NextEpisode  *tvEpisodeResponse `json:"next_episode"`
+	NextEpisode  *tvEpisodeResponse `json:"nextEpisode"`
 	Title        string             `json:"title" example:"The Iceblade Sorcerer Shall Rule the World"`
-	SeasonsCount int                `json:"seasons_count" example:"1"`
-	VoteAverage  float32            `json:"vote_average" example:"6.7"`
-	VoteCount    int                `json:"vote_count" example:"11"`
+	SeasonsCount int                `json:"seasonsCount" example:"1"`
+	VoteAverage  float32            `json:"voteAverage" example:"6.7"`
+	VoteCount    int                `json:"voteCount" example:"11"`
 }
 
 type tvEpisodeResponse struct {
 	ID            int    `json:"id" example:"4137463"`
-	TVShowID      int    `json:"tv_show_id" example:"200777"`
-	PosterURL     string `json:"poster_url" example:"https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"`
-	EpisodeNumber int    `json:"episode_number" example:"12"`
-	SeasonNumber  int    `json:"season_number" example:"1"`
+	Present       bool   `json:"present" example:"true"`
+	TVShowID      int    `json:"tvShowId" example:"200777"`
+	PosterURL     string `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/uVqsuh8qrNX8tkQDpDF7nDZdg0w.jpg"`
+	EpisodeNumber int    `json:"episodeNumber" example:"12"`
+	SeasonNumber  int    `json:"seasonNumber" example:"1"`
 	Name          string `json:"name" example:"Le plus puissant sorcier du monde révèle Akasha"`
 	Overview      string `json:"overview" example:"Ray et ses amis volent au secours de Rebecca, qui montre des signes..."`
-	AirDate       string `json:"air_date" example:"2023-03-24"`
+	AirDate       string `json:"airDate" example:"2023-03-24"`
 }
 
 type mediaResponse struct {
-	ID          string    `json:"id" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
-	CreatedAt   time.Time `json:"created_at" example:"2023-05-07T20:31:28.327382+02:00"`
-	UpdatedAt   time.Time `json:"updated_at" example:"2023-05-07T20:31:28.327382+02:00"`
-	MediaType   string    `json:"media_type" example:"TvShow"`
-	TmdbID      int       `json:"tmdb_id" example:"200777"`
-	ReleaseDate string    `json:"release_date" example:"2023-01-06"`
+	ID          int       `json:"id" example:"134564"`
+	CreatedAt   time.Time `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	UpdatedAt   time.Time `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	MediaType   string    `json:"mediaType" example:"TvShow"`
+	Name        string    `json:"name" example:"The Iceblade Sorcerer Shall Rule the World"`
+	ReleaseDate string    `json:"releaseDate" example:"2023-01-06"`
 }
 type mediaFileResponse struct {
 	ID        string             `json:"id" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
-	CreatedAt time.Time          `json:"created_at" example:"2023-05-07T20:31:28.327382+02:00"`
-	UpdatedAt time.Time          `json:"updated_at" example:"2023-05-07T20:31:28.327382+02:00"`
-	Filename  string             `json:"filename" example:"The Iceblade Sorcerer Shall Rule the World - S1E09.mkv"`
-	Size      float64            `json:"size" example:"771367779"`
+	CreatedAt time.Time          `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	UpdatedAt time.Time          `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	Filename  string             `json:"filename" example:"index.m3u8"`
 	Duration  float64            `json:"duration" example:"1450.76"`
-	MimeType  string             `json:"mime_type" example:"video/x-matroska"`
-	Codec     string             `json:"codec" example:"H264"`
 	Audios    []audioResponse    `json:"audios"`
 	Subtitles []subtitleResponse `json:"subtitles"`
 }
 
 type audioResponse struct {
-	Codec    string  `json:"codec" example:"AAC"`
-	Language string  `json:"language" example:"jpn"`
-	Bitrate  float64 `json:"bitrate" example:"160"`
+	Language string `json:"language" example:"jpn"`
+	Filename string `json:"filename" example:"audio_1.m3u8"`
 }
 
 type subtitleResponse struct {
-	Codec    string `json:"code" example:"ASS"`
 	Language string `json:"language" example:"fre"`
+	Filename string `json:"filename" example:"subtitle_1.vtt"`
 }
 
-func toMovieResponse(movie *tmdb.Movie) *movieResponse {
+type tvShowResults struct {
+	Results     []*tvShowResponse `json:"results"`
+	TotalPage   int               `json:"totalPage" example:"71"`
+	TotalResult int               `json:"totalResult" example:"1412"`
+}
+
+type movieResults struct {
+	Results     []*movieResponse `json:"results"`
+	TotalPage   int              `json:"totalPage" example:"71"`
+	TotalResult int              `json:"totalResult" example:"1412"`
+}
+
+func toMovieResponse(movie *tmdb.Movie, present bool) *movieResponse {
 	return &movieResponse{
-		ID: movie.ID,
+		ID:      movie.ID,
+		Present: present,
 		Actors: func() []person {
 			var actors = make([]person, len(movie.Actors))
 			for i, actor := range movie.Actors {
@@ -169,9 +188,18 @@ func toMovieResponse(movie *tmdb.Movie) *movieResponse {
 	}
 }
 
-func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
+func toMoviesResponse(movies []*tmdb.Movie, presence *[]bool) []*movieResponse {
+	var moviesResponse = make([]*movieResponse, len(movies))
+	for i, movie := range movies {
+		moviesResponse[i] = toMovieResponse(movie, (*presence)[i])
+	}
+	return moviesResponse
+}
+
+func toTVShowResponse(tvShow *tmdb.TVShow, present bool) *tvShowResponse {
 	return &tvShowResponse{
-		ID: tvShow.ID,
+		ID:      tvShow.ID,
+		Present: present,
 		Actors: func() []person {
 			var actors = make([]person, len(tvShow.Actors))
 			for i, actor := range tvShow.Actors {
@@ -210,9 +238,9 @@ func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
 		Overview:    tvShow.Overview,
 		PosterURL:   tvShow.PosterURL,
 		ReleaseDate: tvShow.ReleaseDate,
-		Studios: func() []studio {
-			var studios = make([]studio, len(tvShow.Studios))
-			for i, studioP := range tvShow.Studios {
+		Networks: func() []studio {
+			var studios = make([]studio, len(tvShow.Networks))
+			for i, studioP := range tvShow.Networks {
 				studios[i] = studio{
 					ID:      studioP.ID,
 					Name:    studioP.Name,
@@ -226,7 +254,7 @@ func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
 			if tvShow.NextEpisode == nil {
 				return nil
 			}
-			return toTVEpisodeResponse(tvShow.NextEpisode)
+			return toTVEpisodeResponse(tvShow.NextEpisode, false)
 		}(),
 		SeasonsCount: tvShow.SeasonsCount,
 		Status:       tvShow.Status,
@@ -235,9 +263,18 @@ func toTVShowResponse(tvShow *tmdb.TVShow) *tvShowResponse {
 	}
 }
 
-func toTVEpisodeResponse(tvEpisode *tmdb.TVEpisode) *tvEpisodeResponse {
+func toTVShowsResponse(tvShows []*tmdb.TVShow, presence *[]bool) []*tvShowResponse {
+	var tvShowsResponse = make([]*tvShowResponse, len(tvShows))
+	for i, tvShow := range tvShows {
+		tvShowsResponse[i] = toTVShowResponse(tvShow, (*presence)[i])
+	}
+	return tvShowsResponse
+}
+
+func toTVEpisodeResponse(tvEpisode *tmdb.TVEpisode, present bool) *tvEpisodeResponse {
 	return &tvEpisodeResponse{
 		ID:            tvEpisode.ID,
+		Present:       present,
 		TVShowID:      tvEpisode.TVShowID,
 		PosterURL:     tvEpisode.PosterURL,
 		EpisodeNumber: tvEpisode.EpisodeNumber,
@@ -248,13 +285,12 @@ func toTVEpisodeResponse(tvEpisode *tmdb.TVEpisode) *tvEpisodeResponse {
 	}
 }
 
-func toTVEpisodesResponse(tvEpisodes *[]tmdb.TVEpisode) *[]tvEpisodeResponse {
-	var tvEpisodesResponse = make([]tvEpisodeResponse, len(*tvEpisodes))
-	for i, tvEpisode := range *tvEpisodes {
-		var episode = tvEpisode
-		tvEpisodesResponse[i] = *toTVEpisodeResponse(&episode)
+func toTVEpisodesResponse(tvEpisodes []*tmdb.TVEpisode, presence *[]bool) []*tvEpisodeResponse {
+	var tvEpisodesResponse = make([]*tvEpisodeResponse, len(tvEpisodes))
+	for i, tvEpisode := range tvEpisodes {
+		tvEpisodesResponse[i] = toTVEpisodeResponse(tvEpisode, (*presence)[i])
 	}
-	return &tvEpisodesResponse
+	return tvEpisodesResponse
 }
 
 func toMediaResponse(media *repository.Media) *mediaResponse {
@@ -262,8 +298,8 @@ func toMediaResponse(media *repository.Media) *mediaResponse {
 		ID:          media.ID,
 		CreatedAt:   media.CreatedAt,
 		UpdatedAt:   media.UpdatedAt,
+		Name:        media.Name,
 		MediaType:   string(media.MediaType),
-		TmdbID:      media.TmdbID,
 		ReleaseDate: media.ReleaseDate.Format("2006-01-02"),
 	}
 }
@@ -274,17 +310,13 @@ func toMediaFileResponse(mediaFile *repository.MediaFile) *mediaFileResponse {
 		CreatedAt: mediaFile.CreatedAt,
 		UpdatedAt: mediaFile.UpdatedAt,
 		Filename:  mediaFile.Filename,
-		Size:      mediaFile.Size,
 		Duration:  mediaFile.Duration,
-		MimeType:  mediaFile.Mimetype,
-		Codec:     string(mediaFile.Codec),
 		Audios: func() []audioResponse {
 			var audios = make([]audioResponse, len(mediaFile.Audio))
 			for i, audio := range mediaFile.Audio {
 				audios[i] = audioResponse{
-					Codec:    string(audio.Codec),
+					Filename: audio.Filename,
 					Language: audio.Language,
-					Bitrate:  audio.Bitrate,
 				}
 			}
 			return audios
@@ -293,11 +325,43 @@ func toMediaFileResponse(mediaFile *repository.MediaFile) *mediaFileResponse {
 			var subtitles = make([]subtitleResponse, len(mediaFile.Subtitles))
 			for i, subtitle := range mediaFile.Subtitles {
 				subtitles[i] = subtitleResponse{
-					Codec:    string(subtitle.Codec),
+					Filename: subtitle.Filename,
 					Language: subtitle.Language,
 				}
 			}
 			return subtitles
 		}(),
+	}
+}
+
+func toGenreResponse(tmdbGenre *tmdb.Genre) *genre {
+	return &genre{
+		ID:   tmdbGenre.ID,
+		Name: tmdbGenre.Name,
+	}
+}
+
+func toGenresResponse(tmdbGenres []*tmdb.Genre) []*genre {
+	var genres = make([]*genre, len(tmdbGenres))
+	for i, tmdbGenre := range tmdbGenres {
+		genres[i] = toGenreResponse(tmdbGenre)
+	}
+	return genres
+}
+
+func toStudioResponse(tmdbStudio *tmdb.Studio) *studio {
+	return &studio{
+		ID:      tmdbStudio.ID,
+		Name:    tmdbStudio.Name,
+		LogoURL: tmdbStudio.LogoURL,
+	}
+}
+
+func toActorResponse(tmdbActor *tmdb.Actor) *actor {
+	return &actor{
+		ID:         tmdbActor.ID,
+		Name:       tmdbActor.Name,
+		ProfileURL: tmdbActor.ProfileURL,
+		Overview:   tmdbActor.Overview,
 	}
 }
