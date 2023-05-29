@@ -285,6 +285,96 @@ const docTemplate = `{
                 }
             }
         },
+        "/calendar/movies": {
+            "get": {
+                "description": "Get movies calendar",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Calendar",
+                    "Movie"
+                ],
+                "summary": "Get movies calendar",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.movieResults"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/calendar/tvshows": {
+            "get": {
+                "description": "Get tv shows calendar",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Calendar",
+                    "TvShow"
+                ],
+                "summary": "Get tv shows calendar",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.tvShowResults"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/discover/movie/actor": {
             "get": {
                 "description": "Get movies by actor",
