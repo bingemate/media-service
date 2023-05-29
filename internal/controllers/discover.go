@@ -61,6 +61,7 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 // @Tags			Movie
 // @Param			query query string true "Search query"
 // @Param			page query int false "Page number"
+// @Param           available query bool false "Only available movies"
 // @Produce		json
 // @Success		200	{object} movieResults
 // @Failure		400	{object} errorResponse
@@ -72,13 +73,17 @@ func searchMovie(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
+	available, err := strconv.ParseBool(c.Query("available"))
+	if err != nil {
+		available = false
+	}
 	if query == "" {
 		c.JSON(400, errorResponse{
 			Error: "query is required",
 		})
 		return
 	}
-	result, presence, err := mediaDiscover.SearchMovie(query, page)
+	result, presence, err := mediaDiscover.SearchMovie(query, page, available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -98,6 +103,7 @@ func searchMovie(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Tags			TvShow
 // @Param			query query string true "Search query"
 // @Param			page query int false "Page number"
+// @Param           available query bool false "Only available tv shows"
 // @Produce		json
 // @Success		200	{object} tvShowResults
 // @Failure		400	{object} errorResponse
@@ -109,13 +115,17 @@ func searchTv(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
+	available, err := strconv.ParseBool(c.Query("available"))
+	if err != nil {
+		available = false
+	}
 	if query == "" {
 		c.JSON(400, errorResponse{
 			Error: "query is required",
 		})
 		return
 	}
-	result, presence, err := mediaDiscover.SearchShow(query, page)
+	result, presence, err := mediaDiscover.SearchShow(query, page, available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -134,6 +144,7 @@ func searchTv(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Tags			Discover
 // @Tags			Movie
 // @Param			page query int false "Page number"
+// @Param           available query bool false "Only available movies"
 // @Produce		json
 // @Success		200	{object} movieResults
 // @Failure		500	{object} errorResponse
@@ -143,7 +154,11 @@ func getPopularMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
-	result, presence, err := mediaDiscover.GetPopularMovies(page)
+	available, err := strconv.ParseBool(c.Query("available"))
+	if err != nil {
+		available = false
+	}
+	result, presence, err := mediaDiscover.GetPopularMovies(page, available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -162,6 +177,7 @@ func getPopularMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Tags			Discover
 // @Tags			TvShow
 // @Param			page query int false "Page number"
+// @Param           available query bool false "Only available tv shows"
 // @Produce		json
 // @Success		200	{object} tvShowResults
 // @Failure		500	{object} errorResponse
@@ -171,7 +187,11 @@ func getPopularTvShows(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		page = 1
 	}
-	result, presence, err := mediaDiscover.GetPopularShows(page)
+	available, err := strconv.ParseBool(c.Query("available"))
+	if err != nil {
+		available = false
+	}
+	result, presence, err := mediaDiscover.GetPopularShows(page, available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -189,12 +209,17 @@ func getPopularTvShows(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Description	Get recent movies
 // @Tags			Discover
 // @Tags			Movie
+// @Param           available query bool false "Only available movies"
 // @Produce		json
 // @Success		200	{array} movieResponse
 // @Failure		500	{object} errorResponse
 // @Router			/discover/movie/recent [get]
 func getRecentMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
-	result, presence, err := mediaDiscover.GetRecentMovies()
+	available, err := strconv.ParseBool(c.Query("available"))
+	if err != nil {
+		available = false
+	}
+	result, presence, err := mediaDiscover.GetRecentMovies(available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -208,12 +233,17 @@ func getRecentMovies(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Description	Get recent tv shows
 // @Tags			Discover
 // @Tags			TvShow
+// @Param           available query bool false "Only available tv shows"
 // @Produce		json
 // @Success		200	{array} tvShowResponse
 // @Failure		500	{object} errorResponse
 // @Router			/discover/tv/recent [get]
 func getRecentTvShows(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
-	result, presence, err := mediaDiscover.GetRecentShows()
+	available, err := strconv.ParseBool(c.Query("available"))
+	if err != nil {
+		available = false
+	}
+	result, presence, err := mediaDiscover.GetRecentShows(available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
