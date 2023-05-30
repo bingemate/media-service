@@ -253,3 +253,17 @@ func (r *MediaRepository) GetRecentTvShows(page, limit int) ([]repository.TvShow
 	}
 	return tvShows, int(count), nil
 }
+
+func (r *MediaRepository) GetFollowedReleases(userID string, month int) (*[]int, error) {
+	var followedReleases []int
+	result := r.db.Table("watch_list_item").
+		Select("media_id").
+		Where("user_id = ? AND status != ?", userID, repository.WatchListStatusAbandoned).
+		Find(&followedReleases)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &followedReleases, nil
+}

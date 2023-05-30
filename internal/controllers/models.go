@@ -128,6 +128,10 @@ type movieResults struct {
 	TotalPage   int              `json:"totalPage" example:"71"`
 	TotalResult int              `json:"totalResult" example:"1412"`
 }
+type tvReleasesResults struct {
+	Episodes []*tvEpisodeResponse `json:"episodes"`
+	TvShows  []*tvShowResponse    `json:"tvShows"`
+}
 
 func toMovieResponse(movie *tmdb.Movie, present bool) *movieResponse {
 	return &movieResponse{
@@ -291,6 +295,13 @@ func toTVEpisodesResponse(tvEpisodes []*tmdb.TVEpisode, presence *[]bool) []*tvE
 		tvEpisodesResponse[i] = toTVEpisodeResponse(tvEpisode, (*presence)[i])
 	}
 	return tvEpisodesResponse
+}
+
+func toTVReleasesResult(tvEpisodes []*tmdb.TVEpisode, tvShows []*tmdb.TVShow, presence *[]bool) *tvReleasesResults {
+	return &tvReleasesResults{
+		Episodes: toTVEpisodesResponse(tvEpisodes, presence),
+		TvShows:  toTVShowsResponse(tvShows, presence),
+	}
 }
 
 func toMediaResponse(media *repository.Media) *mediaResponse {
