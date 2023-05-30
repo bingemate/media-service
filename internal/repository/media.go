@@ -267,3 +267,72 @@ func (r *MediaRepository) GetFollowedReleases(userID string, month int) (*[]int,
 
 	return &followedReleases, nil
 }
+
+func (r *MediaRepository) GetMediaComments(mediaID, size, page int) ([]*repository.Comment, int, error) {
+	var comments []*repository.Comment
+	var count int64
+	offset := (page - 1) * size
+	result := r.db.Where("media_id = ?", mediaID).
+		Count(&count).
+		Order("created_at DESC").
+		Offset(offset).
+		Limit(size).
+		Find(&comments)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return comments, int(count), nil
+}
+
+func (r *MediaRepository) GetUserComments(userID string, size, page int) ([]*repository.Comment, int, error) {
+	var comments []*repository.Comment
+	var count int64
+	offset := (page - 1) * size
+	result := r.db.Where("user_id = ?", userID).
+		Count(&count).
+		Order("created_at DESC").
+		Offset(offset).
+		Limit(size).
+		Find(&comments)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return comments, int(count), nil
+}
+
+func (r *MediaRepository) AddComment(userID string, mediaID int, content string) (*repository.Comment, error) {
+	comment := repository.Comment{
+		UserID:  userID,
+		MediaID: mediaID,
+		Content: content,
+	}
+	result := r.db.Create(&comment)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &comment, nil
+}
+
+func (r *MediaRepository) GetComment(commentID string) (*repository.Comment, error) {
+	var comment repository.Comment
+	result := r.db.Where("id = ?", commentID).First(&comment)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &comment, nil
+}
+
+func (r *MediaRepository) DeleteComment(commentID string) error {
+	return r.db.Where("id = ?", commentID).Delete(&repository.Comment{}).Error
+}
+
+func (r *MediaRepository) UpdateComment(commentID string, content string) (*repository.Comment, error) {
+	var comment repository.Comment
+	result := r.db.Model(&comment).Where("id = ?", commentID).Update("content", content)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &comment, nil
+}
