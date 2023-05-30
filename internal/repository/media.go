@@ -254,52 +254,16 @@ func (r *MediaRepository) GetRecentTvShows(page, limit int) ([]repository.TvShow
 	return tvShows, int(count), nil
 }
 
-func (r *MediaRepository) GetFollowedMovieReleases(userID string, month int) (*[]repository.Movie, error) {
-	startOfMonth := time.Date(time.Now().Year(), time.Month(month), 1, 0, 0, 0, 0, time.UTC)
-	endOfMonth := time.Date(time.Now().Year(), time.Month(month), 1, 0, 0, 0, 0, time.UTC).AddDate(0, 1, 0)
-	var followedMovies []repository.Movie
+func (r *MediaRepository) GetFollowedReleases(userID string, month int) (*[]int, error) {
+	var followedReleases []int
 	result := r.db.Table("watch_list_item").
 		Select("media_id").
 		Where("user_id = ? AND status != ?", userID, repository.WatchListStatusAbandoned).
-		Find(&followedMovies)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	result = r.db.Table("movies").
-		Joins("LEFT JOIN media ON media.id = movies.media_id").
-		Select("*").
-		Where("movies.media_id IN (?) AND media.release_date BETWEEN ? AND ?", followedMovies, startOfMonth, endOfMonth).
-		Find(&followedMovies)
+		Find(&followedReleases)
 
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return &followedMovies, nil
-}
-
-func (r *MediaRepository) GetFollowedTvShowReleases(userID string, month int) (*[]repository.TvShow, error) {
-	startOfMonth := time.Date(time.Now().Year(), time.Month(month), 1, 0, 0, 0, 0, time.UTC)
-	endOfMonth := time.Date(time.Now().Year(), time.Month(month), 1, 0, 0, 0, 0, time.UTC).AddDate(0, 1, 0)
-	var followedTvShows []repository.TvShow
-	result := r.db.Table("watch_list_item").
-		Select("media_id").
-		Where("user_id = ? AND status != ?", userID, repository.WatchListStatusAbandoned).
-		Find(&followedTvShows)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	result = r.db.Table("tv_shows").
-		Joins("LEFT JOIN media ON media.id = tv_shows.media_id").
-		Select("*").
-		Where("tv_shows.media_id IN (?) AND media.release_date BETWEEN ? AND ?", followedTvShows, startOfMonth, endOfMonth).
-		Find(&followedTvShows)
-
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	return &followedTvShows, nil
+	return &followedReleases, nil
 }
