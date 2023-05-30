@@ -1,11 +1,9 @@
 package features
 
 import (
-	repository2 "github.com/bingemate/media-go-pkg/repository"
 	"github.com/bingemate/media-go-pkg/tmdb"
 	"github.com/bingemate/media-service/internal/repository"
 	"log"
-	"sync"
 	"time"
 )
 
@@ -18,54 +16,42 @@ func NewCalendarService(mediaClient tmdb.MediaClient, mediaRepository *repositor
 	return &CalendarService{mediaClient, mediaRepository}
 }
 
-func (s *CalendarService) GetMoviesCalendar(userID string) ([]*tmdb.Movie, *[]bool, error) {
-	month := int(time.Now().Month())
-	followedMovies, err := s.mediaRepository.GetFollowedMovieReleases(userID, month)
+func (s *CalendarService) GetMoviesCalendar(userID string, month int) ([]*tmdb.Movie, *[]bool, error) {
+	startOfMonth := time.Date(time.Now().Year(), time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+	endOfMonth := startOfMonth.AddDate(0, 1, 0)
+	followedReleases, err := s.mediaRepository.GetFollowedReleases(userID, month)
 	if err != nil {
 		return nil, nil, err
 	}
-	var movies = make([]*tmdb.Movie, len(*followedMovies))
-	var presence = make([]bool, len(*followedMovies))
-	var locks = make([]sync.Mutex, len(*followedMovies))
-	var wg sync.WaitGroup
-	for i, followedMovie := range *followedMovies {
-		wg.Add(1)
-		go func(i int, followedMovie repository2.Movie) {
-			defer wg.Done()
-			movie, err := s.mediaClient.GetMovieShort(followedMovie.MediaID)
-			if err != nil {
-				log.Println("error getting movie", followedMovie.MediaID, err)
-				return
-			}
-			locks[i].Lock()
-			defer locks[i].Unlock()
-			movies[i] = movie
-			presence[i] = s.mediaRepository.IsMediaPresent(followedMovie.MediaID)
-		}(i, followedMovie)
+	var presence []bool
+	movies, err := s.mediaClient.GetMoviesReleases(*followedReleases, startOfMonth, endOfMonth)
+	if err != nil {
+		log.Println(err)
+		return nil, nil, err
 	}
-	wg.Wait()
+	presence = make([]bool, len(movies))
+	for i, movie := range movies {
+		presence[i] = s.mediaRepository.IsMediaPresent(movie.ID)
+	}
 	return movies, &presence, nil
 }
 
-func (s *CalendarService) GetTvShowCalendar(userID string) ([]*tmdb.TVEpisode, *[]bool, error) {
-	month := int(time.Now().Month())
+func (s *CalendarService) GetTvShowCalendar(userID string, month int) ([]*tmdb.TVEpisode, []*tmdb.TVShow, *[]bool, error) {
 	startOfMonth := time.Date(time.Now().Year(), time.Month(month), 1, 0, 0, 0, 0, time.UTC)
-	endOfMonth := time.Date(time.Now().Year(), time.Month(month), 1, 0, 0, 0, 0, time.UTC).AddDate(0, 1, 0)
-	followedTvShows, err := s.mediaRepository.GetFollowedTvShowReleases(userID, month)
+	endOfMonth := startOfMonth.AddDate(0, 1, 0)
+	followedReleases, err := s.mediaRepository.GetFollowedReleases(userID, month)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
-	showIds := make([]int, len(*followedTvShows))
-	presence := make([]bool, len(*followedTvShows))
-	for i, followedTvShow := range *followedTvShows {
-		showIds[i] = followedTvShow.MediaID
-		presence[i] = s.mediaRepository.IsMediaPresent(followedTvShow.MediaID)
+	episodes, tvShows, err := s.mediaClient.GetTVShowsReleases(*followedReleases, startOfMonth, endOfMonth)
+	if err != nil {
+		log.Println(err)
+		return nil, nil, nil, err
+	}
+	presence := make([]bool, len(episodes))
+	for i, episode := range episodes {
+		presence[i] = s.mediaRepository.IsMediaPresent(episode.ID)
 	}
 
-	tvShows, err := s.mediaClient.GetTVShowsReleases(showIds, startOfMonth, endOfMonth)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return tvShows, &presence, nil
+	return episodes, tvShows, &presence, nil
 }
