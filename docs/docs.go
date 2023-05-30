@@ -298,6 +298,13 @@ const docTemplate = `{
                 "summary": "Get movies calendar",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Month",
+                        "name": "month",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
                         "type": "string",
                         "description": "User ID",
                         "name": "user-id",
@@ -313,6 +320,48 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/controllers.movieResults"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/calendar/movies/ical/{user-id}": {
+            "get": {
+                "description": "Get movies calendar in iCal format",
+                "produces": [
+                    "text/calendar"
+                ],
+                "tags": [
+                    "Calendar",
+                    "Movie"
+                ],
+                "summary": "Get movies calendar in iCal format",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "iCal data",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -348,16 +397,62 @@ const docTemplate = `{
                         "name": "user-id",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Month",
+                        "name": "month",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/controllers.tvShowResults"
-                            }
+                            "$ref": "#/definitions/controllers.tvReleasesResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/calendar/tvshows/ical/{user-id}": {
+            "get": {
+                "description": "Get tv shows calendar in iCal format",
+                "produces": [
+                    "text/calendar"
+                ],
+                "tags": [
+                    "Calendar",
+                    "TvShow"
+                ],
+                "summary": "Get tv shows calendar in iCal format",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "iCal data",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -1754,6 +1849,23 @@ const docTemplate = `{
                 "tvShowId": {
                     "type": "integer",
                     "example": 200777
+                }
+            }
+        },
+        "controllers.tvReleasesResults": {
+            "type": "object",
+            "properties": {
+                "episodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.tvEpisodeResponse"
+                    }
+                },
+                "tvShows": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.tvShowResponse"
+                    }
                 }
             }
         },
