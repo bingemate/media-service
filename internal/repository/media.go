@@ -22,16 +22,11 @@ func NewMediaRepository(db *gorm.DB) *MediaRepository {
 // GetMediaRating returns the average rating and the number of ratings for a media given the mediaID (TMDB ID)
 func (r *MediaRepository) GetMediaRating(mediaID int) (float32, int, error) {
 	var (
-		media repository.Media
 		sum   float32
 		count int64
 	)
-	err := r.db.Where("id = ?", mediaID).First(&media).Error
-	if err != nil {
-		return 0, 0, errors.New("media not found")
-	}
 
-	err = r.db.Model(&repository.Rating{}).Where("media_id = ?", mediaID).Count(&count).Error
+	err := r.db.Model(&repository.Rating{}).Where("media_id = ?", mediaID).Count(&count).Error
 	if err != nil {
 		return 0, 0, err
 	}
@@ -43,7 +38,6 @@ func (r *MediaRepository) GetMediaRating(mediaID int) (float32, int, error) {
 		return 0, 0, err
 	}
 	return sum / float32(count), int(count), nil
-
 }
 
 // GetMedia returns a media given the mediaID (TMDB ID)
@@ -339,7 +333,7 @@ func (r *MediaRepository) UpdateComment(commentID string, content string) (*repo
 	return &comment, nil
 }
 
-func (r *MediaRepository) GetMediaRatings(mediaID, page, limit int) ([]*repository.Rating, int, error) {
+func (r *MediaRepository) GetMediaRatings(mediaID, limit, page int) ([]*repository.Rating, int, error) {
 	offset := (page - 1) * limit
 
 	var ratings []*repository.Rating
@@ -368,7 +362,7 @@ func (r *MediaRepository) GetUserMediaRating(userID string, mediaID int) (*repos
 	return &rating, nil
 }
 
-func (r *MediaRepository) GetUserRatings(userID string, page, limit int) ([]*repository.Rating, int, error) {
+func (r *MediaRepository) GetUserRatings(userID string, limit, page int) ([]*repository.Rating, int, error) {
 	offset := (page - 1) * limit
 
 	var ratings []*repository.Rating
@@ -389,13 +383,13 @@ func (r *MediaRepository) GetUserRatings(userID string, page, limit int) ([]*rep
 func (r *MediaRepository) SaveMediaRating(mediaID int, userID string, rating int) (*repository.Rating, error) {
 	ratingEntity, err := r.GetUserMediaRating(userID, mediaID)
 	if err != nil {
-		ratingEntity.Rating = rating
-	} else {
 		ratingEntity = &repository.Rating{
 			UserID:  userID,
 			MediaID: mediaID,
 			Rating:  rating,
 		}
+	} else {
+		ratingEntity.Rating = rating
 	}
 	result := r.db.Save(ratingEntity)
 	if result.Error != nil {
