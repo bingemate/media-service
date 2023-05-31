@@ -164,7 +164,7 @@ func deleteComment(c *gin.Context, commentService *features.CommentService) {
 	roles := c.GetHeader("roles")
 	isAdmin := strings.Contains(roles, "bingemate-admin")
 
-	err := commentService.DeleteComment(userID, commentID, isAdmin)
+	err := commentService.DeleteComment(commentID, userID, isAdmin)
 
 	if err != nil {
 		c.JSON(500, errorResponse{Error: err.Error()})
@@ -212,7 +212,7 @@ func updateComment(c *gin.Context, commentService *features.CommentService) {
 		c.JSON(400, errorResponse{Error: "comment must not be longer than 1000 characters"})
 		return
 	}
-	commentResult, err := commentService.UpdateComment(userID, commentID, isAdmin, comment.Content)
+	commentResult, err := commentService.UpdateComment(commentID, userID, isAdmin, comment.Content)
 	if err != nil {
 		c.JSON(500, errorResponse{Error: err.Error()})
 		return

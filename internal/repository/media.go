@@ -272,7 +272,8 @@ func (r *MediaRepository) GetMediaComments(mediaID, size, page int) ([]*reposito
 	var comments []*repository.Comment
 	var count int64
 	offset := (page - 1) * size
-	result := r.db.Where("media_id = ?", mediaID).
+	result := r.db.Model(&repository.Comment{}).
+		Where("media_id = ?", mediaID).
 		Count(&count).
 		Order("created_at DESC").
 		Offset(offset).
@@ -289,7 +290,8 @@ func (r *MediaRepository) GetUserComments(userID string, size, page int) ([]*rep
 	var comments []*repository.Comment
 	var count int64
 	offset := (page - 1) * size
-	result := r.db.Where("user_id = ?", userID).
+	result := r.db.Model(&repository.Comment{}).
+		Where("user_id = ?", userID).
 		Count(&count).
 		Order("created_at DESC").
 		Offset(offset).
@@ -317,7 +319,7 @@ func (r *MediaRepository) AddComment(userID string, mediaID int, content string)
 
 func (r *MediaRepository) GetComment(commentID string) (*repository.Comment, error) {
 	var comment repository.Comment
-	result := r.db.Where("id = ?", commentID).First(&comment)
+	result := r.db.Model(&repository.Comment{}).Where("id = ?", commentID).First(&comment)
 	if result.Error != nil {
 		return nil, result.Error
 	}

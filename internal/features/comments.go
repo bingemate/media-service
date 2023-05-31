@@ -15,11 +15,11 @@ func NewCommentService(mediaRepository *repository.MediaRepository) *CommentServ
 }
 
 func (s *CommentService) GetComments(mediaID, page int) ([]*repository2.Comment, int, error) {
-	return s.mediaRepository.GetMediaComments(mediaID, 20, page)
+	return s.mediaRepository.GetMediaComments(mediaID, 5, page)
 }
 
 func (s *CommentService) GetUserComments(userID string, page int) ([]*repository2.Comment, int, error) {
-	return s.mediaRepository.GetUserComments(userID, 20, page)
+	return s.mediaRepository.GetUserComments(userID, 5, page)
 }
 
 func (s *CommentService) AddComment(userID string, mediaID int, comment string) (*repository2.Comment, error) {
