@@ -22,16 +22,11 @@ func NewMediaRepository(db *gorm.DB) *MediaRepository {
 // GetMediaRating returns the average rating and the number of ratings for a media given the mediaID (TMDB ID)
 func (r *MediaRepository) GetMediaRating(mediaID int) (float32, int, error) {
 	var (
-		media repository.Media
 		sum   float32
 		count int64
 	)
-	err := r.db.Where("id = ?", mediaID).First(&media).Error
-	if err != nil {
-		return 0, 0, errors.New("media not found")
-	}
 
-	err = r.db.Model(&repository.Rating{}).Where("media_id = ?", mediaID).Count(&count).Error
+	err := r.db.Model(&repository.Rating{}).Where("media_id = ?", mediaID).Count(&count).Error
 	if err != nil {
 		return 0, 0, err
 	}
@@ -43,7 +38,6 @@ func (r *MediaRepository) GetMediaRating(mediaID int) (float32, int, error) {
 		return 0, 0, err
 	}
 	return sum / float32(count), int(count), nil
-
 }
 
 // GetMedia returns a media given the mediaID (TMDB ID)
@@ -266,4 +260,140 @@ func (r *MediaRepository) GetFollowedReleases(userID string, month int) (*[]int,
 	}
 
 	return &followedReleases, nil
+}
+
+func (r *MediaRepository) GetMediaComments(mediaID, size, page int) ([]*repository.Comment, int, error) {
+	var comments []*repository.Comment
+	var count int64
+	offset := (page - 1) * size
+	result := r.db.Model(&repository.Comment{}).
+		Where("media_id = ?", mediaID).
+		Count(&count).
+		Order("created_at DESC").
+		Offset(offset).
+		Limit(size).
+		Find(&comments)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return comments, int(count), nil
+}
+
+func (r *MediaRepository) GetUserComments(userID string, size, page int) ([]*repository.Comment, int, error) {
+	var comments []*repository.Comment
+	var count int64
+	offset := (page - 1) * size
+	result := r.db.Model(&repository.Comment{}).
+		Where("user_id = ?", userID).
+		Count(&count).
+		Order("created_at DESC").
+		Offset(offset).
+		Limit(size).
+		Find(&comments)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return comments, int(count), nil
+}
+
+func (r *MediaRepository) AddComment(userID string, mediaID int, content string) (*repository.Comment, error) {
+	comment := repository.Comment{
+		UserID:  userID,
+		MediaID: mediaID,
+		Content: content,
+	}
+	result := r.db.Create(&comment)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &comment, nil
+}
+
+func (r *MediaRepository) GetComment(commentID string) (*repository.Comment, error) {
+	var comment repository.Comment
+	result := r.db.Model(&repository.Comment{}).Where("id = ?", commentID).First(&comment)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &comment, nil
+}
+
+func (r *MediaRepository) DeleteComment(commentID string) error {
+	return r.db.Where("id = ?", commentID).Delete(&repository.Comment{}).Error
+}
+
+func (r *MediaRepository) UpdateComment(commentID string, content string) (*repository.Comment, error) {
+	var comment repository.Comment
+	result := r.db.Model(&comment).Where("id = ?", commentID).Update("content", content)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &comment, nil
+}
+
+func (r *MediaRepository) GetMediaRatings(mediaID, limit, page int) ([]*repository.Rating, int, error) {
+	offset := (page - 1) * limit
+
+	var ratings []*repository.Rating
+	var count int64
+	result := r.db.
+		Model(&repository.Rating{}).
+		Where("media_id = ?", mediaID).
+		Count(&count).
+		Order("created_at DESC").
+		Offset(offset).
+		Limit(limit).
+		Find(&ratings)
+
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return ratings, int(count), nil
+}
+
+func (r *MediaRepository) GetUserMediaRating(userID string, mediaID int) (*repository.Rating, error) {
+	var rating repository.Rating
+	result := r.db.Model(&repository.Rating{}).Where("user_id = ? AND media_id = ?", userID, mediaID).First(&rating)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &rating, nil
+}
+
+func (r *MediaRepository) GetUserRatings(userID string, limit, page int) ([]*repository.Rating, int, error) {
+	offset := (page - 1) * limit
+
+	var ratings []*repository.Rating
+	var count int64
+	result := r.db.
+		Model(&repository.Rating{}).
+		Where("user_id = ?", userID).
+		Count(&count).
+		Limit(limit).
+		Offset(offset).
+		Find(&ratings)
+	if result.Error != nil {
+		return nil, 0, result.Error
+	}
+	return ratings, int(count), nil
+}
+
+func (r *MediaRepository) SaveMediaRating(mediaID int, userID string, rating int) (*repository.Rating, error) {
+	ratingEntity, err := r.GetUserMediaRating(userID, mediaID)
+	if err != nil {
+		ratingEntity = &repository.Rating{
+			UserID:  userID,
+			MediaID: mediaID,
+			Rating:  rating,
+		}
+	} else {
+		ratingEntity.Rating = rating
+	}
+	result := r.db.Save(ratingEntity)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return ratingEntity, nil
 }
