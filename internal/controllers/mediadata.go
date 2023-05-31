@@ -11,8 +11,14 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/movie-tmdb/:id", func(c *gin.Context) {
 		getMovieByTMDB(c, mediaData)
 	})
+	engine.GET("/movie-tmdb/:id/short", func(c *gin.Context) {
+		getMovieShortByTMDB(c, mediaData)
+	})
 	engine.GET("/tvshow-tmdb/:id", func(c *gin.Context) {
 		getTvShowByTMDB(c, mediaData)
+	})
+	engine.GET("/tvshow-tmdb/:id/short", func(c *gin.Context) {
+		getTvShowShortByTMDB(c, mediaData)
 	})
 	engine.GET("/tvshow-episode-tmdb/:id/:season/:episode", func(c *gin.Context) {
 		getTvShowEpisodeByTMDB(c, mediaData)
@@ -57,6 +63,35 @@ func getMovieByTMDB(c *gin.Context, mediaData *features.MediaData) {
 	c.JSON(200, toMovieResponse(result, presence))
 }
 
+// @Summary		Get Movie Short Metadata
+// @Description	Get Movie Short Metadata by TMDB ID
+// @Description	The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+// @Tags			Media Data
+// @Tags			Movie
+// @Param			id path int true "TMDB ID"
+// @Produce		json
+// @Success		200	{object} movieResponse
+// @Failure		400	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/media/movie-tmdb/{id}/short [get]
+func getMovieShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	result, presence, err := mediaData.GetMovieShortInfo(id)
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, toMovieResponse(result, presence))
+}
+
 // @Summary		Get TvShow Metadata
 // @Description	Get TvShow Metadata by TMDB ID
 // @Description	The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
@@ -77,6 +112,35 @@ func getTvShowByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		return
 	}
 	result, presence, err := mediaData.GetTvShowInfo(id)
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, toTVShowResponse(result, presence))
+}
+
+// @Summary		Get TvShow Short Metadata
+// @Description	Get TvShow Short Metadata by TMDB ID
+// @Description	The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+// @Tags			Media Data
+// @Tags			TvShow
+// @Param			id path int true "TMDB ID"
+// @Produce		json
+// @Success		200	{object} tvShowResponse
+// @Failure		400	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/media/tvshow-tmdb/{id}/short [get]
+func getTvShowShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	result, presence, err := mediaData.GetTvShowShortInfo(id)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
