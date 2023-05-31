@@ -1451,6 +1451,36 @@ paths:
       tags:
       - Media Data
       - Movie
+  /media/movie-tmdb/{id}/short:
+    get:
+      description: |-
+        Get Movie Short Metadata by TMDB ID
+        The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.movieResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get Movie Short Metadata
+      tags:
+      - Media Data
+      - Movie
   /media/tvshow-episode-tmdb/{id}/{season}/{episode}:
     get:
       description: Get TvShow Episode Metadata by TvShow TMDB ID, Season and Episode
@@ -1561,6 +1591,36 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get TvShow Metadata
+      tags:
+      - Media Data
+      - TvShow
+  /media/tvshow-tmdb/{id}/short:
+    get:
+      description: |-
+        Get TvShow Short Metadata by TMDB ID
+        The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.tvShowResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Short Metadata
       tags:
       - Media Data
       - TvShow
