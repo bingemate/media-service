@@ -84,7 +84,7 @@ func getMovieShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
 	}
 	result, presence, err := mediaData.GetMovieShortInfo(id)
 	if err != nil {
-		c.JSON(500, errorResponse{
+		c.JSON(404, errorResponse{
 			Error: err.Error(),
 		})
 		return
@@ -142,7 +142,7 @@ func getTvShowShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
 	}
 	result, presence, err := mediaData.GetTvShowShortInfo(id)
 	if err != nil {
-		c.JSON(500, errorResponse{
+		c.JSON(404, errorResponse{
 			Error: err.Error(),
 		})
 		return
