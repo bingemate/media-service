@@ -19,11 +19,13 @@ func InitRouter(engine *gin.Engine, db *gorm.DB, env initializers.Env) {
 	var mediaAssetData = features.NewMediaAssetsData(mediaClient)
 	var mediaCalendar = features.NewCalendarService(mediaClient, mediaRepository)
 	var commentService = features.NewCommentService(mediaRepository)
+	var ratingService = features.NewRatingService(mediaRepository)
 	InitMediaDataController(mediaServiceGroup.Group("/media"), mediaData)
 	InitFileInfoController(mediaServiceGroup.Group("/media-file"), mediaFile)
 	InitDiscoverController(mediaServiceGroup.Group("/discover"), mediaDiscover)
 	InitCalendarController(mediaServiceGroup.Group("/calendar"), mediaCalendar)
 	InitMediaAssetsController(mediaServiceGroup.Group("/assets"), mediaAssetData)
 	InitCommentController(mediaServiceGroup.Group("/comment"), commentService)
+	InitRatingController(mediaServiceGroup.Group("/rating"), ratingService)
 	InitPingController(mediaServiceGroup.Group("/ping"))
 }
