@@ -216,6 +216,40 @@ definitions:
         example: https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg
         type: string
     type: object
+  controllers.ratingRequest:
+    properties:
+      rating:
+        example: 5
+        type: integer
+    type: object
+  controllers.ratingResponse:
+    properties:
+      createdAt:
+        example: "2023-05-07T20:31:28.327382+02:00"
+        type: string
+      mediaId:
+        example: 134564
+        type: integer
+      rating:
+        example: 5
+        type: integer
+      updatedAt:
+        example: "2023-05-07T20:31:28.327382+02:00"
+        type: string
+      userId:
+        example: eec1d6b7-97c9-47e9-846b-6817d0e3d4ed
+        type: string
+    type: object
+  controllers.ratingResults:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/controllers.ratingResponse'
+        type: array
+      totalResult:
+        example: 14
+        type: integer
+    type: object
   controllers.studio:
     properties:
       id:
@@ -1545,4 +1579,135 @@ paths:
       summary: Ping
       tags:
       - Ping
+  /rating/media/{mediaID}:
+    get:
+      description: Get media's rating
+      parameters:
+      - description: Media ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ratingResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get media's rating
+      tags:
+      - Rating
+    post:
+      description: Save media's rating
+      parameters:
+      - description: Media ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      - description: Rating
+        in: body
+        name: rating
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ratingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ratingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Save media's rating
+      tags:
+      - Rating
+  /rating/media/{mediaID}/own:
+    get:
+      description: Get user's media rating
+      parameters:
+      - description: Media ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ratingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get user's media rating
+      tags:
+      - Rating
+  /rating/user/{userID}:
+    get:
+      description: Get user's rating
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ratingResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get user's rating
+      tags:
+      - Rating
 swagger: "2.0"
