@@ -27,6 +27,43 @@ definitions:
         example: jpn
         type: string
     type: object
+  controllers.commentRequest:
+    properties:
+      content:
+        example: This is a comment
+        type: string
+    type: object
+  controllers.commentResponse:
+    properties:
+      content:
+        example: This is a comment
+        type: string
+      createdAt:
+        example: "2023-05-07T20:31:28.327382+02:00"
+        type: string
+      id:
+        example: eec1d6b7-97c9-47e9-846b-6817d0e3d4ed
+        type: string
+      mediaId:
+        example: 134564
+        type: integer
+      updatedAt:
+        example: "2023-05-07T20:31:28.327382+02:00"
+        type: string
+      userId:
+        example: eec1d6b7-97c9-47e9-846b-6817d0e3d4ed
+        type: string
+    type: object
+  controllers.commentResults:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/controllers.commentResponse'
+        type: array
+      totalResult:
+        example: 1412
+        type: integer
+    type: object
   controllers.crew:
     properties:
       id:
@@ -620,6 +657,182 @@ paths:
       tags:
       - Calendar
       - TvShow
+  /comment/{commentID}:
+    delete:
+      description: Delete comment
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: string
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      - description: User roles
+        in: header
+        name: roles
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: comment deleted
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Delete comment
+      tags:
+      - Comment
+    put:
+      description: Update comment
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: string
+      - description: Comment
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.commentRequest'
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      - description: User roles
+        in: header
+        name: roles
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.commentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Update comment
+      tags:
+      - Comment
+  /comment/media/{mediaID}:
+    get:
+      description: Get media's comments
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Media ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.commentResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get media's comments
+      tags:
+      - Comment
+    post:
+      description: Add comment to a media
+      parameters:
+      - description: Media ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      - description: Comment
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.commentRequest'
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.commentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Add comment
+      tags:
+      - Comment
+  /comment/user/{userID}:
+    get:
+      description: Get user's comments
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.commentResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get user's comments
+      tags:
+      - Comment
   /discover/movie/actor:
     get:
       description: Get movies by actor
