@@ -135,6 +135,23 @@ type commentResults struct {
 	TotalResult int                `json:"totalResult" example:"1412"`
 }
 
+type ratingRequest struct {
+	Rating int `json:"rating" example:"5"`
+}
+
+type ratingResponse struct {
+	UserID    string    `json:"userId" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
+	MediaID   int       `json:"mediaId" example:"134564"`
+	Rating    int       `json:"rating" example:"5"`
+	CreatedAt time.Time `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	UpdatedAt time.Time `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
+}
+
+type ratingResults struct {
+	Results     []*ratingResponse `json:"results"`
+	TotalResult int               `json:"totalResult" example:"14"`
+}
+
 type tvShowResults struct {
 	Results     []*tvShowResponse `json:"results"`
 	TotalPage   int               `json:"totalPage" example:"71"`
@@ -412,4 +429,22 @@ func toCommentsResponse(comments []*repository.Comment) []*commentResponse {
 		commentsResponse[i] = toCommentResponse(comment)
 	}
 	return commentsResponse
+}
+
+func toRatingResponse(rating *repository.Rating) *ratingResponse {
+	return &ratingResponse{
+		CreatedAt: rating.CreatedAt,
+		UpdatedAt: rating.UpdatedAt,
+		UserID:    rating.UserID,
+		MediaID:   rating.MediaID,
+		Rating:    rating.Rating,
+	}
+}
+
+func toRatingsResponse(ratings []*repository.Rating) []*ratingResponse {
+	var ratingsResponse = make([]*ratingResponse, len(ratings))
+	for i, rating := range ratings {
+		ratingsResponse[i] = toRatingResponse(rating)
+	}
+	return ratingsResponse
 }
