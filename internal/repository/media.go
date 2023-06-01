@@ -248,6 +248,24 @@ func (r *MediaRepository) GetRecentTvShows(page, limit int) ([]repository.TvShow
 	return tvShows, int(count), nil
 }
 
+// GetMediasByComments returns a list of medias ordered by number of comments
+func (r *MediaRepository) GetMediasByComments() (*[]int, error) {
+	var mediaIds []int
+
+	err := r.db.Model(&repository.Comment{}).
+		Select("media_id").
+		Group("media_id").
+		Order("COUNT(comments.id) DESC").
+		Limit(20).
+		Find(&mediaIds).Error
+
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+
+	return &mediaIds, nil
+}
+
 func (r *MediaRepository) GetFollowedReleases(userID string, month int) (*[]int, error) {
 	var followedReleases []int
 	result := r.db.Table("watch_list_item").
