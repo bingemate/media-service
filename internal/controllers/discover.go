@@ -53,6 +53,9 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 	engine.GET("tv/recommendations/:tv", func(c *gin.Context) {
 		getTvShowRecommendations(c, mediaDiscover)
 	})
+	engine.GET("media/comments", func(c *gin.Context) {
+		getMediasByComments(c, mediaDiscover)
+	})
 }
 
 // @Summary		Search movies
@@ -566,4 +569,28 @@ func getTvShowRecommendations(c *gin.Context, mediaDiscover *features.MediaDisco
 		return
 	}
 	c.JSON(200, toTVShowsResponse(result, presence))
+}
+
+// @Summary		Get medias by comment
+// @Description	Get medias ordered by number of comments
+// @Tags			Discover
+// @Tags			Media
+// @Param           available query bool false "Only available tv shows"
+// @Produce		json
+// @Success		200	{array} int
+// @Failure		500	{object} errorResponse
+// @Router			/discover/media/comments [get]
+func getMediasByComments(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
+	available, err := strconv.ParseBool(c.Query("available"))
+	if err != nil {
+		available = false
+	}
+	result, err := mediaDiscover.GetMediasByComments(available)
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, result)
 }

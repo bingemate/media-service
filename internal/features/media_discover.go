@@ -532,27 +532,6 @@ func (m *MediaDiscovery) GetShowRecommendations(showID int) ([]*tmdb.TVShow, *[]
 	return shows, &presence, nil
 }
 
-// Add in another service
-/*func (m *MediaDiscovery) GetTVShowsReleases(tvIds []int, startDate string, endDate string) ([]*tmdb.TVEpisodeRelease, error) {
-	start, err := time.Parse("2006-01-02", startDate)
-	if err != nil {
-		return nil, err
-	}
-	end, err := time.Parse("2006-01-02", endDate)
-	if err != nil {
-		return nil, err
-	}
-	return m.mediaClient.GetTVShowsReleases(tvIds, start, end)
+func (m *MediaDiscovery) GetMediasByComments(present bool) (*[]int, error) {
+	return m.mediaRepository.GetMediasByComments(present)
 }
-
-func (m *MediaDiscovery) GetMovieReleases(movieIds []int, startDate string, endDate string) ([]*tmdb.MovieRelease, error) {
-	start, err := time.Parse("2006-01-02", startDate)
-	if err != nil {
-		return nil, err
-	}
-	end, err := time.Parse("2006-01-02", endDate)
-	if err != nil {
-		return nil, err
-	}
-	return m.mediaClient.GetMoviesReleases(movieIds, start, end)
-}*/
