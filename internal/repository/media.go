@@ -249,15 +249,21 @@ func (r *MediaRepository) GetRecentTvShows(page, limit int) ([]repository.TvShow
 }
 
 // GetMediasByComments returns a list of medias ordered by number of comments
-func (r *MediaRepository) GetMediasByComments() (*[]int, error) {
+func (r *MediaRepository) GetMediasByComments(present bool) (*[]int, error) {
 	var mediaIds []int
 
-	err := r.db.Model(&repository.Comment{}).
+	query := r.db.Model(&repository.Comment{}).
 		Select("media_id").
 		Group("media_id").
 		Order("COUNT(comments.id) DESC").
-		Limit(20).
-		Find(&mediaIds).Error
+		Limit(20)
+
+	if present {
+		// Add WHERE clause to check if media_id exists in the "media" table
+		query = query.Joins("JOIN media ON comments.media_id = media.id").Where("media.id = comments.media_id")
+	}
+
+	err := query.Find(&mediaIds).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err

@@ -532,6 +532,6 @@ func (m *MediaDiscovery) GetShowRecommendations(showID int) ([]*tmdb.TVShow, *[]
 	return shows, &presence, nil
 }
 
-func (m *MediaDiscovery) GetMediasByComments() (*[]int, error) {
-	return m.mediaRepository.GetMediasByComments()
+func (m *MediaDiscovery) GetMediasByComments(present bool) (*[]int, error) {
+	return m.mediaRepository.GetMediasByComments(present)
 }

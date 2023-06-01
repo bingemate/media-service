@@ -575,12 +575,17 @@ func getTvShowRecommendations(c *gin.Context, mediaDiscover *features.MediaDisco
 // @Description	Get medias ordered by number of comments
 // @Tags			Discover
 // @Tags			Media
+// @Param           available query bool false "Only available tv shows"
 // @Produce		json
 // @Success		200	{array} int
 // @Failure		500	{object} errorResponse
 // @Router			/discover/media/comments [get]
 func getMediasByComments(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
-	result, err := mediaDiscover.GetMediasByComments()
+	available, err := strconv.ParseBool(c.Query("available"))
+	if err != nil {
+		available = false
+	}
+	result, err := mediaDiscover.GetMediasByComments(available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
