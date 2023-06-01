@@ -867,6 +867,26 @@ paths:
       summary: Get user's comments
       tags:
       - Comment
+  /discover/media/comments:
+    get:
+      description: Get medias ordered by number of comments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: integer
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get medias by comment
+      tags:
+      - Discover
+      - Media
   /discover/movie/actor:
     get:
       description: Get movies by actor

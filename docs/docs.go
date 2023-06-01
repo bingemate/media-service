@@ -734,6 +734,36 @@ const docTemplate = `{
                 }
             }
         },
+        "/discover/media/comments": {
+            "get": {
+                "description": "Get medias ordered by number of comments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Media"
+                ],
+                "summary": "Get medias by comment",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/discover/movie/actor": {
             "get": {
                 "description": "Get movies by actor",
