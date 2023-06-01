@@ -735,6 +735,14 @@
                     "Media"
                 ],
                 "summary": "Get medias by comment",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Only available tv shows",
+                        "name": "available",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

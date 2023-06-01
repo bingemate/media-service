@@ -870,6 +870,11 @@ paths:
   /discover/media/comments:
     get:
       description: Get medias ordered by number of comments
+      parameters:
+      - description: Only available tv shows
+        in: query
+        name: available
+        type: boolean
       produces:
       - application/json
       responses:
