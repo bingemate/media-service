@@ -117,6 +117,41 @@ type subtitleResponse struct {
 	Filename string `json:"filename" example:"subtitle_1.vtt"`
 }
 
+type commentRequest struct {
+	Content string `json:"content" example:"This is a comment"`
+}
+
+type commentResponse struct {
+	ID        string    `json:"id" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
+	CreatedAt time.Time `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	UpdatedAt time.Time `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	Content   string    `json:"content" example:"This is a comment"`
+	MediaID   int       `json:"mediaId" example:"134564"`
+	UserID    string    `json:"userId" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
+}
+
+type commentResults struct {
+	Results     []*commentResponse `json:"results"`
+	TotalResult int                `json:"totalResult" example:"1412"`
+}
+
+type ratingRequest struct {
+	Rating int `json:"rating" example:"5"`
+}
+
+type ratingResponse struct {
+	UserID    string    `json:"userId" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
+	MediaID   int       `json:"mediaId" example:"134564"`
+	Rating    int       `json:"rating" example:"5"`
+	CreatedAt time.Time `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	UpdatedAt time.Time `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
+}
+
+type ratingResults struct {
+	Results     []*ratingResponse `json:"results"`
+	TotalResult int               `json:"totalResult" example:"14"`
+}
+
 type tvShowResults struct {
 	Results     []*tvShowResponse `json:"results"`
 	TotalPage   int               `json:"totalPage" example:"71"`
@@ -127,6 +162,10 @@ type movieResults struct {
 	Results     []*movieResponse `json:"results"`
 	TotalPage   int              `json:"totalPage" example:"71"`
 	TotalResult int              `json:"totalResult" example:"1412"`
+}
+type tvReleasesResults struct {
+	Episodes []*tvEpisodeResponse `json:"episodes"`
+	TvShows  []*tvShowResponse    `json:"tvShows"`
 }
 
 func toMovieResponse(movie *tmdb.Movie, present bool) *movieResponse {
@@ -293,6 +332,13 @@ func toTVEpisodesResponse(tvEpisodes []*tmdb.TVEpisode, presence *[]bool) []*tvE
 	return tvEpisodesResponse
 }
 
+func toTVReleasesResult(tvEpisodes []*tmdb.TVEpisode, tvShows []*tmdb.TVShow, presence *[]bool) *tvReleasesResults {
+	return &tvReleasesResults{
+		Episodes: toTVEpisodesResponse(tvEpisodes, presence),
+		TvShows:  toTVShowsResponse(tvShows, presence),
+	}
+}
+
 func toMediaResponse(media *repository.Media) *mediaResponse {
 	return &mediaResponse{
 		ID:          media.ID,
@@ -364,4 +410,41 @@ func toActorResponse(tmdbActor *tmdb.Actor) *actor {
 		ProfileURL: tmdbActor.ProfileURL,
 		Overview:   tmdbActor.Overview,
 	}
+}
+
+func toCommentResponse(comment *repository.Comment) *commentResponse {
+	return &commentResponse{
+		ID:        comment.ID,
+		CreatedAt: comment.CreatedAt,
+		UpdatedAt: comment.UpdatedAt,
+		Content:   comment.Content,
+		UserID:    comment.UserID,
+		MediaID:   comment.MediaID,
+	}
+}
+
+func toCommentsResponse(comments []*repository.Comment) []*commentResponse {
+	var commentsResponse = make([]*commentResponse, len(comments))
+	for i, comment := range comments {
+		commentsResponse[i] = toCommentResponse(comment)
+	}
+	return commentsResponse
+}
+
+func toRatingResponse(rating *repository.Rating) *ratingResponse {
+	return &ratingResponse{
+		CreatedAt: rating.CreatedAt,
+		UpdatedAt: rating.UpdatedAt,
+		UserID:    rating.UserID,
+		MediaID:   rating.MediaID,
+		Rating:    rating.Rating,
+	}
+}
+
+func toRatingsResponse(ratings []*repository.Rating) []*ratingResponse {
+	var ratingsResponse = make([]*ratingResponse, len(ratings))
+	for i, rating := range ratings {
+		ratingsResponse[i] = toRatingResponse(rating)
+	}
+	return ratingsResponse
 }

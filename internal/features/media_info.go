@@ -46,6 +46,20 @@ func (m *MediaData) GetMovieInfo(id int) (*tmdb.Movie, bool, error) {
 	return movie, m.mediaRepository.IsMediaPresent(id), nil
 }
 
+// GetMovieShortInfo returns a movie given the mediaID (TMDB ID)
+func (m *MediaData) GetMovieShortInfo(id int) (*tmdb.Movie, bool, error) {
+	movie, err := m.mediaClient.GetMovieShort(id)
+	if err != nil {
+		return nil, false, err
+	}
+	voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(id)
+	if err == nil {
+		movie.VoteAverage = voteAverage
+		movie.VoteCount = voteCount
+	}
+	return movie, m.mediaRepository.IsMediaPresent(id), nil
+}
+
 // GetEpisodeInfo returns an episode info given the tvID (TMDB ID), season and episode number
 func (m *MediaData) GetEpisodeInfo(tvID, season, episodeNumber int) (*tmdb.TVEpisode, bool, error) {
 	episode, err := m.mediaClient.GetTVEpisode(tvID, season, episodeNumber)
@@ -70,6 +84,20 @@ func (m *MediaData) GetEpisodeInfoByID(episodeID int) (*tmdb.TVEpisode, bool, er
 // GetTvShowInfo returns a tv show given the mediaID (TMDB ID)
 func (m *MediaData) GetTvShowInfo(mediaID int) (*tmdb.TVShow, bool, error) {
 	tvShow, err := m.mediaClient.GetTVShow(mediaID)
+	if err != nil {
+		return nil, false, err
+	}
+	voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(mediaID)
+	if err == nil {
+		tvShow.VoteAverage = voteAverage
+		tvShow.VoteCount = voteCount
+	}
+	return tvShow, m.mediaRepository.IsMediaPresent(mediaID), nil
+}
+
+// GetTvShowShortInfo returns a tv show given the mediaID (TMDB ID)
+func (m *MediaData) GetTvShowShortInfo(mediaID int) (*tmdb.TVShow, bool, error) {
+	tvShow, err := m.mediaClient.GetTVShowShort(mediaID)
 	if err != nil {
 		return nil, false, err
 	}
