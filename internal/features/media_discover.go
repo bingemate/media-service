@@ -35,18 +35,18 @@ func (m *MediaDiscovery) searchAllMovie(query string, page int) (*tmdb.Paginated
 		return nil, nil, err
 	}
 	for i, movie := range movies.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 		if err == nil {
 			movie.VoteAverage = voteAverage
 			movie.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(movie.ID)
+		presence[i] = m.mediaRepository.IsMovieFilePresent(movie.ID)
 	}
 	return movies, &presence, nil
 }
 
 func (m *MediaDiscovery) searchAvailableMovie(query string, page int) (*tmdb.PaginatedMovieResults, *[]bool, error) {
-	movies, total, err := m.mediaRepository.SearchMovies(page, 20, query)
+	movies, total, err := m.mediaRepository.SearchAvailableMovies(page, 20, query)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -58,12 +58,12 @@ func (m *MediaDiscovery) searchAvailableMovie(query string, page int) (*tmdb.Pag
 		wg.Add(1)
 		go func(i int, movie repository2.Movie) {
 			defer wg.Done()
-			result, err := m.mediaClient.GetMovieShort(movie.MediaID)
+			result, err := m.mediaClient.GetMovieShort(movie.ID)
 			if err != nil {
-				log.Println("error getting movie", movie.MediaID, err)
+				log.Println("error getting movie", movie.ID, err)
 				return
 			}
-			voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.MediaID)
+			voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 			if err == nil {
 				result.VoteAverage = voteAverage
 				result.VoteCount = voteCount
@@ -96,18 +96,18 @@ func (m *MediaDiscovery) searchAllShow(query string, page int) (*tmdb.PaginatedT
 		return nil, nil, err
 	}
 	for i, show := range shows.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 		if err == nil {
 			show.VoteAverage = voteAverage
 			show.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(show.ID)
+		presence[i] = m.mediaRepository.IsTvShowHasEpisodeFiles(show.ID)
 	}
 	return shows, &presence, nil
 }
 
 func (m *MediaDiscovery) searchAvailableShow(query string, page int) (*tmdb.PaginatedTVShowResults, *[]bool, error) {
-	shows, total, err := m.mediaRepository.SearchTvShows(page, 20, query)
+	shows, total, err := m.mediaRepository.SearchAvailableTvShows(page, 20, query)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -119,12 +119,12 @@ func (m *MediaDiscovery) searchAvailableShow(query string, page int) (*tmdb.Pagi
 		wg.Add(1)
 		go func(i int, show repository2.TvShow) {
 			defer wg.Done()
-			result, err := m.mediaClient.GetTVShowShort(show.MediaID)
+			result, err := m.mediaClient.GetTVShowShort(show.ID)
 			if err != nil {
-				log.Println("error getting show", show.MediaID, err)
+				log.Println("error getting show", show.ID, err)
 				return
 			}
-			voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.MediaID)
+			voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 			if err == nil {
 				result.VoteAverage = voteAverage
 				result.VoteCount = voteCount
@@ -157,18 +157,18 @@ func (m *MediaDiscovery) getAllPopularMovies(page int) (*tmdb.PaginatedMovieResu
 		return nil, nil, err
 	}
 	for i, movie := range movies.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 		if err == nil {
 			movie.VoteAverage = voteAverage
 			movie.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(movie.ID)
+		presence[i] = m.mediaRepository.IsMovieFilePresent(movie.ID)
 	}
 	return movies, &presence, nil
 }
 
 func (m *MediaDiscovery) getAvailablePopularMovies(page int) (*tmdb.PaginatedMovieResults, *[]bool, error) {
-	movies, total, err := m.mediaRepository.GetMoviesByRating(page, 20, 30)
+	movies, total, err := m.mediaRepository.GetAvailableMoviesByRating(page, 20, 30)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -180,12 +180,12 @@ func (m *MediaDiscovery) getAvailablePopularMovies(page int) (*tmdb.PaginatedMov
 		wg.Add(1)
 		go func(i int, movie repository2.Movie) {
 			defer wg.Done()
-			result, err := m.mediaClient.GetMovieShort(movie.MediaID)
+			result, err := m.mediaClient.GetMovieShort(movie.ID)
 			if err != nil {
-				log.Println("error getting movie", movie.MediaID, err)
+				log.Println("error getting movie", movie.ID, err)
 				return
 			}
-			voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.MediaID)
+			voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 			if err == nil {
 				result.VoteAverage = voteAverage
 				result.VoteCount = voteCount
@@ -218,18 +218,18 @@ func (m *MediaDiscovery) getAllPopularTVShows(page int) (*tmdb.PaginatedTVShowRe
 		return nil, nil, err
 	}
 	for i, show := range shows.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 		if err == nil {
 			show.VoteAverage = voteAverage
 			show.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(show.ID)
+		presence[i] = m.mediaRepository.IsTvShowHasEpisodeFiles(show.ID)
 	}
 	return shows, &presence, nil
 }
 
 func (m *MediaDiscovery) getAvailablePopularTVShows(page int) (*tmdb.PaginatedTVShowResults, *[]bool, error) {
-	shows, total, err := m.mediaRepository.GetTvShowsByRating(page, 20, 30)
+	shows, total, err := m.mediaRepository.GetAvailableTvShowsByRating(page, 20, 30)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -241,12 +241,12 @@ func (m *MediaDiscovery) getAvailablePopularTVShows(page int) (*tmdb.PaginatedTV
 		wg.Add(1)
 		go func(i int, show repository2.TvShow) {
 			defer wg.Done()
-			result, err := m.mediaClient.GetTVShowShort(show.MediaID)
+			result, err := m.mediaClient.GetTVShowShort(show.ID)
 			if err != nil {
-				log.Println("error getting show", show.MediaID, err)
+				log.Println("error getting show", show.ID, err)
 				return
 			}
-			voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.MediaID)
+			voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 			if err == nil {
 				result.VoteAverage = voteAverage
 				result.VoteCount = voteCount
@@ -279,18 +279,18 @@ func (m *MediaDiscovery) getAllRecentMovies() ([]*tmdb.Movie, *[]bool, error) {
 		return nil, nil, err
 	}
 	for i, movie := range movies {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 		if err == nil {
 			movie.VoteAverage = voteAverage
 			movie.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(movie.ID)
+		presence[i] = m.mediaRepository.IsMovieFilePresent(movie.ID)
 	}
 	return movies, &presence, nil
 }
 
 func (m *MediaDiscovery) getAvailableRecentMovies() ([]*tmdb.Movie, *[]bool, error) {
-	movies, _, err := m.mediaRepository.GetRecentMovies(1, 20)
+	movies, _, err := m.mediaRepository.GetAvailableRecentMovies(1, 20)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -302,12 +302,12 @@ func (m *MediaDiscovery) getAvailableRecentMovies() ([]*tmdb.Movie, *[]bool, err
 		wg.Add(1)
 		go func(i int, movie repository2.Movie) {
 			defer wg.Done()
-			result, err := m.mediaClient.GetMovieShort(movie.MediaID)
+			result, err := m.mediaClient.GetMovieShort(movie.ID)
 			if err != nil {
-				log.Println("error getting movie", movie.MediaID, err)
+				log.Println("error getting movie", movie.ID, err)
 				return
 			}
-			voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.MediaID)
+			voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 			if err == nil {
 				result.VoteAverage = voteAverage
 				result.VoteCount = voteCount
@@ -336,18 +336,18 @@ func (m *MediaDiscovery) getAllRecentShows() ([]*tmdb.TVShow, *[]bool, error) {
 		return nil, nil, err
 	}
 	for i, show := range shows {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 		if err == nil {
 			show.VoteAverage = voteAverage
 			show.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(show.ID)
+		presence[i] = m.mediaRepository.IsTvShowHasEpisodeFiles(show.ID)
 	}
 	return shows, &presence, nil
 }
 
 func (m *MediaDiscovery) getAvailableRecentShows() ([]*tmdb.TVShow, *[]bool, error) {
-	shows, _, err := m.mediaRepository.GetRecentTvShows(1, 20)
+	shows, _, err := m.mediaRepository.GetAvailableRecentTvShows(1, 20)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -359,12 +359,12 @@ func (m *MediaDiscovery) getAvailableRecentShows() ([]*tmdb.TVShow, *[]bool, err
 		wg.Add(1)
 		go func(i int, show repository2.TvShow) {
 			defer wg.Done()
-			result, err := m.mediaClient.GetTVShowShort(show.MediaID)
+			result, err := m.mediaClient.GetTVShowShort(show.ID)
 			if err != nil {
-				log.Println("error getting show", show.MediaID, err)
+				log.Println("error getting show", show.ID, err)
 				return
 			}
-			voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.MediaID)
+			voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 			if err == nil {
 				result.VoteAverage = voteAverage
 				result.VoteCount = voteCount
@@ -386,12 +386,12 @@ func (m *MediaDiscovery) GetMoviesByGenre(genreID int, page int) (*tmdb.Paginate
 		return nil, nil, err
 	}
 	for i, movie := range movies.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 		if err == nil {
 			movie.VoteAverage = voteAverage
 			movie.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(movie.ID)
+		presence[i] = m.mediaRepository.IsMovieFilePresent(movie.ID)
 	}
 	return movies, &presence, nil
 }
@@ -403,12 +403,12 @@ func (m *MediaDiscovery) GetShowsByGenre(genreID int, page int) (*tmdb.Paginated
 		return nil, nil, err
 	}
 	for i, show := range shows.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 		if err == nil {
 			show.VoteAverage = voteAverage
 			show.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(show.ID)
+		presence[i] = m.mediaRepository.IsTvShowHasEpisodeFiles(show.ID)
 	}
 	return shows, &presence, nil
 }
@@ -420,12 +420,12 @@ func (m *MediaDiscovery) GetMoviesByActor(actorID int, page int) (*tmdb.Paginate
 		return nil, nil, err
 	}
 	for i, movie := range movies.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 		if err == nil {
 			movie.VoteAverage = voteAverage
 			movie.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(movie.ID)
+		presence[i] = m.mediaRepository.IsMovieFilePresent(movie.ID)
 	}
 	return movies, &presence, nil
 }
@@ -437,12 +437,12 @@ func (m *MediaDiscovery) GetShowsByActor(actorID int, page int) (*tmdb.Paginated
 		return nil, nil, err
 	}
 	for i, show := range shows.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 		if err == nil {
 			show.VoteAverage = voteAverage
 			show.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(show.ID)
+		presence[i] = m.mediaRepository.IsTvShowHasEpisodeFiles(show.ID)
 	}
 	return shows, &presence, nil
 }
@@ -454,12 +454,12 @@ func (m *MediaDiscovery) GetMoviesByDirector(directorID int, page int) (*tmdb.Pa
 		return nil, nil, err
 	}
 	for i, movie := range movies.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 		if err == nil {
 			movie.VoteAverage = voteAverage
 			movie.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(movie.ID)
+		presence[i] = m.mediaRepository.IsMovieFilePresent(movie.ID)
 	}
 	return movies, &presence, nil
 }
@@ -471,12 +471,12 @@ func (m *MediaDiscovery) GetMoviesByStudio(studioID int, page int) (*tmdb.Pagina
 		return nil, nil, err
 	}
 	for i, movie := range movies.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 		if err == nil {
 			movie.VoteAverage = voteAverage
 			movie.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(movie.ID)
+		presence[i] = m.mediaRepository.IsMovieFilePresent(movie.ID)
 	}
 	return movies, &presence, nil
 }
@@ -488,12 +488,12 @@ func (m *MediaDiscovery) GetShowsByNetwork(networkID int, page int) (*tmdb.Pagin
 		return nil, nil, err
 	}
 	for i, show := range shows.Results {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 		if err == nil {
 			show.VoteAverage = voteAverage
 			show.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(show.ID)
+		presence[i] = m.mediaRepository.IsTvShowHasEpisodeFiles(show.ID)
 	}
 	return shows, &presence, nil
 }
@@ -505,12 +505,12 @@ func (m *MediaDiscovery) GetMovieRecommendations(movieID int) ([]*tmdb.Movie, *[
 		return nil, nil, err
 	}
 	for i, movie := range movies {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(movie.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 		if err == nil {
 			movie.VoteAverage = voteAverage
 			movie.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(movie.ID)
+		presence[i] = m.mediaRepository.IsMovieFilePresent(movie.ID)
 	}
 	return movies, &presence, nil
 }
@@ -522,16 +522,24 @@ func (m *MediaDiscovery) GetShowRecommendations(showID int) ([]*tmdb.TVShow, *[]
 		return nil, nil, err
 	}
 	for i, show := range shows {
-		voteAverage, voteCount, err := m.mediaRepository.GetMediaRating(show.ID)
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 		if err == nil {
 			show.VoteAverage = voteAverage
 			show.VoteCount = voteCount
 		}
-		presence[i] = m.mediaRepository.IsMediaPresent(show.ID)
+		presence[i] = m.mediaRepository.IsTvShowHasEpisodeFiles(show.ID)
 	}
 	return shows, &presence, nil
 }
 
-func (m *MediaDiscovery) GetMediasByComments(present bool) (*[]int, error) {
-	return m.mediaRepository.GetMediasByComments(present)
+//func (m *MediaDiscovery) GetMediasByComments(present bool) (*[]int, error) {
+//	return m.mediaRepository.GetMediasByComments(present)
+//}
+
+func (m *MediaDiscovery) GetMoviesByComments(present bool) (*[]int, error) {
+	return m.mediaRepository.GetMoviesByComments(present)
+}
+
+func (m *MediaDiscovery) GetShowsByComments(present bool) (*[]int, error) {
+	return m.mediaRepository.GetTvShowsByComments(present)
 }
