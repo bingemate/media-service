@@ -7,66 +7,43 @@ import (
 )
 
 func InitRatingController(engine *gin.RouterGroup, ratingService *features.RatingService) {
-	engine.GET("/media/:mediaID", func(c *gin.Context) {
-		getMediaRating(c, ratingService)
+	engine.GET("/movie/:mediaID", func(c *gin.Context) {
+		getMovieRating(c, ratingService)
 	})
-	engine.GET("/media/:mediaID/own", func(c *gin.Context) {
-		getUserMediaRating(c, ratingService)
+	engine.GET("/movie/:mediaID/own", func(c *gin.Context) {
+		getUserMovieRating(c, ratingService)
 	})
-	engine.GET("/user/:userID", func(c *gin.Context) {
-		getUserRating(c, ratingService)
+	engine.GET("/tv/:mediaID", func(c *gin.Context) {
+		getTVShowRating(c, ratingService)
 	})
-	engine.POST("/media/:mediaID", func(c *gin.Context) {
-		saveMediaRating(c, ratingService)
+	engine.GET("/tv/:mediaID/own", func(c *gin.Context) {
+		getUserTVShowRating(c, ratingService)
+	})
+	engine.GET("/movie/user/:userID", func(c *gin.Context) {
+		getUserMovieRatings(c, ratingService)
+	})
+	engine.POST("/movie/:mediaID", func(c *gin.Context) {
+		saveMovieRating(c, ratingService)
+	})
+	engine.GET("/tv/user/:userID", func(c *gin.Context) {
+		getUserTVShowRatings(c, ratingService)
+	})
+	engine.POST("/tv/:mediaID", func(c *gin.Context) {
+		saveTVShowRating(c, ratingService)
 	})
 }
 
-/*// @Summary Get media's comments
-// @Description Get media's comments
-// @Tags Comment
-// @Param page query int false "Page number"
-// @Param mediaID path int true "Media ID"
-// @Produce json
-// @Success 200 {object} commentResults
-// @Failure 400 {object} errorResponse
-// @Failure 500 {object} errorResponse
-// @Router /comment/media/{mediaID} [get]
-func getComments(c *gin.Context, commentService *features.CommentService) {
-	page, err := strconv.Atoi(c.Query("page"))
-	if err != nil {
-		page = 1
-	}
-	mediaID, err := strconv.Atoi(c.Param("mediaID"))
-	if err != nil {
-		c.JSON(400, errorResponse{Error: "mediaID must be a number"})
-		return
-	}
-	if mediaID <= 0 {
-		c.JSON(400, errorResponse{Error: "mediaID must be a positive number"})
-		return
-	}
-	comments, total, err := commentService.GetComments(mediaID, page)
-	if err != nil {
-		c.JSON(500, errorResponse{Error: err.Error()})
-		return
-	}
-	c.JSON(200, commentResults{
-		Results:     toCommentsResponse(comments),
-		TotalResult: total,
-	})
-}*/
-
-// @Summary Get media's rating
-// @Description Get media's rating
+// @Summary Get movie's rating
+// @Description Get movie's rating
 // @Tags Rating
-// @Param mediaID path int true "Media ID"
+// @Param mediaID path int true "Movie ID"
 // @Param page query int false "Page number"
 // @Produce json
 // @Success 200 {object} ratingResults
 // @Failure 400 {object} errorResponse
 // @Failure 500 {object} errorResponse
-// @Router /rating/media/{mediaID} [get]
-func getMediaRating(c *gin.Context, ratingService *features.RatingService) {
+// @Router /rating/movie/{mediaID} [get]
+func getMovieRating(c *gin.Context, ratingService *features.RatingService) {
 	mediaID, err := strconv.Atoi(c.Param("mediaID"))
 	if err != nil {
 		c.JSON(400, errorResponse{Error: "mediaID must be a number"})
@@ -81,28 +58,64 @@ func getMediaRating(c *gin.Context, ratingService *features.RatingService) {
 		page = 1
 	}
 
-	ratings, count, err := ratingService.GetMediaRating(mediaID, page)
+	ratings, count, err := ratingService.GetMovieRatings(mediaID, page)
 	if err != nil {
 		c.JSON(500, errorResponse{Error: err.Error()})
 		return
 	}
 	c.JSON(200, ratingResults{
-		Results:     toRatingsResponse(ratings),
+		Results:     toMovieRatingsResponse(ratings),
 		TotalResult: count,
 	})
 }
 
-// @Summary Get user's media rating
-// @Description Get user's media rating
+// @Summary Get tv show's rating
+// @Description Get tv show's rating
 // @Tags Rating
-// @Param mediaID path int true "Media ID"
+// @Param mediaID path int true "TV Show ID"
+// @Param page query int false "Page number"
+// @Produce json
+// @Success 200 {object} ratingResults
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /rating/tv/{mediaID} [get]
+func getTVShowRating(c *gin.Context, ratingService *features.RatingService) {
+	mediaID, err := strconv.Atoi(c.Param("mediaID"))
+	if err != nil {
+		c.JSON(400, errorResponse{Error: "mediaID must be a number"})
+		return
+	}
+	if mediaID <= 0 {
+		c.JSON(400, errorResponse{Error: "mediaID must be a positive number"})
+		return
+	}
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		page = 1
+	}
+
+	ratings, count, err := ratingService.GetTvShowRatings(mediaID, page)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, ratingResults{
+		Results:     toTVShowRatingsResponse(ratings),
+		TotalResult: count,
+	})
+}
+
+// @Summary Get user's movie rating
+// @Description Get user's movie rating
+// @Tags Rating
+// @Param mediaID path int true "Movie ID"
 // @Param user-id header string true "User ID"
 // @Produce json
 // @Success 200 {object} ratingResponse
 // @Failure 400 {object} errorResponse
 // @Failure 500 {object} errorResponse
-// @Router /rating/media/{mediaID}/own [get]
-func getUserMediaRating(c *gin.Context, ratingService *features.RatingService) {
+// @Router /rating/movie/{mediaID}/own [get]
+func getUserMovieRating(c *gin.Context, ratingService *features.RatingService) {
 	mediaID, err := strconv.Atoi(c.Param("mediaID"))
 	if err != nil {
 		c.JSON(400, errorResponse{Error: "mediaID must be a number"})
@@ -118,16 +131,50 @@ func getUserMediaRating(c *gin.Context, ratingService *features.RatingService) {
 		return
 	}
 
-	rating, err := ratingService.GetUserMediaRating(userID, mediaID)
+	rating, err := ratingService.GetUserMovieRating(userID, mediaID)
 	if err != nil {
 		c.JSON(500, errorResponse{Error: err.Error()})
 		return
 	}
-	c.JSON(200, toRatingResponse(rating))
+	c.JSON(200, toMovieRatingResponse(rating))
 }
 
-// @Summary Get user's rating
-// @Description Get user's rating
+// @Summary Get user's tv show rating
+// @Description Get user's tv show rating
+// @Tags Rating
+// @Param mediaID path int true "TV Show ID"
+// @Param user-id header string true "User ID"
+// @Produce json
+// @Success 200 {object} ratingResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /rating/tv/{mediaID}/own [get]
+func getUserTVShowRating(c *gin.Context, ratingService *features.RatingService) {
+	mediaID, err := strconv.Atoi(c.Param("mediaID"))
+	if err != nil {
+		c.JSON(400, errorResponse{Error: "mediaID must be a number"})
+		return
+	}
+	if mediaID <= 0 {
+		c.JSON(400, errorResponse{Error: "mediaID must be a positive number"})
+		return
+	}
+	userID := c.GetHeader("user-id")
+	if userID == "" {
+		c.JSON(400, errorResponse{Error: "user-id header is required"})
+		return
+	}
+
+	rating, err := ratingService.GetUserTvShowRating(userID, mediaID)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, toTVShowRatingResponse(rating))
+}
+
+// @Summary Get user's movie ratings
+// @Description Get user's ratings
 // @Tags Rating
 // @Param userID path string true "User ID"
 // @Param page query int false "Page number"
@@ -135,8 +182,8 @@ func getUserMediaRating(c *gin.Context, ratingService *features.RatingService) {
 // @Success 200 {object} ratingResults
 // @Failure 400 {object} errorResponse
 // @Failure 500 {object} errorResponse
-// @Router /rating/user/{userID} [get]
-func getUserRating(c *gin.Context, ratingService *features.RatingService) {
+// @Router /rating/movie/user/{userID} [get]
+func getUserMovieRatings(c *gin.Context, ratingService *features.RatingService) {
 	userID := c.Param("userID")
 	if userID == "" {
 		c.JSON(400, errorResponse{Error: "userID is required"})
@@ -147,29 +194,61 @@ func getUserRating(c *gin.Context, ratingService *features.RatingService) {
 		page = 1
 	}
 
-	ratings, count, err := ratingService.GetUsersRating(userID, page)
+	ratings, count, err := ratingService.GetUsersMovieRatings(userID, page)
 	if err != nil {
 		c.JSON(500, errorResponse{Error: err.Error()})
 		return
 	}
 	c.JSON(200, ratingResults{
-		Results:     toRatingsResponse(ratings),
+		Results:     toMovieRatingsResponse(ratings),
 		TotalResult: count,
 	})
 }
 
-// @Summary Save media's rating
-// @Description Save media's rating
+// @Summary Get user's tv show ratings
+// @Description Get user's ratings
 // @Tags Rating
-// @Param mediaID path int true "Media ID"
+// @Param userID path string true "User ID"
+// @Param page query int false "Page number"
+// @Produce json
+// @Success 200 {object} ratingResults
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /rating/tv/user/{userID} [get]
+func getUserTVShowRatings(c *gin.Context, ratingService *features.RatingService) {
+	userID := c.Param("userID")
+	if userID == "" {
+		c.JSON(400, errorResponse{Error: "userID is required"})
+		return
+	}
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		page = 1
+	}
+
+	ratings, count, err := ratingService.GetUsersTvShowRatings(userID, page)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, ratingResults{
+		Results:     toTVShowRatingsResponse(ratings),
+		TotalResult: count,
+	})
+}
+
+// @Summary Save movie's rating
+// @Description Save movie's rating
+// @Tags Rating
+// @Param mediaID path int true "Movie ID"
 // @Param user-id header string true "User ID"
 // @Param rating body ratingRequest true "Rating"
 // @Produce json
 // @Success 200 {object} ratingResponse
 // @Failure 400 {object} errorResponse
 // @Failure 500 {object} errorResponse
-// @Router /rating/media/{mediaID} [post]
-func saveMediaRating(c *gin.Context, ratingService *features.RatingService) {
+// @Router /rating/movie/{mediaID} [post]
+func saveMovieRating(c *gin.Context, ratingService *features.RatingService) {
 	mediaID, err := strconv.Atoi(c.Param("mediaID"))
 	if err != nil {
 		c.JSON(400, errorResponse{Error: "mediaID must be a number"})
@@ -191,10 +270,51 @@ func saveMediaRating(c *gin.Context, ratingService *features.RatingService) {
 		return
 	}
 
-	rating, err := ratingService.RateMedia(userID, mediaID, ratingRequest.Rating)
+	rating, err := ratingService.RateMovie(userID, mediaID, ratingRequest.Rating)
 	if err != nil {
 		c.JSON(500, errorResponse{Error: err.Error()})
 		return
 	}
-	c.JSON(200, toRatingResponse(rating))
+	c.JSON(200, toMovieRatingResponse(rating))
+}
+
+// @Summary Save tv show's rating
+// @Description Save tv show's rating
+// @Tags Rating
+// @Param mediaID path int true "TV Show ID"
+// @Param user-id header string true "User ID"
+// @Param rating body ratingRequest true "Rating"
+// @Produce json
+// @Success 200 {object} ratingResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /rating/tv/{mediaID} [post]
+func saveTVShowRating(c *gin.Context, ratingService *features.RatingService) {
+	mediaID, err := strconv.Atoi(c.Param("mediaID"))
+	if err != nil {
+		c.JSON(400, errorResponse{Error: "mediaID must be a number"})
+		return
+	}
+	if mediaID <= 0 {
+		c.JSON(400, errorResponse{Error: "mediaID must be a positive number"})
+		return
+	}
+	userID := c.GetHeader("user-id")
+	if userID == "" {
+		c.JSON(400, errorResponse{Error: "user-id header is required"})
+		return
+	}
+
+	var ratingRequest ratingRequest
+	if err := c.ShouldBindJSON(&ratingRequest); err != nil {
+		c.JSON(400, errorResponse{Error: err.Error()})
+		return
+	}
+
+	rating, err := ratingService.RateTvShow(userID, mediaID, ratingRequest.Rating)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, toTVShowRatingResponse(rating))
 }
