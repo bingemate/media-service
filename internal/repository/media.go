@@ -582,6 +582,60 @@ func (r *MediaRepository) GetUserTvShowComments(userID string, size, page int) (
 	return comments, int(count), nil
 }
 
+// GetUserMovieCommentsByRange returns a list of comments for a movie
+func (r *MediaRepository) GetUserMovieCommentsByRange(userID string, start, end time.Time) ([]*repository.MovieComment, error) {
+	var comments []*repository.MovieComment
+	result := r.db.Model(&repository.MovieComment{}).
+		Where("user_id = ? AND created_at BETWEEN ? AND ?", userID, start, end).
+		Order("created_at DESC").
+		Find(&comments)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return comments, nil
+}
+
+// GetUserTvShowCommentsByRange returns a list of comments for a tv show
+func (r *MediaRepository) GetUserTvShowCommentsByRange(userID string, start, end time.Time) ([]*repository.TvShowComment, error) {
+	var comments []*repository.TvShowComment
+	result := r.db.Model(&repository.TvShowComment{}).
+		Where("user_id = ? AND created_at BETWEEN ? AND ?", userID, start, end).
+		Order("created_at DESC").
+		Find(&comments)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return comments, nil
+}
+
+// CountUserMovieComments returns the number of comments for a movie
+func (r *MediaRepository) CountUserMovieComments(userID string) (int, error) {
+	var count int64
+	result := r.db.Model(&repository.MovieComment{}).
+		Where("user_id = ?", userID).
+		Count(&count)
+
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int(count), nil
+}
+
+// CountUserTvShowComments returns the number of comments for a tv show
+func (r *MediaRepository) CountUserTvShowComments(userID string) (int, error) {
+	var count int64
+	result := r.db.Model(&repository.TvShowComment{}).
+		Where("user_id = ?", userID).
+		Count(&count)
+
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int(count), nil
+}
+
 //func (r *MediaRepository) AddComment(userID string, mediaID int, content string) (*repository.Comment, error) {
 //	comment := repository.Comment{
 //		UserID:  userID,
