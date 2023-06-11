@@ -59,22 +59,23 @@ type movieResponse struct {
 }
 
 type tvShowResponse struct {
-	ID           int                `json:"id" example:"200777"`
-	Present      bool               `json:"present" example:"true"`
-	Actors       []person           `json:"actors"`
-	BackdropURL  string             `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"`
-	Crew         []crew             `json:"crew"`
-	Genres       []genre            `json:"genres"`
-	Overview     string             `json:"overview" example:"Ray White est un jeune homme venant d'entrer dans la populaire académie de magie Arnold. En tant que..."`
-	PosterURL    string             `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"`
-	ReleaseDate  string             `json:"releaseDate" example:"2023-01-06"`
-	Networks     []studio           `json:"networks"`
-	Status       string             `json:"status" example:"Ended"`
-	NextEpisode  *tvEpisodeResponse `json:"nextEpisode"`
-	Title        string             `json:"title" example:"The Iceblade Sorcerer Shall Rule the World"`
-	SeasonsCount int                `json:"seasonsCount" example:"1"`
-	VoteAverage  float32            `json:"voteAverage" example:"6.7"`
-	VoteCount    int                `json:"voteCount" example:"11"`
+	ID            int                `json:"id" example:"200777"`
+	Present       bool               `json:"present" example:"true"`
+	Actors        []person           `json:"actors"`
+	BackdropURL   string             `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"`
+	Crew          []crew             `json:"crew"`
+	Genres        []genre            `json:"genres"`
+	Overview      string             `json:"overview" example:"Ray White est un jeune homme venant d'entrer dans la populaire académie de magie Arnold. En tant que..."`
+	PosterURL     string             `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"`
+	ReleaseDate   string             `json:"releaseDate" example:"2023-01-06"`
+	Networks      []studio           `json:"networks"`
+	Status        string             `json:"status" example:"Ended"`
+	NextEpisode   *tvEpisodeResponse `json:"nextEpisode"`
+	Title         string             `json:"title" example:"The Iceblade Sorcerer Shall Rule the World"`
+	SeasonsCount  int                `json:"seasonsCount" example:"1"`
+	EpisodesCount int                `json:"episodesCount" example:"12"`
+	VoteAverage   float32            `json:"voteAverage" example:"6.7"`
+	VoteCount     int                `json:"voteCount" example:"11"`
 }
 
 type tvEpisodeResponse struct {
@@ -303,10 +304,11 @@ func toTVShowResponse(tvShow *tmdb.TVShow, present bool) *tvShowResponse {
 			}
 			return toTVEpisodeResponse(tvShow.NextEpisode, false)
 		}(),
-		SeasonsCount: tvShow.SeasonsCount,
-		Status:       tvShow.Status,
-		VoteAverage:  tvShow.VoteAverage,
-		VoteCount:    tvShow.VoteCount,
+		SeasonsCount:  tvShow.SeasonsCount,
+		EpisodesCount: tvShow.EpisodesCount,
+		Status:        tvShow.Status,
+		VoteAverage:   tvShow.VoteAverage,
+		VoteCount:     tvShow.VoteCount,
 	}
 }
 
