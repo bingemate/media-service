@@ -4,6 +4,7 @@ import (
 	"fmt"
 	repository2 "github.com/bingemate/media-go-pkg/repository"
 	"github.com/bingemate/media-service/internal/repository"
+	"time"
 )
 
 type CommentService struct {
@@ -120,4 +121,40 @@ func (s *CommentService) UpdateTvShowComment(commentID, userID string, isAdmin b
 	}
 
 	return s.mediaRepository.UpdateTvShowComment(commentID, content)
+}
+
+func (s *CommentService) GetUserMovieCommentsByRange(userID string, start, end string) ([]*repository2.MovieComment, error) {
+	startTime, err := time.Parse("2006-01-02", start)
+	if err != nil {
+		return nil, err
+	}
+	endTime, err := time.Parse("2006-01-02", end)
+	if err != nil {
+		return nil, err
+	}
+	return s.mediaRepository.GetUserMovieCommentsByRange(userID, startTime, endTime)
+}
+
+func (s *CommentService) GetUserTvShowCommentsByRange(userID string, start, end string) ([]*repository2.TvShowComment, error) {
+	startTime, err := time.Parse("2006-01-02", start)
+	if err != nil {
+		return nil, err
+	}
+	endTime, err := time.Parse("2006-01-02", end)
+	if err != nil {
+		return nil, err
+	}
+	return s.mediaRepository.GetUserTvShowCommentsByRange(userID, startTime, endTime)
+}
+
+func (s *CommentService) CountUserComments(userID string) (int, error) {
+	movieCommentsCount, err := s.mediaRepository.CountUserMovieComments(userID)
+	if err != nil {
+		return 0, err
+	}
+	tvShowCommentsCount, err := s.mediaRepository.CountUserTvShowComments(userID)
+	if err != nil {
+		return 0, err
+	}
+	return movieCommentsCount + tvShowCommentsCount, nil
 }
