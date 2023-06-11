@@ -403,8 +403,8 @@ func (r *MediaRepository) GetTvShowsByComments(present bool) (*[]int, error) {
 	var tvShowIds []int
 
 	query := r.db.Model(&repository.TvShowComment{}).
-		Select("tv_show_id").
-		Group("tv_show_id").
+		Select("tv_show_comments.tv_show_id").
+		Group("tv_show_comments.tv_show_id").
 		Order("COUNT(tv_show_comments.id) DESC").
 		Limit(20)
 
