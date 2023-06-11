@@ -700,15 +700,9 @@ paths:
       tags:
       - Calendar
       - TvShow
-  /comment/count/{userID}:
+  /comment/count:
     get:
-      description: Get User's comments count
-      parameters:
-      - description: User ID
-        in: path
-        name: userID
-        required: true
-        type: string
+      description: Get comments count
       produces:
       - application/json
       responses:
@@ -716,26 +710,17 @@ paths:
           description: OK
           schema:
             type: integer
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/controllers.errorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get User's comments count
+      summary: Get comments count
       tags:
       - Comment
-  /comment/history/{userID}:
+  /comment/history:
     get:
-      description: Get User's comments history
+      description: Get comments history
       parameters:
-      - description: User ID
-        in: path
-        name: userID
-        required: true
-        type: string
       - description: Start date (YYYY-MM-DD)
         in: query
         name: start
@@ -761,7 +746,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get User's comments history
+      summary: Get comments history
       tags:
       - Comment
   /comment/movie/{commentID}:
@@ -1114,6 +1099,70 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get user's tv show comments
+      tags:
+      - Comment
+  /comment/user/count/{userID}:
+    get:
+      description: Get User's comments count
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get User's comments count
+      tags:
+      - Comment
+  /comment/user/history/{userID}:
+    get:
+      description: Get User's comments history
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: start
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.commentHistoryReponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get User's comments history
       tags:
       - Comment
   /discover/movie/actor:
@@ -2067,6 +2116,23 @@ paths:
       summary: Ping
       tags:
       - Ping
+  /rating/count:
+    get:
+      description: Get rating count
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get rating count
+      tags:
+      - Rating
   /rating/movie/{mediaID}:
     get:
       description: Get movie's rating
@@ -2327,6 +2393,33 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get user's tv show ratings
+      tags:
+      - Rating
+  /rating/user/count/{userID}:
+    get:
+      description: Get User's rating count
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get User's rating count
       tags:
       - Rating
 swagger: "2.0"
