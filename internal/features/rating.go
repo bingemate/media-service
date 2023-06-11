@@ -83,3 +83,27 @@ func (s *RatingService) RateMovie(userID string, movieID, rating int) (*reposito
 func (s *RatingService) RateTvShow(userID string, tvShowID, rating int) (*repository2.TvShowRating, error) {
 	return s.mediaRepository.SaveTvShowRating(tvShowID, userID, rating)
 }
+
+func (s *RatingService) CountUserRatings(userID string) (int, error) {
+	movieRatingCount, err := s.mediaRepository.CountUserMovieRatings(userID)
+	if err != nil {
+		return 0, err
+	}
+	tvShowRatingCount, err := s.mediaRepository.CountUserTvShowRatings(userID)
+	if err != nil {
+		return 0, err
+	}
+	return movieRatingCount + tvShowRatingCount, nil
+}
+
+func (s *RatingService) CountRatings() (int, error) {
+	movieRatingCount, err := s.mediaRepository.CountMovieRatings()
+	if err != nil {
+		return 0, err
+	}
+	tvShowRatingCount, err := s.mediaRepository.CountTvShowRatings()
+	if err != nil {
+		return 0, err
+	}
+	return movieRatingCount + tvShowRatingCount, nil
+}

@@ -158,3 +158,39 @@ func (s *CommentService) CountUserComments(userID string) (int, error) {
 	}
 	return movieCommentsCount + tvShowCommentsCount, nil
 }
+
+func (s *CommentService) GetMovieCommentsByRange(start, end string) ([]*repository2.MovieComment, error) {
+	startTime, err := time.Parse("2006-01-02", start)
+	if err != nil {
+		return nil, err
+	}
+	endTime, err := time.Parse("2006-01-02", end)
+	if err != nil {
+		return nil, err
+	}
+	return s.mediaRepository.GetMovieCommentsByRange(startTime, endTime)
+}
+
+func (s *CommentService) GetTvShowCommentsByRange(start, end string) ([]*repository2.TvShowComment, error) {
+	startTime, err := time.Parse("2006-01-02", start)
+	if err != nil {
+		return nil, err
+	}
+	endTime, err := time.Parse("2006-01-02", end)
+	if err != nil {
+		return nil, err
+	}
+	return s.mediaRepository.GetTvShowCommentsByRange(startTime, endTime)
+}
+
+func (s *CommentService) CountComments() (int, error) {
+	movieCommentsCount, err := s.mediaRepository.CountMovieComments()
+	if err != nil {
+		return 0, err
+	}
+	tvShowCommentsCount, err := s.mediaRepository.CountTvShowComments()
+	if err != nil {
+		return 0, err
+	}
+	return movieCommentsCount + tvShowCommentsCount, nil
+}
