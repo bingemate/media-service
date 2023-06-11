@@ -322,6 +322,9 @@ definitions:
         items:
           $ref: '#/definitions/controllers.crew'
         type: array
+      episodesCount:
+        example: 12
+        type: integer
       genres:
         items:
           $ref: '#/definitions/controllers.genre'

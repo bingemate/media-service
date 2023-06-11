@@ -3262,6 +3262,10 @@ const docTemplate = `{
                         "$ref": "#/definitions/controllers.crew"
                     }
                 },
+                "episodesCount": {
+                    "type": "integer",
+                    "example": 12
+                },
                 "genres": {
                     "type": "array",
                     "items": {
