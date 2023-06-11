@@ -31,6 +31,12 @@ func InitRatingController(engine *gin.RouterGroup, ratingService *features.Ratin
 	engine.POST("/tv/:mediaID", func(c *gin.Context) {
 		saveTVShowRating(c, ratingService)
 	})
+	engine.GET("/user/count/:userID", func(c *gin.Context) {
+		getUserRatingCount(c, ratingService)
+	})
+	engine.GET("/count", func(c *gin.Context) {
+		getRatingCount(c, ratingService)
+	})
 }
 
 // @Summary Get movie's rating
@@ -317,4 +323,44 @@ func saveTVShowRating(c *gin.Context, ratingService *features.RatingService) {
 		return
 	}
 	c.JSON(200, toTVShowRatingResponse(rating))
+}
+
+// @Summary Get User's rating count
+// @Description Get User's rating count
+// @Tags Rating
+// @Param userID path string true "User ID"
+// @Produce json
+// @Success 200 {object} int
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /rating/user/count/{userID} [get]
+func getUserRatingCount(c *gin.Context, ratingService *features.RatingService) {
+	userID := c.Param("userID")
+	if userID == "" {
+		c.JSON(400, errorResponse{Error: "userID is required"})
+		return
+	}
+
+	count, err := ratingService.CountUserRatings(userID)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, count)
+}
+
+// @Summary Get rating count
+// @Description Get rating count
+// @Tags Rating
+// @Produce json
+// @Success 200 {object} int
+// @Failure 500 {object} errorResponse
+// @Router /rating/count [get]
+func getRatingCount(c *gin.Context, ratingService *features.RatingService) {
+	count, err := ratingService.CountRatings()
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, count)
 }

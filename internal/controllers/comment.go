@@ -24,7 +24,6 @@ func InitCommentController(engine *gin.RouterGroup, commentService *features.Com
 	engine.PUT("movie/:commentID", func(c *gin.Context) {
 		updateMovieComment(c, commentService)
 	})
-
 	engine.GET("tv/:mediaID", func(c *gin.Context) {
 		getTVShowComments(c, commentService)
 	})
@@ -40,11 +39,17 @@ func InitCommentController(engine *gin.RouterGroup, commentService *features.Com
 	engine.PUT("tv/:commentID", func(c *gin.Context) {
 		updateTVShowComment(c, commentService)
 	})
-	engine.GET("history/:userID", func(c *gin.Context) {
+	engine.GET("user/history/:userID", func(c *gin.Context) {
 		getUserCommentHistory(c, commentService)
 	})
-	engine.GET("count/:userID", func(c *gin.Context) {
+	engine.GET("user/count/:userID", func(c *gin.Context) {
 		getUserCommentCount(c, commentService)
+	})
+	engine.GET("/history", func(c *gin.Context) {
+		getCommentHistory(c, commentService)
+	})
+	engine.GET("/count", func(c *gin.Context) {
+		getCommentCount(c, commentService)
 	})
 }
 
@@ -446,7 +451,7 @@ func updateTVShowComment(c *gin.Context, commentService *features.CommentService
 // @Success 200 {array} commentHistoryReponse
 // @Failure 400 {object} errorResponse
 // @Failure 500 {object} errorResponse
-// @Router /comment/history/{userID} [get]
+// @Router /comment/user/history/{userID} [get]
 func getUserCommentHistory(c *gin.Context, commentService *features.CommentService) {
 	userID := c.Param("userID")
 	if userID == "" {
@@ -498,7 +503,7 @@ func getUserCommentHistory(c *gin.Context, commentService *features.CommentServi
 // @Success 200 {object} int
 // @Failure 400 {object} errorResponse
 // @Failure 500 {object} errorResponse
-// @Router /comment/count/{userID} [get]
+// @Router /comment/user/count/{userID} [get]
 func getUserCommentCount(c *gin.Context, commentService *features.CommentService) {
 	userID := c.Param("userID")
 	if userID == "" {
@@ -507,6 +512,69 @@ func getUserCommentCount(c *gin.Context, commentService *features.CommentService
 	}
 
 	count, err := commentService.CountUserComments(userID)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, count)
+}
+
+// @Summary Get comments history
+// @Description Get comments history
+// @Tags Comment
+// @Param start query string false "Start date (YYYY-MM-DD)"
+// @Param end query string false "End date (YYYY-MM-DD)"
+// @Produce json
+// @Success 200 {array} commentHistoryReponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /comment/history [get]
+func getCommentHistory(c *gin.Context, commentService *features.CommentService) {
+	start := c.Query("start")
+	end := c.Query("end")
+
+	if start == "" {
+		now := time.Now()
+		currentYear := now.Year()
+		currentMonth := now.Month()
+		currentLocation := now.Location()
+
+		firstDayOfCurrentMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+		start = firstDayOfCurrentMonth.Format("2006-01-02")
+	}
+	if end == "" {
+		now := time.Now()
+		currentYear := now.Year()
+		currentMonth := now.Month()
+		currentLocation := now.Location()
+
+		firstDayOfCurrentMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+		lastDayOfCurrentMonth := firstDayOfCurrentMonth.AddDate(0, 1, -1)
+		end = lastDayOfCurrentMonth.Format("2006-01-02")
+	}
+
+	movieCommentsHistory, err := commentService.GetMovieCommentsByRange(start, end)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	tvShowCommentsHistory, err := commentService.GetTvShowCommentsByRange(start, end)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, toCommentHistories(movieCommentsHistory, tvShowCommentsHistory))
+}
+
+// @Summary Get comments count
+// @Description Get comments count
+// @Tags Comment
+// @Produce json
+// @Success 200 {object} int
+// @Failure 500 {object} errorResponse
+// @Router /comment/count [get]
+func getCommentCount(c *gin.Context, commentService *features.CommentService) {
+	count, err := commentService.CountComments()
 	if err != nil {
 		c.JSON(500, errorResponse{Error: err.Error()})
 		return
