@@ -240,7 +240,7 @@ func (r *MediaRepository) GetAvailableTvShowsByRating(page, limit, days int) ([]
 		Select("tv_shows.*, AVG(tv_show_ratings.rating) as average_rating").
 		Joins("LEFT JOIN tv_show_ratings ON tv_show_ratings.tv_show_id = tv_shows.id AND tv_show_ratings.created_at > ?", time.Now().AddDate(0, 0, -days)).
 		Joins("JOIN episodes ON episodes.tv_show_id = tv_shows.id").
-		Where("tv_shows.media_file_id IS NOT NULL").
+		Where("episodes.media_file_id IS NOT NULL").
 		Group("tv_shows.id").
 		Having("COUNT(DISTINCT episodes.id) > 0").
 		Count(&count).
