@@ -1675,7 +1675,7 @@ paths:
       tags:
       - Discover
       - TvShow
-  /media-file/episode/{id}:
+  /file/episode/{id}:
     get:
       description: Get episode file info by its Episode TMDB ID
       parameters:
@@ -1706,7 +1706,7 @@ paths:
       summary: Get episode file info by its Episode TMDB ID
       tags:
       - File
-  /media-file/movie/{id}:
+  /file/movie/{id}:
     get:
       description: Get movie file info by its Movie TMDB ID
       parameters:
@@ -1737,7 +1737,7 @@ paths:
       summary: Get movie file info by its Movie TMDB ID
       tags:
       - File
-  /media-file/tv/{id}/available:
+  /file/tv/{id}/available:
     get:
       description: Get all available episodes id for a tv show
       parameters:

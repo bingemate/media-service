@@ -1938,7 +1938,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/media-file/episode/{id}": {
+        "/file/episode/{id}": {
             "get": {
                 "description": "Get episode file info by its Episode TMDB ID",
                 "produces": [
@@ -1985,7 +1985,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/media-file/movie/{id}": {
+        "/file/movie/{id}": {
             "get": {
                 "description": "Get movie file info by its Movie TMDB ID",
                 "produces": [
@@ -2032,7 +2032,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/media-file/tv/{id}/available": {
+        "/file/tv/{id}/available": {
             "get": {
                 "description": "Get all available episodes id for a tv show",
                 "produces": [
