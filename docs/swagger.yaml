@@ -27,6 +27,15 @@ definitions:
         example: jpn
         type: string
     type: object
+  controllers.commentHistoryReponse:
+    properties:
+      count:
+        example: 12
+        type: integer
+      date:
+        example: "2023-05-07"
+        type: string
+    type: object
   controllers.commentRequest:
     properties:
       content:
@@ -691,6 +700,70 @@ paths:
       tags:
       - Calendar
       - TvShow
+  /comment/count/{userID}:
+    get:
+      description: Get User's comments count
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get User's comments count
+      tags:
+      - Comment
+  /comment/history/{userID}:
+    get:
+      description: Get User's comments history
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: start
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.commentHistoryReponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get User's comments history
+      tags:
+      - Comment
   /comment/movie/{commentID}:
     delete:
       description: Delete movie comment
