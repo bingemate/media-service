@@ -610,6 +610,34 @@ func (r *MediaRepository) GetUserTvShowCommentsByRange(userID string, start, end
 	return comments, nil
 }
 
+// GetMovieCommentsByRange returns a list of comments for a movie
+func (r *MediaRepository) GetMovieCommentsByRange(start, end time.Time) ([]*repository.MovieComment, error) {
+	var comments []*repository.MovieComment
+	result := r.db.Model(&repository.MovieComment{}).
+		Where("created_at BETWEEN ? AND ?", start, end).
+		Order("created_at DESC").
+		Find(&comments)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return comments, nil
+}
+
+// GetTvShowCommentsByRange returns a list of comments for a tv show
+func (r *MediaRepository) GetTvShowCommentsByRange(start, end time.Time) ([]*repository.TvShowComment, error) {
+	var comments []*repository.TvShowComment
+	result := r.db.Model(&repository.TvShowComment{}).
+		Where("created_at BETWEEN ? AND ?", start, end).
+		Order("created_at DESC").
+		Find(&comments)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return comments, nil
+}
+
 // CountUserMovieComments returns the number of comments for a movie
 func (r *MediaRepository) CountUserMovieComments(userID string) (int, error) {
 	var count int64
@@ -628,6 +656,30 @@ func (r *MediaRepository) CountUserTvShowComments(userID string) (int, error) {
 	var count int64
 	result := r.db.Model(&repository.TvShowComment{}).
 		Where("user_id = ?", userID).
+		Count(&count)
+
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int(count), nil
+}
+
+// CountMovieComments returns the number of comments for a movie
+func (r *MediaRepository) CountMovieComments() (int, error) {
+	var count int64
+	result := r.db.Model(&repository.MovieComment{}).
+		Count(&count)
+
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int(count), nil
+}
+
+// CountTvShowComments returns the number of comments for a tv show
+func (r *MediaRepository) CountTvShowComments() (int, error) {
+	var count int64
+	result := r.db.Model(&repository.TvShowComment{}).
 		Count(&count)
 
 	if result.Error != nil {
@@ -1071,4 +1123,46 @@ func (r *MediaRepository) AvailableEpisodes(tvShowID int) (*[]int, error) {
 		return nil, result.Error
 	}
 	return &episodeIDs, nil
+}
+
+func (r *MediaRepository) CountUserMovieRatings(userID string) (int, error) {
+	var count int64
+	result := r.db.Model(&repository.MovieRating{}).
+		Where("user_id = ?", userID).
+		Count(&count)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int(count), nil
+}
+
+func (r *MediaRepository) CountUserTvShowRatings(userID string) (int, error) {
+	var count int64
+	result := r.db.Model(&repository.TvShowRating{}).
+		Where("user_id = ?", userID).
+		Count(&count)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int(count), nil
+}
+
+func (r *MediaRepository) CountMovieRatings() (int, error) {
+	var count int64
+	result := r.db.Model(&repository.MovieRating{}).
+		Count(&count)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int(count), nil
+}
+
+func (r *MediaRepository) CountTvShowRatings() (int, error) {
+	var count int64
+	result := r.db.Model(&repository.TvShowRating{}).
+		Count(&count)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int(count), nil
 }
