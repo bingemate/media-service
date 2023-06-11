@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/bingemate/media-go-pkg/repository"
 	"github.com/bingemate/media-go-pkg/tmdb"
+	"sort"
 	"time"
 )
 
@@ -142,6 +143,11 @@ type commentResponse struct {
 type commentResults struct {
 	Results     []*commentResponse `json:"results"`
 	TotalResult int                `json:"totalResult" example:"1412"`
+}
+
+type commentHistoryReponse struct {
+	Date  string `json:"date" example:"2023-05-07"`
+	Count int    `json:"count" example:"12"`
 }
 
 type ratingRequest struct {
@@ -515,4 +521,40 @@ func toTVShowRatingsResponse(ratings []*repository.TvShowRating) []*ratingRespon
 		ratingsResponse[i] = toTVShowRatingResponse(rating)
 	}
 	return ratingsResponse
+}
+
+func toCommentHistories(movieComments []*repository.MovieComment, tvShowComments []*repository.TvShowComment) []*commentHistoryReponse {
+	var commentMap = make(map[string]*commentHistoryReponse)
+	for _, comment := range movieComments {
+		date := comment.CreatedAt.Format("2006-01-02")
+		if _, ok := commentMap[date]; !ok {
+			commentMap[date] = &commentHistoryReponse{
+				Date:  date,
+				Count: 1,
+			}
+		} else {
+			commentMap[date].Count++
+		}
+	}
+	for _, comment := range tvShowComments {
+		date := comment.CreatedAt.Format("2006-01-02")
+		if _, ok := commentMap[date]; !ok {
+			commentMap[date] = &commentHistoryReponse{
+				Date:  date,
+				Count: 1,
+			}
+		} else {
+			commentMap[date].Count++
+		}
+	}
+	var commentHistories = make([]*commentHistoryReponse, len(commentMap))
+	i := 0
+	for _, commentHistory := range commentMap {
+		commentHistories[i] = commentHistory
+		i++
+	}
+	sort.Slice(commentHistories, func(i, j int) bool {
+		return commentHistories[i].Date < commentHistories[j].Date
+	})
+	return commentHistories
 }

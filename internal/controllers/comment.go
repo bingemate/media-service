@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func InitCommentController(engine *gin.RouterGroup, commentService *features.CommentService) {
@@ -38,6 +39,12 @@ func InitCommentController(engine *gin.RouterGroup, commentService *features.Com
 	})
 	engine.PUT("tv/:commentID", func(c *gin.Context) {
 		updateTVShowComment(c, commentService)
+	})
+	engine.GET("history/:userID", func(c *gin.Context) {
+		getUserCommentHistory(c, commentService)
+	})
+	engine.GET("count/:userID", func(c *gin.Context) {
+		getUserCommentCount(c, commentService)
 	})
 }
 
@@ -427,4 +434,82 @@ func updateTVShowComment(c *gin.Context, commentService *features.CommentService
 		return
 	}
 	c.JSON(200, toTVShowCommentResponse(commentResult))
+}
+
+// @Summary Get User's comments history
+// @Description Get User's comments history
+// @Tags Comment
+// @Param userID path string true "User ID"
+// @Param start query string false "Start date (YYYY-MM-DD)"
+// @Param end query string false "End date (YYYY-MM-DD)"
+// @Produce json
+// @Success 200 {array} commentHistoryReponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /comment/history/{userID} [get]
+func getUserCommentHistory(c *gin.Context, commentService *features.CommentService) {
+	userID := c.Param("userID")
+	if userID == "" {
+		c.JSON(400, errorResponse{Error: "userID is required"})
+		return
+	}
+
+	start := c.Query("start")
+	end := c.Query("end")
+
+	if start == "" {
+		now := time.Now()
+		currentYear := now.Year()
+		currentMonth := now.Month()
+		currentLocation := now.Location()
+
+		firstDayOfCurrentMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+		start = firstDayOfCurrentMonth.Format("2006-01-02")
+	}
+	if end == "" {
+		now := time.Now()
+		currentYear := now.Year()
+		currentMonth := now.Month()
+		currentLocation := now.Location()
+
+		firstDayOfCurrentMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+		lastDayOfCurrentMonth := firstDayOfCurrentMonth.AddDate(0, 1, -1)
+		end = lastDayOfCurrentMonth.Format("2006-01-02")
+	}
+
+	movieCommentsHistory, err := commentService.GetUserMovieCommentsByRange(userID, start, end)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	tvShowCommentsHistory, err := commentService.GetUserTvShowCommentsByRange(userID, start, end)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, toCommentHistories(movieCommentsHistory, tvShowCommentsHistory))
+}
+
+// @Summary Get User's comments count
+// @Description Get User's comments count
+// @Tags Comment
+// @Param userID path string true "User ID"
+// @Produce json
+// @Success 200 {object} int
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /comment/count/{userID} [get]
+func getUserCommentCount(c *gin.Context, commentService *features.CommentService) {
+	userID := c.Param("userID")
+	if userID == "" {
+		c.JSON(400, errorResponse{Error: "userID is required"})
+		return
+	}
+
+	count, err := commentService.CountUserComments(userID)
+	if err != nil {
+		c.JSON(500, errorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(200, count)
 }
