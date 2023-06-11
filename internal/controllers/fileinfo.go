@@ -28,7 +28,7 @@ func InitFileInfoController(engine *gin.RouterGroup, fileInfo *features.MediaFil
 // @Failure		400	{object} errorResponse
 // @Failure		404	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/media-file/movie/{id} [get]
+// @Router			/file/movie/{id} [get]
 func getMovieFileInfo(c *gin.Context, mediaData *features.MediaFile) {
 	mediaID, err := strconv.Atoi(c.Param("id"))
 	result, err := mediaData.GetMovieFileInfo(mediaID)
@@ -62,7 +62,7 @@ func getMovieFileInfo(c *gin.Context, mediaData *features.MediaFile) {
 // @Failure		400	{object} errorResponse
 // @Failure		404	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/media-file/episode/{id} [get]
+// @Router			/file/episode/{id} [get]
 func getEpisodeFileInfo(c *gin.Context, mediaData *features.MediaFile) {
 	mediaID, err := strconv.Atoi(c.Param("id"))
 	result, err := mediaData.GetEpisodeFileInfo(mediaID)
@@ -96,7 +96,7 @@ func getEpisodeFileInfo(c *gin.Context, mediaData *features.MediaFile) {
 // @Failure 400 {object} errorResponse
 // @Failure 404 {object} errorResponse
 // @Failure 500 {object} errorResponse
-// @Router /media-file/tv/{id}/available [get]
+// @Router /file/tv/{id}/available [get]
 func getAvailableEpisodes(c *gin.Context, mediaData *features.MediaFile) {
 	mediaID, err := strconv.Atoi(c.Param("id"))
 	result, err := mediaData.GetAvailableEpisode(mediaID)

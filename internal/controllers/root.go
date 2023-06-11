@@ -21,7 +21,7 @@ func InitRouter(engine *gin.Engine, db *gorm.DB, env initializers.Env) {
 	var commentService = features.NewCommentService(mediaRepository)
 	var ratingService = features.NewRatingService(mediaRepository)
 	InitMediaDataController(mediaServiceGroup.Group("/media"), mediaData)
-	InitFileInfoController(mediaServiceGroup.Group("/media-file"), mediaFile)
+	InitFileInfoController(mediaServiceGroup.Group("/file"), mediaFile)
 	InitDiscoverController(mediaServiceGroup.Group("/discover"), mediaDiscover)
 	InitCalendarController(mediaServiceGroup.Group("/calendar"), mediaCalendar)
 	InitMediaAssetsController(mediaServiceGroup.Group("/assets"), mediaAssetData)

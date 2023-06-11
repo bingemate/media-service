@@ -1118,6 +1118,7 @@ func (r *MediaRepository) AvailableEpisodes(tvShowID int) (*[]int, error) {
 	result := r.db.Model(&repository.Episode{}).
 		Select("id").
 		Where("tv_show_id = ? AND media_file_id IS NOT NULL", tvShowID).
+		Order("nb_season, nb_episode").
 		Find(&episodeIDs)
 	if result.Error != nil {
 		return nil, result.Error
