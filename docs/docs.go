@@ -1938,6 +1938,65 @@ const docTemplate = `{
                 }
             }
         },
+        "/file/episode/search": {
+            "get": {
+                "description": "Search tv show episodes files",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Search tv show episodes files",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.episodeFilesResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/file/episode/{id}": {
             "get": {
                 "description": "Get episode file info by its Episode TMDB ID",
@@ -1962,6 +2021,65 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/controllers.mediaFileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/movie/search": {
+            "get": {
+                "description": "Search movie files",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Search movie files",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieFilesResult"
                         }
                     },
                     "400": {
@@ -2069,6 +2187,47 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/{id}": {
+            "delete": {
+                "description": "Delete a file",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Delete a file",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "File ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/controllers.errorResponse"
                         }
@@ -3169,6 +3328,56 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.episodeFileResponse": {
+            "type": "object",
+            "properties": {
+                "episodeNumber": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "file": {
+                    "$ref": "#/definitions/controllers.mediaFileResponse"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 4137463
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Le plus puissant sorcier du monde révèle Akasha"
+                },
+                "releaseDate": {
+                    "type": "string",
+                    "example": "2023-03-24"
+                },
+                "seasonNumber": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "tvShowId": {
+                    "type": "integer",
+                    "example": 200777
+                },
+                "tvShowName": {
+                    "type": "string",
+                    "example": "The Iceblade Sorcerer Shall Rule the World"
+                }
+            }
+        },
+        "controllers.episodeFilesResult": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.episodeFileResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.errorResponse": {
             "type": "object",
             "properties": {
@@ -3216,6 +3425,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
                 },
+                "size": {
+                    "type": "integer",
+                    "example": 123456789
+                },
                 "subtitles": {
                     "type": "array",
                     "items": {
@@ -3250,6 +3463,40 @@ const docTemplate = `{
                 "updatedAt": {
                     "type": "string",
                     "example": "2023-05-07T20:31:28.327382+02:00"
+                }
+            }
+        },
+        "controllers.movieFileResponse": {
+            "type": "object",
+            "properties": {
+                "file": {
+                    "$ref": "#/definitions/controllers.mediaFileResponse"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 134564
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Apex"
+                },
+                "releaseDate": {
+                    "type": "string",
+                    "example": "2023-01-06"
+                }
+            }
+        },
+        "controllers.movieFilesResult": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.movieFileResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
