@@ -170,7 +170,7 @@ func (r *MediaRepository) SearchEpisodeFiles(query string, page, limit int) ([]*
 		Joins("TvShow").
 		Joins("MediaFile").
 		Where("media_file_id IS NOT NULL").
-		Where(`episodes.name LIKE ? OR "TvShow".name LIKE ?`, "%"+query+"%", "%"+query+"%").
+		Where(`episodes.name ILIKE ? OR "TvShow".name ILIKE ?`, "%"+query+"%", "%"+query+"%").
 		Preload("TvShow").
 		Preload("MediaFile.Audios").
 		Preload("MediaFile.Subtitles").
@@ -197,7 +197,7 @@ func (r *MediaRepository) SearchMovieFiles(query string, page, limit int) ([]*re
 		Model(&repository.Movie{}).
 		Joins("MediaFile").
 		Where("media_file_id IS NOT NULL").
-		Where(`movies.name LIKE ?`, "%"+query+"%").
+		Where(`movies.name ILIKE ?`, "%"+query+"%").
 		Preload("MediaFile.Audios").
 		Preload("MediaFile.Subtitles").
 		Group("movies.id").
