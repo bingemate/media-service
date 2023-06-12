@@ -157,6 +157,65 @@ func (r *MediaRepository) GetMovieFileInfo(movieID int) (*repository.MediaFile, 
 	return mediaFile.MediaFile, nil
 }
 
+// SearchEpisodeFiles returns a list of episodes given a query
+func (r *MediaRepository) SearchEpisodeFiles(query string, page, limit int) ([]*repository.Episode, int, error) {
+	var (
+		episodes []*repository.Episode
+		count    int64
+	)
+	offset := (page - 1) * limit
+
+	err := r.db.
+		Model(&repository.Episode{}).
+		Joins("TvShow").
+		Joins("MediaFile").
+		Where("media_file_id IS NOT NULL").
+		Where(`episodes.name LIKE ? OR "TvShow".name LIKE ?`, "%"+query+"%", "%"+query+"%").
+		Preload("TvShow").
+		Preload("MediaFile.Audios").
+		Preload("MediaFile.Subtitles").
+		Group("episodes.id").
+		Count(&count).
+		Offset(offset).
+		Limit(limit).
+		Find(&episodes).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return episodes, int(count), nil
+}
+
+// SearchMovieFiles returns a list of movies given a query
+func (r *MediaRepository) SearchMovieFiles(query string, page, limit int) ([]*repository.Movie, int, error) {
+	var (
+		movies []*repository.Movie
+		count  int64
+	)
+	offset := (page - 1) * limit
+
+	err := r.db.
+		Model(&repository.Movie{}).
+		Joins("MediaFile").
+		Where("media_file_id IS NOT NULL").
+		Where(`movies.name LIKE ?`, "%"+query+"%").
+		Preload("MediaFile.Audios").
+		Preload("MediaFile.Subtitles").
+		Group("movies.id").
+		Count(&count).
+		Offset(offset).
+		Limit(limit).
+		Find(&movies).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return movies, int(count), nil
+}
+
+// DeleteMediaFile deletes a media file given the fileID
+func (r *MediaRepository) DeleteMediaFile(fileID string) error {
+	return r.db.Delete(&repository.MediaFile{}, "id = ?", fileID).Error
+}
+
 //// IsMediaPresent returns true if the media is present in the database
 //func (r *MediaRepository) IsMediaPresent(mediaID int) bool {
 //	var count int64
