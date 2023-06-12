@@ -26,6 +26,15 @@ func InitFileInfoController(engine *gin.RouterGroup, fileInfo *features.MediaFil
 	engine.DELETE(":id", func(c *gin.Context) {
 		deleteFile(c, fileInfo)
 	})
+	engine.GET("size", func(c *gin.Context) {
+		getTotalSize(c, fileInfo)
+	})
+	engine.GET("count", func(c *gin.Context) {
+		countFiles(c, fileInfo)
+	})
+	engine.GET("available", func(c *gin.Context) {
+		getAvailableSpace(c, fileInfo)
+	})
 }
 
 // @Summary		Get movie file info by its Movie TMDB ID
@@ -240,4 +249,58 @@ func deleteFile(c *gin.Context, mediaData *features.MediaFile) {
 		return
 	}
 	c.JSON(200, "OK")
+}
+
+// @Summary Get total size
+// @Description Get total size taken by all files
+// @Tags File
+// @Produce json
+// @Success 200 {int} int "Total size in bytes"
+// @Failure 500 {object} errorResponse
+// @Router /file/size [get]
+func getTotalSize(c *gin.Context, mediaData *features.MediaFile) {
+	size, err := mediaData.MediaFilesTotalSize()
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, size)
+}
+
+// @Summary Count files
+// @Description Count files
+// @Tags File
+// @Produce json
+// @Success 200 {int} int "Total number of files"
+// @Failure 500 {object} errorResponse
+// @Router /file/count [get]
+func countFiles(c *gin.Context, mediaData *features.MediaFile) {
+	count, err := mediaData.MediaFilesCount()
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, count)
+}
+
+// @Summary Get available space
+// @Description Get available space
+// @Tags File
+// @Produce json
+// @Success 200 {int} int "Available space in bytes"
+// @Failure 500 {object} errorResponse
+// @Router /file/available [get]
+func getAvailableSpace(c *gin.Context, mediaData *features.MediaFile) {
+	size, err := mediaData.AvailableSpace()
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, size)
 }
