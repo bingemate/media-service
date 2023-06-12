@@ -5,6 +5,7 @@ import (
 	repository2 "github.com/bingemate/media-go-pkg/repository"
 	"github.com/bingemate/media-service/internal/repository"
 	"gorm.io/gorm"
+	"syscall"
 )
 
 type MediaFile struct {
@@ -90,4 +91,24 @@ func (m *MediaFile) SearchMovieFiles(query string, page, limit int) ([]*reposito
 // DeleteMediaFile deletes a media file given the fileID
 func (m *MediaFile) DeleteMediaFile(fileID string) error {
 	return m.mediaRepository.DeleteMediaFile(fileID)
+}
+
+// MediaFilesTotalSize returns the total size of all media files
+func (m *MediaFile) MediaFilesTotalSize() (int64, error) {
+	return m.mediaRepository.MediaFilesTotalSize()
+}
+
+// MediaFilesCount returns the total number of media files
+func (m *MediaFile) MediaFilesCount() (int64, error) {
+	return m.mediaRepository.MediaFilesCount()
+}
+
+// AvailableSpace returns the available space in the media folder
+func (m *MediaFile) AvailableSpace() (uint64, error) {
+	fs := syscall.Statfs_t{}
+	err := syscall.Statfs(m.moviePath, &fs)
+	if err != nil {
+		return 0, err
+	}
+	return fs.Bavail * uint64(fs.Bsize), nil
 }

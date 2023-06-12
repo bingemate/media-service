@@ -1763,6 +1763,40 @@ paths:
       summary: Delete a file
       tags:
       - File
+  /file/available:
+    get:
+      description: Get available space
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Available space in bytes
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get available space
+      tags:
+      - File
+  /file/count:
+    get:
+      description: Count files
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total number of files
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Count files
+      tags:
+      - File
   /file/episode/{id}:
     get:
       description: Get episode file info by its Episode TMDB ID
@@ -1901,6 +1935,23 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Search movie files
+      tags:
+      - File
+  /file/size:
+    get:
+      description: Get total size taken by all files
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total size in bytes
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get total size
       tags:
       - File
   /file/tv/{id}/available:

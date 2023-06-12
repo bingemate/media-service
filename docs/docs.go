@@ -1938,6 +1938,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/file/available": {
+            "get": {
+                "description": "Get available space",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Get available space",
+                "responses": {
+                    "200": {
+                        "description": "Available space in bytes",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/count": {
+            "get": {
+                "description": "Count files",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Count files",
+                "responses": {
+                    "200": {
+                        "description": "Total number of files",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/file/episode/search": {
             "get": {
                 "description": "Search tv show episodes files",
@@ -2139,6 +2191,32 @@ const docTemplate = `{
                         "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/size": {
+            "get": {
+                "description": "Get total size taken by all files",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Get total size",
+                "responses": {
+                    "200": {
+                        "description": "Total size in bytes",
+                        "schema": {
+                            "type": "int"
                         }
                     },
                     "500": {

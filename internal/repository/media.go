@@ -211,6 +211,26 @@ func (r *MediaRepository) SearchMovieFiles(query string, page, limit int) ([]*re
 	return movies, int(count), nil
 }
 
+// MediaFilesTotalSize returns the total size of all media files
+func (r *MediaRepository) MediaFilesTotalSize() (int64, error) {
+	var totalSize int64
+	err := r.db.Model(&repository.MediaFile{}).Select("SUM(size)").Row().Scan(&totalSize)
+	if err != nil {
+		return 0, err
+	}
+	return totalSize, nil
+}
+
+// MediaFilesCount returns the total number of media files
+func (r *MediaRepository) MediaFilesCount() (int64, error) {
+	var count int64
+	err := r.db.Model(&repository.MediaFile{}).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 // DeleteMediaFile deletes a media file given the fileID
 func (r *MediaRepository) DeleteMediaFile(fileID string) error {
 	return r.db.Delete(&repository.MediaFile{}, "id = ?", fileID).Error
