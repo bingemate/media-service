@@ -107,10 +107,40 @@ type episodeMediaResponse struct {
 	EpisodeNumber int       `json:"episodeNumber" example:"12"`
 	SeasonNumber  int       `json:"seasonNumber" example:"1"`
 }
+
+type episodeFileResponse struct {
+	ID            int                `json:"id" example:"4137463"`
+	Name          string             `json:"name" example:"Le plus puissant sorcier du monde révèle Akasha"`
+	ReleaseDate   string             `json:"releaseDate" example:"2023-03-24"`
+	EpisodeNumber int                `json:"episodeNumber" example:"12"`
+	SeasonNumber  int                `json:"seasonNumber" example:"1"`
+	TvShowId      int                `json:"tvShowId" example:"200777"`
+	TvShowName    string             `json:"tvShowName" example:"The Iceblade Sorcerer Shall Rule the World"`
+	File          *mediaFileResponse `json:"file"`
+}
+
+type episodeFilesResult struct {
+	Results []*episodeFileResponse `json:"results"`
+	Total   int                    `json:"total"`
+}
+
+type movieFileResponse struct {
+	ID          int                `json:"id" example:"134564"`
+	Name        string             `json:"name" example:"Apex"`
+	ReleaseDate string             `json:"releaseDate" example:"2023-01-06"`
+	File        *mediaFileResponse `json:"file"`
+}
+
+type movieFilesResult struct {
+	Results []*movieFileResponse `json:"results"`
+	Total   int                  `json:"total"`
+}
+
 type mediaFileResponse struct {
 	ID        string             `json:"id" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
 	CreatedAt time.Time          `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	UpdatedAt time.Time          `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	Size      int64              `json:"size" example:"123456789"`
 	Filename  string             `json:"filename" example:"index.m3u8"`
 	Duration  float64            `json:"duration" example:"1450.76"`
 	Audios    []audioResponse    `json:"audios"`
@@ -393,6 +423,7 @@ func toMediaFileResponse(mediaFile *repository.MediaFile) *mediaFileResponse {
 		CreatedAt: mediaFile.CreatedAt,
 		UpdatedAt: mediaFile.UpdatedAt,
 		Filename:  mediaFile.Filename,
+		Size:      mediaFile.Size,
 		Duration:  mediaFile.Duration,
 		Audios: func() []audioResponse {
 			var audios = make([]audioResponse, len(mediaFile.Audios))
@@ -557,4 +588,42 @@ func toCommentHistories(movieComments []*repository.MovieComment, tvShowComments
 		return commentHistories[i].Date < commentHistories[j].Date
 	})
 	return commentHistories
+}
+
+func toEpisodeFileResponse(episode *repository.Episode) *episodeFileResponse {
+	return &episodeFileResponse{
+		ID:            episode.ID,
+		Name:          episode.Name,
+		ReleaseDate:   episode.ReleaseDate.Format("2006-01-02"),
+		SeasonNumber:  episode.NbSeason,
+		EpisodeNumber: episode.NbEpisode,
+		TvShowId:      episode.TvShowID,
+		TvShowName:    episode.TvShow.Name,
+		File:          toMediaFileResponse(episode.MediaFile),
+	}
+}
+
+func toEpisodeFilesResponse(episodes []*repository.Episode) []*episodeFileResponse {
+	var episodesResponse = make([]*episodeFileResponse, len(episodes))
+	for i, episode := range episodes {
+		episodesResponse[i] = toEpisodeFileResponse(episode)
+	}
+	return episodesResponse
+}
+
+func toMovieFileResponse(movie *repository.Movie) *movieFileResponse {
+	return &movieFileResponse{
+		ID:          movie.ID,
+		Name:        movie.Name,
+		ReleaseDate: movie.ReleaseDate.Format("2006-01-02"),
+		File:        toMediaFileResponse(movie.MediaFile),
+	}
+}
+
+func toMovieFilesResponse(movies []*repository.Movie) []*movieFileResponse {
+	var moviesResponse = make([]*movieFileResponse, len(movies))
+	for i, movie := range movies {
+		moviesResponse[i] = toMovieFileResponse(movie)
+	}
+	return moviesResponse
 }

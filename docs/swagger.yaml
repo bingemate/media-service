@@ -88,6 +88,41 @@ definitions:
         example: Director
         type: string
     type: object
+  controllers.episodeFileResponse:
+    properties:
+      episodeNumber:
+        example: 12
+        type: integer
+      file:
+        $ref: '#/definitions/controllers.mediaFileResponse'
+      id:
+        example: 4137463
+        type: integer
+      name:
+        example: Le plus puissant sorcier du monde révèle Akasha
+        type: string
+      releaseDate:
+        example: "2023-03-24"
+        type: string
+      seasonNumber:
+        example: 1
+        type: integer
+      tvShowId:
+        example: 200777
+        type: integer
+      tvShowName:
+        example: The Iceblade Sorcerer Shall Rule the World
+        type: string
+    type: object
+  controllers.episodeFilesResult:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/controllers.episodeFileResponse'
+        type: array
+      total:
+        type: integer
+    type: object
   controllers.errorResponse:
     properties:
       error:
@@ -121,6 +156,9 @@ definitions:
       id:
         example: eec1d6b7-97c9-47e9-846b-6817d0e3d4ed
         type: string
+      size:
+        example: 123456789
+        type: integer
       subtitles:
         items:
           $ref: '#/definitions/controllers.subtitleResponse'
@@ -146,6 +184,29 @@ definitions:
       updatedAt:
         example: "2023-05-07T20:31:28.327382+02:00"
         type: string
+    type: object
+  controllers.movieFileResponse:
+    properties:
+      file:
+        $ref: '#/definitions/controllers.mediaFileResponse'
+      id:
+        example: 134564
+        type: integer
+      name:
+        example: Apex
+        type: string
+      releaseDate:
+        example: "2023-01-06"
+        type: string
+    type: object
+  controllers.movieFilesResult:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/controllers.movieFileResponse'
+        type: array
+      total:
+        type: integer
     type: object
   controllers.movieResponse:
     properties:
@@ -1675,6 +1736,33 @@ paths:
       tags:
       - Discover
       - TvShow
+  /file/{id}:
+    delete:
+      description: Delete a file
+      parameters:
+      - description: File ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Delete a file
+      tags:
+      - File
   /file/episode/{id}:
     get:
       description: Get episode file info by its Episode TMDB ID
@@ -1706,6 +1794,45 @@ paths:
       summary: Get episode file info by its Episode TMDB ID
       tags:
       - File
+  /file/episode/search:
+    get:
+      description: Search tv show episodes files
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page limit
+        in: query
+        name: limit
+        type: integer
+      - description: Search query
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.episodeFilesResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Search tv show episodes files
+      tags:
+      - File
   /file/movie/{id}:
     get:
       description: Get movie file info by its Movie TMDB ID
@@ -1735,6 +1862,45 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get movie file info by its Movie TMDB ID
+      tags:
+      - File
+  /file/movie/search:
+    get:
+      description: Search movie files
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page limit
+        in: query
+        name: limit
+        type: integer
+      - description: Search query
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.movieFilesResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Search movie files
       tags:
       - File
   /file/tv/{id}/available:
