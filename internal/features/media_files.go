@@ -76,3 +76,18 @@ func (m *MediaFile) GetAvailableEpisode(tvShowID int) (*[]int, error) {
 	}
 	return episodes, nil
 }
+
+// SearchEpisodeFiles returns all episodes that match the query
+func (m *MediaFile) SearchEpisodeFiles(query string, page, limit int) ([]*repository2.Episode, int, error) {
+	return m.mediaRepository.SearchEpisodeFiles(query, page, limit)
+}
+
+// SearchMovieFiles returns all movies that match the query
+func (m *MediaFile) SearchMovieFiles(query string, page, limit int) ([]*repository2.Movie, int, error) {
+	return m.mediaRepository.SearchMovieFiles(query, page, limit)
+}
+
+// DeleteMediaFile deletes a media file given the fileID
+func (m *MediaFile) DeleteMediaFile(fileID string) error {
+	return m.mediaRepository.DeleteMediaFile(fileID)
+}
