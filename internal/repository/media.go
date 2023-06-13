@@ -396,7 +396,7 @@ func (r *MediaRepository) GetAvailableRecentMovies(page, limit int) ([]repositor
 		Select("*").
 		Where("movies.media_file_id IS NOT NULL").
 		Count(&count).
-		Order("movies.created_at DESC, movies.updated_at DESC").
+		Order("movies.updated_at DESC, movies.created_at DESC").
 		Offset(offset).
 		Limit(limit).
 		Find(&movies)
@@ -418,7 +418,7 @@ func (r *MediaRepository) GetAvailableRecentTvShows(page, limit int) ([]reposito
 		Group("tv_shows.id").
 		Having("COUNT(DISTINCT episodes.id) > 0").
 		Count(&count).
-		Order("tv_shows.created_at DESC, tv_shows.updated_at DESC").
+		Order("episodes.updated_at DESC, episodes.created_at DESC").
 		Offset(offset).
 		Limit(limit).
 		Find(&tvShows)
