@@ -170,7 +170,7 @@ func (r *MediaRepository) SearchEpisodeFiles(query string, page, limit int) ([]*
 		Joins("TvShow").
 		Joins("MediaFile").
 		Where("media_file_id IS NOT NULL").
-		Where(`episodes.name ILIKE ? OR "TvShow".name ILIKE ?`, "%"+query+"%", "%"+query+"%").
+		Where(`unaccent(episodes.name) ILIKE unaccent(?) OR "TvShow".name ILIKE unaccent(?)`, "%"+query+"%", "%"+query+"%").
 		Preload("TvShow").
 		Preload("MediaFile.Audios").
 		Preload("MediaFile.Subtitles").
@@ -198,7 +198,7 @@ func (r *MediaRepository) SearchMovieFiles(query string, page, limit int) ([]*re
 		Model(&repository.Movie{}).
 		Joins("MediaFile").
 		Where("media_file_id IS NOT NULL").
-		Where(`movies.name ILIKE ?`, "%"+query+"%").
+		Where(`unaccent(movies.name) ILIKE unaccent(?)`, "%"+query+"%").
 		Preload("MediaFile.Audios").
 		Preload("MediaFile.Subtitles").
 		Order("movies.created_at DESC, movies.updated_at DESC").
@@ -347,7 +347,7 @@ func (r *MediaRepository) SearchAvailableMovies(page, limit int, query string) (
 	result := r.db.Table("movies").
 		Select("movies.*, AVG(movie_ratings.rating) as average_rating").
 		Joins("LEFT JOIN movie_ratings ON movie_ratings.movie_id = movies.id").
-		Where("movies.media_file_id IS NOT NULL AND movies.name ILIKE ?", "%"+query+"%").
+		Where("movies.media_file_id IS NOT NULL AND unaccent(movies.name) ILIKE unaccent(?)", "%"+query+"%").
 		Group("movies.id").
 		Count(&count).
 		Order("average_rating DESC, movies.name ASC").
@@ -373,7 +373,7 @@ func (r *MediaRepository) SearchAvailableTvShows(page, limit int, query string) 
 		Select("tv_shows.*, AVG(tv_show_ratings.rating) as average_rating").
 		Joins("LEFT JOIN tv_show_ratings ON tv_show_ratings.tv_show_id = tv_shows.id").
 		Joins("JOIN episodes ON episodes.tv_show_id = tv_shows.id").
-		Where("tv_shows.name ILIKE ?", "%"+query+"%").
+		Where("unaccent(tv_shows.name) ILIKE unaccent(?)", "%"+query+"%").
 		Where("episodes.media_file_id IS NOT NULL").
 		Group("tv_shows.id").
 		Having("COUNT(DISTINCT episodes.id) > 0").
@@ -417,7 +417,7 @@ func (r *MediaRepository) GetAvailableRecentTvShows(page, limit int) ([]reposito
 	result := r.db.Table("tv_shows").
 		Joins("JOIN episodes ON episodes.tv_show_id = tv_shows.id").
 		Where("episodes.media_file_id IS NOT NULL").
-		Order("episodes.updated_at DESC, episodes.created_at DESC").
+		//Order("episodes.updated_at DESC, episodes.created_at DESC").
 		Group("tv_shows.id").
 		Having("COUNT(DISTINCT episodes.id) > 0").
 		Count(&count).
