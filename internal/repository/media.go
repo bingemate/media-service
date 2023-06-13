@@ -174,6 +174,7 @@ func (r *MediaRepository) SearchEpisodeFiles(query string, page, limit int) ([]*
 		Preload("TvShow").
 		Preload("MediaFile.Audios").
 		Preload("MediaFile.Subtitles").
+		Order("episodes.created_at DESC, episodes.updated_at DESC").
 		Group("episodes.id").
 		Count(&count).
 		Offset(offset).
@@ -200,6 +201,7 @@ func (r *MediaRepository) SearchMovieFiles(query string, page, limit int) ([]*re
 		Where(`movies.name ILIKE ?`, "%"+query+"%").
 		Preload("MediaFile.Audios").
 		Preload("MediaFile.Subtitles").
+		Order("movies.created_at DESC, movies.updated_at DESC").
 		Group("movies.id").
 		Count(&count).
 		Offset(offset).
@@ -415,10 +417,10 @@ func (r *MediaRepository) GetAvailableRecentTvShows(page, limit int) ([]reposito
 	result := r.db.Table("tv_shows").
 		Joins("JOIN episodes ON episodes.tv_show_id = tv_shows.id").
 		Where("episodes.media_file_id IS NOT NULL").
+		Order("episodes.updated_at DESC, episodes.created_at DESC").
 		Group("tv_shows.id").
 		Having("COUNT(DISTINCT episodes.id) > 0").
 		Count(&count).
-		Order("episodes.updated_at DESC, episodes.created_at DESC").
 		Offset(offset).
 		Limit(limit).
 		Find(&tvShows)
