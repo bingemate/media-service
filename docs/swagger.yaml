@@ -27,6 +27,15 @@ definitions:
         example: jpn
         type: string
     type: object
+  controllers.commentHistoryReponse:
+    properties:
+      count:
+        example: 12
+        type: integer
+      date:
+        example: "2023-05-07"
+        type: string
+    type: object
   controllers.commentRequest:
     properties:
       content:
@@ -79,6 +88,41 @@ definitions:
         example: Director
         type: string
     type: object
+  controllers.episodeFileResponse:
+    properties:
+      episodeNumber:
+        example: 12
+        type: integer
+      file:
+        $ref: '#/definitions/controllers.mediaFileResponse'
+      id:
+        example: 4137463
+        type: integer
+      name:
+        example: Le plus puissant sorcier du monde révèle Akasha
+        type: string
+      releaseDate:
+        example: "2023-03-24"
+        type: string
+      seasonNumber:
+        example: 1
+        type: integer
+      tvShowId:
+        example: 200777
+        type: integer
+      tvShowName:
+        example: The Iceblade Sorcerer Shall Rule the World
+        type: string
+    type: object
+  controllers.episodeFilesResult:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/controllers.episodeFileResponse'
+        type: array
+      total:
+        type: integer
+    type: object
   controllers.errorResponse:
     properties:
       error:
@@ -112,6 +156,9 @@ definitions:
       id:
         example: eec1d6b7-97c9-47e9-846b-6817d0e3d4ed
         type: string
+      size:
+        example: 123456789
+        type: integer
       subtitles:
         items:
           $ref: '#/definitions/controllers.subtitleResponse'
@@ -128,9 +175,6 @@ definitions:
       id:
         example: 134564
         type: integer
-      mediaType:
-        example: TvShow
-        type: string
       name:
         example: The Iceblade Sorcerer Shall Rule the World
         type: string
@@ -140,6 +184,29 @@ definitions:
       updatedAt:
         example: "2023-05-07T20:31:28.327382+02:00"
         type: string
+    type: object
+  controllers.movieFileResponse:
+    properties:
+      file:
+        $ref: '#/definitions/controllers.mediaFileResponse'
+      id:
+        example: 134564
+        type: integer
+      name:
+        example: Apex
+        type: string
+      releaseDate:
+        example: "2023-01-06"
+        type: string
+    type: object
+  controllers.movieFilesResult:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/controllers.movieFileResponse'
+        type: array
+      total:
+        type: integer
     type: object
   controllers.movieResponse:
     properties:
@@ -325,6 +392,9 @@ definitions:
         items:
           $ref: '#/definitions/controllers.crew'
         type: array
+      episodesCount:
+        example: 12
+        type: integer
       genres:
         items:
           $ref: '#/definitions/controllers.genre'
@@ -691,11 +761,60 @@ paths:
       tags:
       - Calendar
       - TvShow
-  /comment/{commentID}:
-    delete:
-      description: Delete comment
+  /comment/count:
+    get:
+      description: Get comments count
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get comments count
+      tags:
+      - Comment
+  /comment/history:
+    get:
+      description: Get comments history
       parameters:
-      - description: Comment ID
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: start
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.commentHistoryReponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get comments history
+      tags:
+      - Comment
+  /comment/movie/{commentID}:
+    delete:
+      description: Delete movie comment
+      parameters:
+      - description: Movie Comment ID
         in: path
         name: commentID
         required: true
@@ -724,13 +843,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Delete comment
+      summary: Delete movie comment
       tags:
       - Comment
     put:
-      description: Update comment
+      description: Update movie comment
       parameters:
-      - description: Comment ID
+      - description: Movie Comment ID
         in: path
         name: commentID
         required: true
@@ -765,18 +884,18 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Update comment
+      summary: Update movie comment
       tags:
       - Comment
-  /comment/media/{mediaID}:
+  /comment/movie/{mediaID}:
     get:
-      description: Get media's comments
+      description: Get movie's comments
       parameters:
       - description: Page number
         in: query
         name: page
         type: integer
-      - description: Media ID
+      - description: Movie ID
         in: path
         name: mediaID
         required: true
@@ -796,13 +915,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get media's comments
+      summary: Get movie's comments
       tags:
       - Comment
     post:
-      description: Add comment to a media
+      description: Add comment to a movie
       parameters:
-      - description: Media ID
+      - description: Movie ID
         in: path
         name: mediaID
         required: true
@@ -833,12 +952,12 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Add comment
+      summary: Add movie comment
       tags:
       - Comment
-  /comment/user/{userID}:
+  /comment/movie/user/{userID}:
     get:
-      description: Get user's comments
+      description: Get user's movie comments
       parameters:
       - description: Page number
         in: query
@@ -864,17 +983,229 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get user's comments
+      summary: Get user's movie comments
       tags:
       - Comment
-  /discover/media/comments:
-    get:
-      description: Get medias ordered by number of comments
+  /comment/tv/{commentID}:
+    delete:
+      description: Delete tv show comment
       parameters:
-      - description: Only available tv shows
+      - description: TV Show Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: string
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      - description: User roles
+        in: header
+        name: roles
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: comment deleted
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Delete tv show comment
+      tags:
+      - Comment
+    put:
+      description: Update tv show comment
+      parameters:
+      - description: TV Show Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: string
+      - description: Comment
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.commentRequest'
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      - description: User roles
+        in: header
+        name: roles
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.commentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Update tv show comment
+      tags:
+      - Comment
+  /comment/tv/{mediaID}:
+    get:
+      description: Get tv show's comments
+      parameters:
+      - description: Page number
         in: query
-        name: available
-        type: boolean
+        name: page
+        type: integer
+      - description: TV Show ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.commentResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get tv show's comments
+      tags:
+      - Comment
+    post:
+      description: Add comment to a tv show
+      parameters:
+      - description: TV Show ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      - description: Comment
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.commentRequest'
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.commentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Add tv show comment
+      tags:
+      - Comment
+  /comment/tv/user/{userID}:
+    get:
+      description: Get user's tv show comments
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.commentResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get user's tv show comments
+      tags:
+      - Comment
+  /comment/user/count/{userID}:
+    get:
+      description: Get User's comments count
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get User's comments count
+      tags:
+      - Comment
+  /comment/user/history/{userID}:
+    get:
+      description: Get User's comments history
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - description: Start date (YYYY-MM-DD)
+        in: query
+        name: start
+        type: string
+      - description: End date (YYYY-MM-DD)
+        in: query
+        name: end
+        type: string
       produces:
       - application/json
       responses:
@@ -882,16 +1213,19 @@ paths:
           description: OK
           schema:
             items:
-              type: integer
+              $ref: '#/definitions/controllers.commentHistoryReponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get medias by comment
+      summary: Get User's comments history
       tags:
-      - Discover
-      - Media
+      - Comment
   /discover/movie/actor:
     get:
       description: Get movies by actor
@@ -921,6 +1255,31 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get movies by actor
+      tags:
+      - Discover
+      - Movie
+  /discover/movie/comments:
+    get:
+      description: Get movies ordered by number of comments
+      parameters:
+      - description: Only available movies
+        in: query
+        name: available
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: integer
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get movies by comments
       tags:
       - Discover
       - Movie
@@ -1170,6 +1529,31 @@ paths:
       tags:
       - Discover
       - TvShow
+  /discover/tv/comments:
+    get:
+      description: Get tv shows ordered by number of comments
+      parameters:
+      - description: Only available tv shows
+        in: query
+        name: available
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: integer
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get tv shows by comments
+      tags:
+      - Discover
+      - TvShow
   /discover/tv/genre:
     get:
       description: Get tv shows by genre
@@ -1352,9 +1736,70 @@ paths:
       tags:
       - Discover
       - TvShow
-  /media-file/file-tmdb/{id}:
+  /file/{id}:
+    delete:
+      description: Delete a file
+      parameters:
+      - description: File ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Delete a file
+      tags:
+      - File
+  /file/available:
     get:
-      description: Get media file info by its Media TMDB ID
+      description: Get available space
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Available space in bytes
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get available space
+      tags:
+      - File
+  /file/count:
+    get:
+      description: Count files
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total number of files
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Count files
+      tags:
+      - File
+  /file/episode/{id}:
+    get:
+      description: Get episode file info by its Episode TMDB ID
       parameters:
       - description: TMDB ID
         in: path
@@ -1380,12 +1825,171 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get media file info by its Media TMDB ID
+      summary: Get episode file info by its Episode TMDB ID
       tags:
-      - Media File
-  /media/base-tmdb/{id}:
+      - File
+  /file/episode/search:
     get:
-      description: Get media info by TMDB ID
+      description: Search tv show episodes files
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page limit
+        in: query
+        name: limit
+        type: integer
+      - description: Search query
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.episodeFilesResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Search tv show episodes files
+      tags:
+      - File
+  /file/movie/{id}:
+    get:
+      description: Get movie file info by its Movie TMDB ID
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.mediaFileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get movie file info by its Movie TMDB ID
+      tags:
+      - File
+  /file/movie/search:
+    get:
+      description: Search movie files
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page limit
+        in: query
+        name: limit
+        type: integer
+      - description: Search query
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.movieFilesResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Search movie files
+      tags:
+      - File
+  /file/size:
+    get:
+      description: Get total size taken by all files
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total size in bytes
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get total size
+      tags:
+      - File
+  /file/tv/{id}/available:
+    get:
+      description: Get all available episodes id for a tv show
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: integer
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get tv show available episodes
+      tags:
+      - File
+  /media/base/episode/{id}:
+    get:
+      description: Get episode base info by TMDB ID
       parameters:
       - description: TMDB ID
         in: path
@@ -1411,9 +2015,74 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get media info
+      summary: Get episode base info
       tags:
-      - Media Data
+      - TvEpisode Data
+      - Base
+  /media/base/movie/{id}:
+    get:
+      description: Get movie base info by TMDB ID
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.mediaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get movie base info
+      tags:
+      - Movie Data
+      - Base
+  /media/base/tv/{id}:
+    get:
+      description: Get tvshow base info by TMDB ID
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.mediaResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get tvshow base info
+      tags:
+      - TvShow Data
+      - Base
   /media/episode-tmdb/{id}:
     get:
       description: Get TvShow Episode Metadata by TMDB ID
@@ -1664,11 +2333,28 @@ paths:
       summary: Ping
       tags:
       - Ping
-  /rating/media/{mediaID}:
+  /rating/count:
     get:
-      description: Get media's rating
+      description: Get rating count
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get rating count
+      tags:
+      - Rating
+  /rating/movie/{mediaID}:
+    get:
+      description: Get movie's rating
       parameters:
-      - description: Media ID
+      - description: Movie ID
         in: path
         name: mediaID
         required: true
@@ -1692,13 +2378,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get media's rating
+      summary: Get movie's rating
       tags:
       - Rating
     post:
-      description: Save media's rating
+      description: Save movie's rating
       parameters:
-      - description: Media ID
+      - description: Movie ID
         in: path
         name: mediaID
         required: true
@@ -1729,14 +2415,14 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Save media's rating
+      summary: Save movie's rating
       tags:
       - Rating
-  /rating/media/{mediaID}/own:
+  /rating/movie/{mediaID}/own:
     get:
-      description: Get user's media rating
+      description: Get user's movie rating
       parameters:
-      - description: Media ID
+      - description: Movie ID
         in: path
         name: mediaID
         required: true
@@ -1761,12 +2447,12 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get user's media rating
+      summary: Get user's movie rating
       tags:
       - Rating
-  /rating/user/{userID}:
+  /rating/movie/user/{userID}:
     get:
-      description: Get user's rating
+      description: Get user's ratings
       parameters:
       - description: User ID
         in: path
@@ -1792,7 +2478,165 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errorResponse'
-      summary: Get user's rating
+      summary: Get user's movie ratings
+      tags:
+      - Rating
+  /rating/tv/{mediaID}:
+    get:
+      description: Get tv show's rating
+      parameters:
+      - description: TV Show ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ratingResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get tv show's rating
+      tags:
+      - Rating
+    post:
+      description: Save tv show's rating
+      parameters:
+      - description: TV Show ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      - description: Rating
+        in: body
+        name: rating
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ratingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ratingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Save tv show's rating
+      tags:
+      - Rating
+  /rating/tv/{mediaID}/own:
+    get:
+      description: Get user's tv show rating
+      parameters:
+      - description: TV Show ID
+        in: path
+        name: mediaID
+        required: true
+        type: integer
+      - description: User ID
+        in: header
+        name: user-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ratingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get user's tv show rating
+      tags:
+      - Rating
+  /rating/tv/user/{userID}:
+    get:
+      description: Get user's ratings
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.ratingResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get user's tv show ratings
+      tags:
+      - Rating
+  /rating/user/count/{userID}:
+    get:
+      description: Get User's rating count
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get User's rating count
       tags:
       - Rating
 swagger: "2.0"

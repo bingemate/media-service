@@ -29,8 +29,14 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/episode-tmdb/:id", func(c *gin.Context) {
 		getEpisodeByTMDB(c, mediaData)
 	})
-	engine.GET("/base-tmdb/:id", func(c *gin.Context) {
-		getMediaByTMDB(c, mediaData)
+	engine.GET("/base/movie/:id", func(c *gin.Context) {
+		getMovieBaseByTMDB(c, mediaData)
+	})
+	engine.GET("/base/tv/:id", func(c *gin.Context) {
+		getTvShowBaseByTMDB(c, mediaData)
+	})
+	engine.GET("/base/episode/:id", func(c *gin.Context) {
+		getEpisodeBaseByTMDB(c, mediaData)
 	})
 }
 
@@ -297,17 +303,18 @@ func getTvShowSeasonEpisodesByTMDB(c *gin.Context, mediaData *features.MediaData
 	c.JSON(200, toTVEpisodesResponse(result, presence))
 }
 
-// @Summary		Get media info
-// @Description	Get media info by TMDB ID
-// @Tags			Media Data
+// @Summary		Get movie base info
+// @Description	Get movie base info by TMDB ID
+// @Tags			Movie Data
+// @Tags			Base
 // @Param			id path int true "TMDB ID"
 // @Produce		json
 // @Success		200	{object} mediaResponse
 // @Failure		400	{object} errorResponse
 // @Failure		404	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/media/base-tmdb/{id} [get]
-func getMediaByTMDB(c *gin.Context, mediaData *features.MediaData) {
+// @Router			/media/base/movie/{id} [get]
+func getMovieBaseByTMDB(c *gin.Context, mediaData *features.MediaData) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(400, errorResponse{
@@ -315,7 +322,7 @@ func getMediaByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		})
 		return
 	}
-	result, err := mediaData.GetMediaByID(id)
+	result, err := mediaData.GetMovieByID(id)
 	if err != nil {
 		if errors.Is(err, features.ErrMediaNotFound) {
 			c.JSON(404, errorResponse{
@@ -328,5 +335,75 @@ func getMediaByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		})
 		return
 	}
-	c.JSON(200, toMediaResponse(result))
+	c.JSON(200, toMovieMediaResponse(result))
+}
+
+// @Summary		Get tvshow base info
+// @Description	Get tvshow base info by TMDB ID
+// @Tags			TvShow Data
+// @Tags			Base
+// @Param			id path int true "TMDB ID"
+// @Produce		json
+// @Success		200	{object} mediaResponse
+// @Failure		400	{object} errorResponse
+// @Failure		404	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/media/base/tv/{id} [get]
+func getTvShowBaseByTMDB(c *gin.Context, mediaData *features.MediaData) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	result, err := mediaData.GetTvShowByID(id)
+	if err != nil {
+		if errors.Is(err, features.ErrMediaNotFound) {
+			c.JSON(404, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, toTVShowMediaResponse(result))
+}
+
+// @Summary		Get episode base info
+// @Description	Get episode base info by TMDB ID
+// @Tags			TvEpisode Data
+// @Tags			Base
+// @Param			id path int true "TMDB ID"
+// @Produce		json
+// @Success		200	{object} mediaResponse
+// @Failure		400	{object} errorResponse
+// @Failure		404	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/media/base/episode/{id} [get]
+func getEpisodeBaseByTMDB(c *gin.Context, mediaData *features.MediaData) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(400, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	result, err := mediaData.GetEpisodeByID(id)
+	if err != nil {
+		if errors.Is(err, features.ErrMediaNotFound) {
+			c.JSON(404, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, toEpisodeMediaResponse(result))
 }

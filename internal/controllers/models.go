@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/bingemate/media-go-pkg/repository"
 	"github.com/bingemate/media-go-pkg/tmdb"
+	"sort"
 	"time"
 )
 
@@ -59,22 +60,23 @@ type movieResponse struct {
 }
 
 type tvShowResponse struct {
-	ID           int                `json:"id" example:"200777"`
-	Present      bool               `json:"present" example:"true"`
-	Actors       []person           `json:"actors"`
-	BackdropURL  string             `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"`
-	Crew         []crew             `json:"crew"`
-	Genres       []genre            `json:"genres"`
-	Overview     string             `json:"overview" example:"Ray White est un jeune homme venant d'entrer dans la populaire académie de magie Arnold. En tant que..."`
-	PosterURL    string             `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"`
-	ReleaseDate  string             `json:"releaseDate" example:"2023-01-06"`
-	Networks     []studio           `json:"networks"`
-	Status       string             `json:"status" example:"Ended"`
-	NextEpisode  *tvEpisodeResponse `json:"nextEpisode"`
-	Title        string             `json:"title" example:"The Iceblade Sorcerer Shall Rule the World"`
-	SeasonsCount int                `json:"seasonsCount" example:"1"`
-	VoteAverage  float32            `json:"voteAverage" example:"6.7"`
-	VoteCount    int                `json:"voteCount" example:"11"`
+	ID            int                `json:"id" example:"200777"`
+	Present       bool               `json:"present" example:"true"`
+	Actors        []person           `json:"actors"`
+	BackdropURL   string             `json:"backdropUrl" example:"https://image.tmdb.org/t/p/original/oL459mgvcnc3jL90K7zkfvXQu0.jpg"`
+	Crew          []crew             `json:"crew"`
+	Genres        []genre            `json:"genres"`
+	Overview      string             `json:"overview" example:"Ray White est un jeune homme venant d'entrer dans la populaire académie de magie Arnold. En tant que..."`
+	PosterURL     string             `json:"posterUrl" example:"https://image.tmdb.org/t/p/original/aiJd0oGkBhf98uEH3F3yC7O48vr.jpg"`
+	ReleaseDate   string             `json:"releaseDate" example:"2023-01-06"`
+	Networks      []studio           `json:"networks"`
+	Status        string             `json:"status" example:"Ended"`
+	NextEpisode   *tvEpisodeResponse `json:"nextEpisode"`
+	Title         string             `json:"title" example:"The Iceblade Sorcerer Shall Rule the World"`
+	SeasonsCount  int                `json:"seasonsCount" example:"1"`
+	EpisodesCount int                `json:"episodesCount" example:"12"`
+	VoteAverage   float32            `json:"voteAverage" example:"6.7"`
+	VoteCount     int                `json:"voteCount" example:"11"`
 }
 
 type tvEpisodeResponse struct {
@@ -93,14 +95,52 @@ type mediaResponse struct {
 	ID          int       `json:"id" example:"134564"`
 	CreatedAt   time.Time `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	UpdatedAt   time.Time `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
-	MediaType   string    `json:"mediaType" example:"TvShow"`
 	Name        string    `json:"name" example:"The Iceblade Sorcerer Shall Rule the World"`
 	ReleaseDate string    `json:"releaseDate" example:"2023-01-06"`
 }
+type episodeMediaResponse struct {
+	ID            int       `json:"id" example:"4137463"`
+	CreatedAt     time.Time `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	UpdatedAt     time.Time `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	Name          string    `json:"name" example:"Le plus puissant sorcier du monde révèle Akasha"`
+	ReleaseDate   string    `json:"releaseDate" example:"2023-03-24"`
+	EpisodeNumber int       `json:"episodeNumber" example:"12"`
+	SeasonNumber  int       `json:"seasonNumber" example:"1"`
+}
+
+type episodeFileResponse struct {
+	ID            int                `json:"id" example:"4137463"`
+	Name          string             `json:"name" example:"Le plus puissant sorcier du monde révèle Akasha"`
+	ReleaseDate   string             `json:"releaseDate" example:"2023-03-24"`
+	EpisodeNumber int                `json:"episodeNumber" example:"12"`
+	SeasonNumber  int                `json:"seasonNumber" example:"1"`
+	TvShowId      int                `json:"tvShowId" example:"200777"`
+	TvShowName    string             `json:"tvShowName" example:"The Iceblade Sorcerer Shall Rule the World"`
+	File          *mediaFileResponse `json:"file"`
+}
+
+type episodeFilesResult struct {
+	Results []*episodeFileResponse `json:"results"`
+	Total   int                    `json:"total"`
+}
+
+type movieFileResponse struct {
+	ID          int                `json:"id" example:"134564"`
+	Name        string             `json:"name" example:"Apex"`
+	ReleaseDate string             `json:"releaseDate" example:"2023-01-06"`
+	File        *mediaFileResponse `json:"file"`
+}
+
+type movieFilesResult struct {
+	Results []*movieFileResponse `json:"results"`
+	Total   int                  `json:"total"`
+}
+
 type mediaFileResponse struct {
 	ID        string             `json:"id" example:"eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"`
 	CreatedAt time.Time          `json:"createdAt" example:"2023-05-07T20:31:28.327382+02:00"`
 	UpdatedAt time.Time          `json:"updatedAt" example:"2023-05-07T20:31:28.327382+02:00"`
+	Size      int64              `json:"size" example:"123456789"`
 	Filename  string             `json:"filename" example:"index.m3u8"`
 	Duration  float64            `json:"duration" example:"1450.76"`
 	Audios    []audioResponse    `json:"audios"`
@@ -133,6 +173,11 @@ type commentResponse struct {
 type commentResults struct {
 	Results     []*commentResponse `json:"results"`
 	TotalResult int                `json:"totalResult" example:"1412"`
+}
+
+type commentHistoryReponse struct {
+	Date  string `json:"date" example:"2023-05-07"`
+	Count int    `json:"count" example:"12"`
 }
 
 type ratingRequest struct {
@@ -295,10 +340,11 @@ func toTVShowResponse(tvShow *tmdb.TVShow, present bool) *tvShowResponse {
 			}
 			return toTVEpisodeResponse(tvShow.NextEpisode, false)
 		}(),
-		SeasonsCount: tvShow.SeasonsCount,
-		Status:       tvShow.Status,
-		VoteAverage:  tvShow.VoteAverage,
-		VoteCount:    tvShow.VoteCount,
+		SeasonsCount:  tvShow.SeasonsCount,
+		EpisodesCount: tvShow.EpisodesCount,
+		Status:        tvShow.Status,
+		VoteAverage:   tvShow.VoteAverage,
+		VoteCount:     tvShow.VoteCount,
 	}
 }
 
@@ -339,14 +385,35 @@ func toTVReleasesResult(tvEpisodes []*tmdb.TVEpisode, tvShows []*tmdb.TVShow, pr
 	}
 }
 
-func toMediaResponse(media *repository.Media) *mediaResponse {
+func toMovieMediaResponse(media *repository.Movie) *mediaResponse {
 	return &mediaResponse{
 		ID:          media.ID,
 		CreatedAt:   media.CreatedAt,
 		UpdatedAt:   media.UpdatedAt,
 		Name:        media.Name,
-		MediaType:   string(media.MediaType),
 		ReleaseDate: media.ReleaseDate.Format("2006-01-02"),
+	}
+}
+
+func toTVShowMediaResponse(media *repository.TvShow) *mediaResponse {
+	return &mediaResponse{
+		ID:          media.ID,
+		CreatedAt:   media.CreatedAt,
+		UpdatedAt:   media.UpdatedAt,
+		Name:        media.Name,
+		ReleaseDate: media.ReleaseDate.Format("2006-01-02"),
+	}
+}
+
+func toEpisodeMediaResponse(media *repository.Episode) *episodeMediaResponse {
+	return &episodeMediaResponse{
+		ID:            media.ID,
+		CreatedAt:     media.CreatedAt,
+		UpdatedAt:     media.UpdatedAt,
+		Name:          media.Name,
+		ReleaseDate:   media.ReleaseDate.Format("2006-01-02"),
+		EpisodeNumber: media.NbEpisode,
+		SeasonNumber:  media.NbSeason,
 	}
 }
 
@@ -356,10 +423,11 @@ func toMediaFileResponse(mediaFile *repository.MediaFile) *mediaFileResponse {
 		CreatedAt: mediaFile.CreatedAt,
 		UpdatedAt: mediaFile.UpdatedAt,
 		Filename:  mediaFile.Filename,
+		Size:      mediaFile.Size,
 		Duration:  mediaFile.Duration,
 		Audios: func() []audioResponse {
-			var audios = make([]audioResponse, len(mediaFile.Audio))
-			for i, audio := range mediaFile.Audio {
+			var audios = make([]audioResponse, len(mediaFile.Audios))
+			for i, audio := range mediaFile.Audios {
 				audios[i] = audioResponse{
 					Filename: audio.Filename,
 					Language: audio.Language,
@@ -412,39 +480,150 @@ func toActorResponse(tmdbActor *tmdb.Actor) *actor {
 	}
 }
 
-func toCommentResponse(comment *repository.Comment) *commentResponse {
+func toMovieCommentResponse(comment *repository.MovieComment) *commentResponse {
 	return &commentResponse{
 		ID:        comment.ID,
 		CreatedAt: comment.CreatedAt,
 		UpdatedAt: comment.UpdatedAt,
 		Content:   comment.Content,
 		UserID:    comment.UserID,
-		MediaID:   comment.MediaID,
+		MediaID:   comment.MovieID,
 	}
 }
 
-func toCommentsResponse(comments []*repository.Comment) []*commentResponse {
+func toMovieCommentsResponse(comments []*repository.MovieComment) []*commentResponse {
 	var commentsResponse = make([]*commentResponse, len(comments))
 	for i, comment := range comments {
-		commentsResponse[i] = toCommentResponse(comment)
+		commentsResponse[i] = toMovieCommentResponse(comment)
 	}
 	return commentsResponse
 }
 
-func toRatingResponse(rating *repository.Rating) *ratingResponse {
+func toTVShowCommentResponse(comment *repository.TvShowComment) *commentResponse {
+	return &commentResponse{
+		ID:        comment.ID,
+		CreatedAt: comment.CreatedAt,
+		UpdatedAt: comment.UpdatedAt,
+		Content:   comment.Content,
+		UserID:    comment.UserID,
+		MediaID:   comment.TvShowID,
+	}
+}
+
+func toTVShowCommentsResponse(comments []*repository.TvShowComment) []*commentResponse {
+	var commentsResponse = make([]*commentResponse, len(comments))
+	for i, comment := range comments {
+		commentsResponse[i] = toTVShowCommentResponse(comment)
+	}
+	return commentsResponse
+}
+
+func toMovieRatingResponse(rating *repository.MovieRating) *ratingResponse {
 	return &ratingResponse{
 		CreatedAt: rating.CreatedAt,
 		UpdatedAt: rating.UpdatedAt,
 		UserID:    rating.UserID,
-		MediaID:   rating.MediaID,
+		MediaID:   rating.MovieID,
 		Rating:    rating.Rating,
 	}
 }
 
-func toRatingsResponse(ratings []*repository.Rating) []*ratingResponse {
+func toMovieRatingsResponse(ratings []*repository.MovieRating) []*ratingResponse {
 	var ratingsResponse = make([]*ratingResponse, len(ratings))
 	for i, rating := range ratings {
-		ratingsResponse[i] = toRatingResponse(rating)
+		ratingsResponse[i] = toMovieRatingResponse(rating)
 	}
 	return ratingsResponse
+}
+
+func toTVShowRatingResponse(rating *repository.TvShowRating) *ratingResponse {
+	return &ratingResponse{
+		CreatedAt: rating.CreatedAt,
+		UpdatedAt: rating.UpdatedAt,
+		UserID:    rating.UserID,
+		MediaID:   rating.TvShowID,
+		Rating:    rating.Rating,
+	}
+}
+
+func toTVShowRatingsResponse(ratings []*repository.TvShowRating) []*ratingResponse {
+	var ratingsResponse = make([]*ratingResponse, len(ratings))
+	for i, rating := range ratings {
+		ratingsResponse[i] = toTVShowRatingResponse(rating)
+	}
+	return ratingsResponse
+}
+
+func toCommentHistories(movieComments []*repository.MovieComment, tvShowComments []*repository.TvShowComment) []*commentHistoryReponse {
+	var commentMap = make(map[string]*commentHistoryReponse)
+	for _, comment := range movieComments {
+		date := comment.CreatedAt.Format("2006-01-02")
+		if _, ok := commentMap[date]; !ok {
+			commentMap[date] = &commentHistoryReponse{
+				Date:  date,
+				Count: 1,
+			}
+		} else {
+			commentMap[date].Count++
+		}
+	}
+	for _, comment := range tvShowComments {
+		date := comment.CreatedAt.Format("2006-01-02")
+		if _, ok := commentMap[date]; !ok {
+			commentMap[date] = &commentHistoryReponse{
+				Date:  date,
+				Count: 1,
+			}
+		} else {
+			commentMap[date].Count++
+		}
+	}
+	var commentHistories = make([]*commentHistoryReponse, len(commentMap))
+	i := 0
+	for _, commentHistory := range commentMap {
+		commentHistories[i] = commentHistory
+		i++
+	}
+	sort.Slice(commentHistories, func(i, j int) bool {
+		return commentHistories[i].Date < commentHistories[j].Date
+	})
+	return commentHistories
+}
+
+func toEpisodeFileResponse(episode *repository.Episode) *episodeFileResponse {
+	return &episodeFileResponse{
+		ID:            episode.ID,
+		Name:          episode.Name,
+		ReleaseDate:   episode.ReleaseDate.Format("2006-01-02"),
+		SeasonNumber:  episode.NbSeason,
+		EpisodeNumber: episode.NbEpisode,
+		TvShowId:      episode.TvShowID,
+		TvShowName:    episode.TvShow.Name,
+		File:          toMediaFileResponse(episode.MediaFile),
+	}
+}
+
+func toEpisodeFilesResponse(episodes []*repository.Episode) []*episodeFileResponse {
+	var episodesResponse = make([]*episodeFileResponse, len(episodes))
+	for i, episode := range episodes {
+		episodesResponse[i] = toEpisodeFileResponse(episode)
+	}
+	return episodesResponse
+}
+
+func toMovieFileResponse(movie *repository.Movie) *movieFileResponse {
+	return &movieFileResponse{
+		ID:          movie.ID,
+		Name:        movie.Name,
+		ReleaseDate: movie.ReleaseDate.Format("2006-01-02"),
+		File:        toMediaFileResponse(movie.MediaFile),
+	}
+}
+
+func toMovieFilesResponse(movies []*repository.Movie) []*movieFileResponse {
+	var moviesResponse = make([]*movieFileResponse, len(movies))
+	for i, movie := range movies {
+		moviesResponse[i] = toMovieFileResponse(movie)
+	}
+	return moviesResponse
 }

@@ -460,42 +460,21 @@
                 }
             }
         },
-        "/comment/media/{mediaID}": {
+        "/comment/count": {
             "get": {
-                "description": "Get media's comments",
+                "description": "Get comments count",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Comment"
                 ],
-                "summary": "Get media's comments",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "mediaID",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "Get comments count",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.commentResults"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.errorResponse"
+                            "type": "integer"
                         }
                     },
                     "500": {
@@ -505,46 +484,40 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Add comment to a media",
+            }
+        },
+        "/comment/history": {
+            "get": {
+                "description": "Get comments history",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Comment"
                 ],
-                "summary": "Add comment",
+                "summary": "Get comments history",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Media ID",
-                        "name": "mediaID",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Comment",
-                        "name": "comment",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controllers.commentRequest"
-                        }
+                        "type": "string",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "name": "start",
+                        "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "User ID",
-                        "name": "user-id",
-                        "in": "header",
-                        "required": true
+                        "description": "End date (YYYY-MM-DD)",
+                        "name": "end",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.commentResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.commentHistoryReponse"
+                            }
                         }
                     },
                     "400": {
@@ -562,16 +535,16 @@
                 }
             }
         },
-        "/comment/user/{userID}": {
+        "/comment/movie/user/{userID}": {
             "get": {
-                "description": "Get user's comments",
+                "description": "Get user's movie comments",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Comment"
                 ],
-                "summary": "Get user's comments",
+                "summary": "Get user's movie comments",
                 "parameters": [
                     {
                         "type": "integer",
@@ -609,20 +582,20 @@
                 }
             }
         },
-        "/comment/{commentID}": {
+        "/comment/movie/{commentID}": {
             "put": {
-                "description": "Update comment",
+                "description": "Update movie comment",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Comment"
                 ],
-                "summary": "Update comment",
+                "summary": "Update movie comment",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Comment ID",
+                        "description": "Movie Comment ID",
                         "name": "commentID",
                         "in": "path",
                         "required": true
@@ -672,18 +645,18 @@
                 }
             },
             "delete": {
-                "description": "Delete comment",
+                "description": "Delete movie comment",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Comment"
                 ],
-                "summary": "Delete comment",
+                "summary": "Delete movie comment",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Comment ID",
+                        "description": "Movie Comment ID",
                         "name": "commentID",
                         "in": "path",
                         "required": true
@@ -724,22 +697,441 @@
                 }
             }
         },
-        "/discover/media/comments": {
+        "/comment/movie/{mediaID}": {
             "get": {
-                "description": "Get medias ordered by number of comments",
+                "description": "Get movie's comments",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Discover",
-                    "Media"
+                    "Comment"
                 ],
-                "summary": "Get medias by comment",
+                "summary": "Get movie's comments",
                 "parameters": [
                     {
-                        "type": "boolean",
-                        "description": "Only available tv shows",
-                        "name": "available",
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Movie ID",
+                        "name": "mediaID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.commentResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add comment to a movie",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Add movie comment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Movie ID",
+                        "name": "mediaID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Comment",
+                        "name": "comment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.commentRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.commentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/tv/user/{userID}": {
+            "get": {
+                "description": "Get user's tv show comments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Get user's tv show comments",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.commentResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/tv/{commentID}": {
+            "put": {
+                "description": "Update tv show comment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Update tv show comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "TV Show Comment ID",
+                        "name": "commentID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Comment",
+                        "name": "comment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.commentRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User roles",
+                        "name": "roles",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.commentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete tv show comment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Delete tv show comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "TV Show Comment ID",
+                        "name": "commentID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User roles",
+                        "name": "roles",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "comment deleted",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/tv/{mediaID}": {
+            "get": {
+                "description": "Get tv show's comments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Get tv show's comments",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "TV Show ID",
+                        "name": "mediaID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.commentResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add comment to a tv show",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Add tv show comment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TV Show ID",
+                        "name": "mediaID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Comment",
+                        "name": "comment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.commentRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.commentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/user/count/{userID}": {
+            "get": {
+                "description": "Get User's comments count",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Get User's comments count",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/user/history/{userID}": {
+            "get": {
+                "description": "Get User's comments history",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Get User's comments history",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "name": "start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End date (YYYY-MM-DD)",
+                        "name": "end",
                         "in": "query"
                     }
                 ],
@@ -749,8 +1141,14 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "type": "integer"
+                                "$ref": "#/definitions/controllers.commentHistoryReponse"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
                         }
                     },
                     "500": {
@@ -799,6 +1197,44 @@
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discover/movie/comments": {
+            "get": {
+                "description": "Get movies ordered by number of comments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Movie"
+                ],
+                "summary": "Get movies by comments",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Only available movies",
+                        "name": "available",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
                         }
                     },
                     "500": {
@@ -1180,6 +1616,44 @@
                 }
             }
         },
+        "/discover/tv/comments": {
+            "get": {
+                "description": "Get tv shows ordered by number of comments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "TvShow"
+                ],
+                "summary": "Get tv shows by comments",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "description": "Only available tv shows",
+                        "name": "available",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/discover/tv/genre": {
             "get": {
                 "description": "Get tv shows by genre",
@@ -1454,16 +1928,127 @@
                 }
             }
         },
-        "/media-file/file-tmdb/{id}": {
+        "/file/available": {
             "get": {
-                "description": "Get media file info by its Media TMDB ID",
+                "description": "Get available space",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Media File"
+                    "File"
                 ],
-                "summary": "Get media file info by its Media TMDB ID",
+                "summary": "Get available space",
+                "responses": {
+                    "200": {
+                        "description": "Available space in bytes",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/count": {
+            "get": {
+                "description": "Count files",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Count files",
+                "responses": {
+                    "200": {
+                        "description": "Total number of files",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/episode/search": {
+            "get": {
+                "description": "Search tv show episodes files",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Search tv show episodes files",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.episodeFilesResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/episode/{id}": {
+            "get": {
+                "description": "Get episode file info by its Episode TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Get episode file info by its Episode TMDB ID",
                 "parameters": [
                     {
                         "type": "integer",
@@ -1501,16 +2086,336 @@
                 }
             }
         },
-        "/media/base-tmdb/{id}": {
+        "/file/movie/search": {
             "get": {
-                "description": "Get media info by TMDB ID",
+                "description": "Search movie files",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Media Data"
+                    "File"
                 ],
-                "summary": "Get media info",
+                "summary": "Search movie files",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.movieFilesResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/movie/{id}": {
+            "get": {
+                "description": "Get movie file info by its Movie TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Get movie file info by its Movie TMDB ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaFileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/size": {
+            "get": {
+                "description": "Get total size taken by all files",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Get total size",
+                "responses": {
+                    "200": {
+                        "description": "Total size in bytes",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/tv/{id}/available": {
+            "get": {
+                "description": "Get all available episodes id for a tv show",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Get tv show available episodes",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/{id}": {
+            "delete": {
+                "description": "Delete a file",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Delete a file",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "File ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/base/episode/{id}": {
+            "get": {
+                "description": "Get episode base info by TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "TvEpisode Data",
+                    "Base"
+                ],
+                "summary": "Get episode base info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/base/movie/{id}": {
+            "get": {
+                "description": "Get movie base info by TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Movie Data",
+                    "Base"
+                ],
+                "summary": "Get movie base info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TMDB ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.mediaResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/base/tv/{id}": {
+            "get": {
+                "description": "Get tvshow base info by TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "TvShow Data",
+                    "Base"
+                ],
+                "summary": "Get tvshow base info",
                 "parameters": [
                     {
                         "type": "integer",
@@ -1907,20 +2812,93 @@
                 }
             }
         },
-        "/rating/media/{mediaID}": {
+        "/rating/count": {
             "get": {
-                "description": "Get media's rating",
+                "description": "Get rating count",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Rating"
                 ],
-                "summary": "Get media's rating",
+                "summary": "Get rating count",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/rating/movie/user/{userID}": {
+            "get": {
+                "description": "Get user's ratings",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rating"
+                ],
+                "summary": "Get user's movie ratings",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ratingResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/rating/movie/{mediaID}": {
+            "get": {
+                "description": "Get movie's rating",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rating"
+                ],
+                "summary": "Get movie's rating",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Media ID",
+                        "description": "Movie ID",
                         "name": "mediaID",
                         "in": "path",
                         "required": true
@@ -1954,18 +2932,18 @@
                 }
             },
             "post": {
-                "description": "Save media's rating",
+                "description": "Save movie's rating",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Rating"
                 ],
-                "summary": "Save media's rating",
+                "summary": "Save movie's rating",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Media ID",
+                        "description": "Movie ID",
                         "name": "mediaID",
                         "in": "path",
                         "required": true
@@ -2009,20 +2987,20 @@
                 }
             }
         },
-        "/rating/media/{mediaID}/own": {
+        "/rating/movie/{mediaID}/own": {
             "get": {
-                "description": "Get user's media rating",
+                "description": "Get user's movie rating",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Rating"
                 ],
-                "summary": "Get user's media rating",
+                "summary": "Get user's movie rating",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Media ID",
+                        "description": "Movie ID",
                         "name": "mediaID",
                         "in": "path",
                         "required": true
@@ -2057,16 +3035,16 @@
                 }
             }
         },
-        "/rating/user/{userID}": {
+        "/rating/tv/user/{userID}": {
             "get": {
-                "description": "Get user's rating",
+                "description": "Get user's ratings",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Rating"
                 ],
-                "summary": "Get user's rating",
+                "summary": "Get user's tv show ratings",
                 "parameters": [
                     {
                         "type": "string",
@@ -2087,6 +3065,197 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/controllers.ratingResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/rating/tv/{mediaID}": {
+            "get": {
+                "description": "Get tv show's rating",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rating"
+                ],
+                "summary": "Get tv show's rating",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TV Show ID",
+                        "name": "mediaID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ratingResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Save tv show's rating",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rating"
+                ],
+                "summary": "Save tv show's rating",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TV Show ID",
+                        "name": "mediaID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Rating",
+                        "name": "rating",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ratingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ratingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/rating/tv/{mediaID}/own": {
+            "get": {
+                "description": "Get user's tv show rating",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rating"
+                ],
+                "summary": "Get user's tv show rating",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "TV Show ID",
+                        "name": "mediaID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user-id",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ratingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/rating/user/count/{userID}": {
+            "get": {
+                "description": "Get User's rating count",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rating"
+                ],
+                "summary": "Get User's rating count",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
                         }
                     },
                     "400": {
@@ -2137,6 +3306,19 @@
                 "language": {
                     "type": "string",
                     "example": "jpn"
+                }
+            }
+        },
+        "controllers.commentHistoryReponse": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "date": {
+                    "type": "string",
+                    "example": "2023-05-07"
                 }
             }
         },
@@ -2214,6 +3396,56 @@
                 }
             }
         },
+        "controllers.episodeFileResponse": {
+            "type": "object",
+            "properties": {
+                "episodeNumber": {
+                    "type": "integer",
+                    "example": 12
+                },
+                "file": {
+                    "$ref": "#/definitions/controllers.mediaFileResponse"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 4137463
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Le plus puissant sorcier du monde révèle Akasha"
+                },
+                "releaseDate": {
+                    "type": "string",
+                    "example": "2023-03-24"
+                },
+                "seasonNumber": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "tvShowId": {
+                    "type": "integer",
+                    "example": 200777
+                },
+                "tvShowName": {
+                    "type": "string",
+                    "example": "The Iceblade Sorcerer Shall Rule the World"
+                }
+            }
+        },
+        "controllers.episodeFilesResult": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.episodeFileResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.errorResponse": {
             "type": "object",
             "properties": {
@@ -2261,6 +3493,10 @@
                     "type": "string",
                     "example": "eec1d6b7-97c9-47e9-846b-6817d0e3d4ed"
                 },
+                "size": {
+                    "type": "integer",
+                    "example": 123456789
+                },
                 "subtitles": {
                     "type": "array",
                     "items": {
@@ -2284,10 +3520,6 @@
                     "type": "integer",
                     "example": 134564
                 },
-                "mediaType": {
-                    "type": "string",
-                    "example": "TvShow"
-                },
                 "name": {
                     "type": "string",
                     "example": "The Iceblade Sorcerer Shall Rule the World"
@@ -2299,6 +3531,40 @@
                 "updatedAt": {
                     "type": "string",
                     "example": "2023-05-07T20:31:28.327382+02:00"
+                }
+            }
+        },
+        "controllers.movieFileResponse": {
+            "type": "object",
+            "properties": {
+                "file": {
+                    "$ref": "#/definitions/controllers.mediaFileResponse"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 134564
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Apex"
+                },
+                "releaseDate": {
+                    "type": "string",
+                    "example": "2023-01-06"
+                }
+            }
+        },
+        "controllers.movieFilesResult": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.movieFileResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -2562,6 +3828,10 @@
                     "items": {
                         "$ref": "#/definitions/controllers.crew"
                     }
+                },
+                "episodesCount": {
+                    "type": "integer",
+                    "example": 12
                 },
                 "genres": {
                     "type": "array",

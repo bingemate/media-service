@@ -53,8 +53,11 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 	engine.GET("tv/recommendations/:tv", func(c *gin.Context) {
 		getTvShowRecommendations(c, mediaDiscover)
 	})
-	engine.GET("media/comments", func(c *gin.Context) {
-		getMediasByComments(c, mediaDiscover)
+	engine.GET("movie/comments", func(c *gin.Context) {
+		getMoviesByComments(c, mediaDiscover)
+	})
+	engine.GET("tv/comments", func(c *gin.Context) {
+		getTvShowsByComments(c, mediaDiscover)
 	})
 }
 
@@ -571,21 +574,45 @@ func getTvShowRecommendations(c *gin.Context, mediaDiscover *features.MediaDisco
 	c.JSON(200, toTVShowsResponse(result, presence))
 }
 
-// @Summary		Get medias by comment
-// @Description	Get medias ordered by number of comments
+// @Summary		Get movies by comments
+// @Description	Get movies ordered by number of comments
 // @Tags			Discover
-// @Tags			Media
-// @Param           available query bool false "Only available tv shows"
+// @Tags			Movie
+// @Param           available query bool false "Only available movies"
 // @Produce		json
 // @Success		200	{array} int
 // @Failure		500	{object} errorResponse
-// @Router			/discover/media/comments [get]
-func getMediasByComments(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
+// @Router			/discover/movie/comments [get]
+func getMoviesByComments(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	available, err := strconv.ParseBool(c.Query("available"))
 	if err != nil {
 		available = false
 	}
-	result, err := mediaDiscover.GetMediasByComments(available)
+	result, err := mediaDiscover.GetMoviesByComments(available)
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, result)
+}
+
+// @Summary		Get tv shows by comments
+// @Description	Get tv shows ordered by number of comments
+// @Tags			Discover
+// @Tags			TvShow
+// @Param           available query bool false "Only available tv shows"
+// @Produce		json
+// @Success		200	{array} int
+// @Failure		500	{object} errorResponse
+// @Router			/discover/tv/comments [get]
+func getTvShowsByComments(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
+	available, err := strconv.ParseBool(c.Query("available"))
+	if err != nil {
+		available = false
+	}
+	result, err := mediaDiscover.GetShowsByComments(available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),

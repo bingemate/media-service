@@ -21,6 +21,7 @@ func ConnectToDB(env Env) (*gorm.DB, error) {
 	if env.DBSync {
 		log.Println("Syncing database...")
 		db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
+		db.Exec("CREATE EXTENSION IF NOT EXISTS \"unaccent\"")
 		err = repository.Migrate(db)
 		if err != nil {
 			return nil, err
