@@ -5,6 +5,7 @@ import (
 	repository2 "github.com/bingemate/media-go-pkg/repository"
 	"github.com/bingemate/media-service/internal/repository"
 	"gorm.io/gorm"
+	"log"
 	"os"
 	"path"
 	"syscall"
@@ -100,9 +101,10 @@ func (m *MediaFile) DeleteMediaFile(fileID string) error {
 	// If it is, delete it
 	moviePath := path.Join(m.moviePath, fileID)
 	tvPath := path.Join(m.tvPath, fileID)
-	_, err = os.Stat(moviePath)
+	log.Println("Deleting folder: ", moviePath, tvPath)
 	if err == nil {
 		err = os.RemoveAll(moviePath)
+		log.Println("Error deleting folder", moviePath, err)
 		if err != nil {
 			return err
 		}
@@ -110,6 +112,7 @@ func (m *MediaFile) DeleteMediaFile(fileID string) error {
 	_, err = os.Stat(tvPath)
 	if err == nil {
 		err = os.RemoveAll(tvPath)
+		log.Println("Error deleting folder", tvPath, err)
 		if err != nil {
 			return err
 		}
