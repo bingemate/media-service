@@ -104,17 +104,15 @@ func (m *MediaFile) DeleteMediaFile(fileID string) error {
 	log.Println("Deleting folder: ", moviePath, tvPath)
 	if err == nil {
 		err = os.RemoveAll(moviePath)
-		log.Println("Error deleting folder", moviePath, err)
 		if err != nil {
-			return err
+			log.Println("Error deleting folder", moviePath, err)
 		}
 	}
 	_, err = os.Stat(tvPath)
 	if err == nil {
 		err = os.RemoveAll(tvPath)
-		log.Println("Error deleting folder", tvPath, err)
 		if err != nil {
-			return err
+			log.Println("Error deleting folder", tvPath, err)
 		}
 	}
 	return nil
