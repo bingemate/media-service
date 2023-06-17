@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"strconv"
 	"syscall"
 )
 
@@ -99,23 +100,27 @@ func (m *MediaFile) DeleteMediaFile(fileID string) error {
 	}
 	// Check if the file is present in movie or tv show folder
 	// If it is, delete it
-	moviePath := path.Join(m.moviePath, fileID)
-	tvPath := path.Join(m.tvPath, fileID)
-	log.Println("Deleting folder: ", moviePath, tvPath)
-	if err == nil {
-		err = os.RemoveAll(moviePath)
-		if err != nil {
-			log.Println("Error deleting folder", moviePath, err)
-		}
+	episode, err := m.mediaRepository.GetEpisodeByFileID(fileID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
 	}
-	_, err = os.Stat(tvPath)
-	if err == nil {
-		err = os.RemoveAll(tvPath)
-		if err != nil {
-			log.Println("Error deleting folder", tvPath, err)
-		}
+	if episode != nil {
+		tvPath := path.Join(m.tvPath, strconv.Itoa(episode.ID))
+		log.Println("Deleting folder: ", tvPath)
+		return os.RemoveAll(tvPath)
 	}
-	return nil
+
+	movie, err := m.mediaRepository.GetMovieByFileID(fileID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
+	}
+	if movie != nil {
+		moviePath := path.Join(m.moviePath, strconv.Itoa(movie.ID))
+		log.Println("Deleting folder: ", moviePath)
+		return os.RemoveAll(moviePath)
+	}
+	return errors.New("file not found")
+	
 }
 
 // MediaFilesTotalSize returns the total size of all media files
