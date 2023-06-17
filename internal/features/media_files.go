@@ -5,8 +5,10 @@ import (
 	repository2 "github.com/bingemate/media-go-pkg/repository"
 	"github.com/bingemate/media-service/internal/repository"
 	"gorm.io/gorm"
+	"log"
 	"os"
 	"path"
+	"strconv"
 	"syscall"
 )
 
@@ -92,29 +94,34 @@ func (m *MediaFile) SearchMovieFiles(query string, page, limit int) ([]*reposito
 
 // DeleteMediaFile deletes a media file given the fileID
 func (m *MediaFile) DeleteMediaFile(fileID string) error {
-	err := m.mediaRepository.DeleteMediaFile(fileID)
-	if err != nil {
-		return err
-	}
 	// Check if the file is present in movie or tv show folder
 	// If it is, delete it
-	moviePath := path.Join(m.moviePath, fileID)
-	tvPath := path.Join(m.tvPath, fileID)
-	_, err = os.Stat(moviePath)
-	if err == nil {
-		err = os.RemoveAll(moviePath)
-		if err != nil {
-			return err
-		}
+	episode, err := m.mediaRepository.GetEpisodeByFileID(fileID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
 	}
-	_, err = os.Stat(tvPath)
-	if err == nil {
+	if episode != nil {
+		tvPath := path.Join(m.tvPath, strconv.Itoa(episode.ID))
+		log.Println("Deleting folder: ", tvPath)
 		err = os.RemoveAll(tvPath)
 		if err != nil {
 			return err
 		}
 	}
-	return nil
+
+	movie, err := m.mediaRepository.GetMovieByFileID(fileID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
+	}
+	if movie != nil {
+		moviePath := path.Join(m.moviePath, strconv.Itoa(movie.ID))
+		log.Println("Deleting folder: ", moviePath)
+		err = os.RemoveAll(moviePath)
+		if err != nil {
+			return err
+		}
+	}
+	return m.mediaRepository.DeleteMediaFile(fileID)
 }
 
 // MediaFilesTotalSize returns the total size of all media files

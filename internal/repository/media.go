@@ -1248,3 +1248,25 @@ func (r *MediaRepository) CountTvShowRatings() (int, error) {
 	}
 	return int(count), nil
 }
+
+func (r *MediaRepository) GetEpisodeByFileID(id string) (*repository.Episode, error) {
+	var episode repository.Episode
+	result := r.db.Model(&repository.Episode{}).
+		Where("media_file_id = ?", id).
+		First(&episode)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &episode, nil
+}
+
+func (r *MediaRepository) GetMovieByFileID(id string) (*repository.Movie, error) {
+	var movie repository.Movie
+	result := r.db.Model(&repository.Movie{}).
+		Where("media_file_id = ?", id).
+		First(&movie)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &movie, nil
+}
