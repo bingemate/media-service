@@ -2357,6 +2357,61 @@
                 }
             }
         },
+        "/media/base/episodes": {
+            "get": {
+                "description": "Get episodes base info by TMDB ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "TvEpisode Data",
+                    "Base"
+                ],
+                "summary": "Get episodes base info",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "TMDB IDs",
+                        "name": "ids",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.mediaResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/media/base/movie/{id}": {
             "get": {
                 "description": "Get movie base info by TMDB ID",
@@ -2501,6 +2556,61 @@
                 }
             }
         },
+        "/media/episodes-tmdb": {
+            "get": {
+                "description": "Get TvShow Episodes metadata by TMDB IDs",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "TvEpisode"
+                ],
+                "summary": "Get TvShow Episodes metadata by TMDB IDs",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "TMDB IDs",
+                        "name": "ids",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.tvEpisodeResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/media/movie-tmdb/{id}": {
             "get": {
                 "description": "Get Movie Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
@@ -2568,6 +2678,55 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/controllers.movieResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/media/movies-tmdb": {
+            "get": {
+                "description": "Get Movies Short Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Media Data",
+                    "Movie"
+                ],
+                "summary": "Get Movies Short Metadata",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "TMDB IDs",
+                        "name": "ids",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/controllers.movieResponse"
+                            }
                         }
                     },
                     "400": {
