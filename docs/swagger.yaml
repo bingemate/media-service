@@ -2427,6 +2427,41 @@ paths:
       tags:
       - Media Data
       - TvShow
+  /media/tvshows-tmdb:
+    get:
+      description: |-
+        Get TvShows Short Metadata by TMDB ID
+        The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+      parameters:
+      - collectionFormat: csv
+        description: TMDB IDs
+        in: query
+        items:
+          type: integer
+        name: ids
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.tvShowResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShows Short Metadata
+      tags:
+      - Media Data
+      - TvShow
   /ping:
     get:
       consumes:
