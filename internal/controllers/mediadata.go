@@ -14,6 +14,9 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/movie-tmdb/:id/short", func(c *gin.Context) {
 		getMovieShortByTMDB(c, mediaData)
 	})
+	engine.GET("/movies-tmdb", func(c *gin.Context) {
+		getMoviesShortByTMDB(c, mediaData)
+	})
 	engine.GET("/tvshow-tmdb/:id", func(c *gin.Context) {
 		getTvShowByTMDB(c, mediaData)
 	})
@@ -29,6 +32,9 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/episode-tmdb/:id", func(c *gin.Context) {
 		getEpisodeByTMDB(c, mediaData)
 	})
+	engine.GET("/episodes-tmdb", func(c *gin.Context) {
+		getEpisodesByTMDB(c, mediaData)
+	})
 	engine.GET("/base/movie/:id", func(c *gin.Context) {
 		getMovieBaseByTMDB(c, mediaData)
 	})
@@ -37,6 +43,9 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	})
 	engine.GET("/base/episode/:id", func(c *gin.Context) {
 		getEpisodeBaseByTMDB(c, mediaData)
+	})
+	engine.GET("/base/episodes", func(c *gin.Context) {
+		getEpisodesBaseByTMDB(c, mediaData)
 	})
 }
 
@@ -96,6 +105,41 @@ func getMovieShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		return
 	}
 	c.JSON(200, toMovieResponse(result, presence))
+}
+
+// @Summary		Get Movies Short Metadata
+// @Description	Get Movies Short Metadata by TMDB ID
+// @Description	The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
+// @Tags			Media Data
+// @Tags			Movie
+// @Param			ids query []int true "TMDB IDs"
+// @Produce		json
+// @Success		200	{array} movieResponse
+// @Failure		400	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/media/movies-tmdb [get]
+func getMoviesShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
+	idsStr := c.QueryArray("ids")
+	ids := make([]int, len(idsStr))
+	for i, idStr := range idsStr {
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			c.JSON(400, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		ids[i] = id
+	}
+
+	result, presence, err := mediaData.GetMoviesShortInfo(ids)
+	if err != nil {
+		c.JSON(404, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, toMoviesResponse(result, presence))
 }
 
 // @Summary		Get TvShow Metadata
@@ -254,6 +298,53 @@ func getEpisodeByTMDB(c *gin.Context, mediaData *features.MediaData) {
 	c.JSON(200, toTVEpisodeResponse(result, presence))
 }
 
+// @Summary		Get TvShow Episodes metadata by TMDB IDs
+// @Description	Get TvShow Episodes metadata by TMDB IDs
+// @Tags			Media Data
+// @Tags			TvEpisode
+// @Param			ids query []int true "TMDB IDs"
+// @Produce		json
+// @Success		200	{array} tvEpisodeResponse
+// @Failure		400	{object} errorResponse
+// @Failure		404	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/media/episodes-tmdb [get]
+func getEpisodesByTMDB(c *gin.Context, mediaData *features.MediaData) {
+	idsStr := c.QueryArray("ids")
+	ids := make([]int, len(idsStr))
+	for i, idStr := range idsStr {
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			c.JSON(400, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		ids[i] = id
+	}
+
+	results, presences, err := mediaData.GetEpisodesInfoByIDs(ids)
+	if err != nil {
+		if errors.Is(err, features.ErrMediaNotFound) {
+			c.JSON(404, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		if errors.Is(err, features.ErrInvalidMediaType) {
+			c.JSON(400, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, toTVEpisodesResponse(results, presences))
+}
+
 // @Summary		Get TvShow Season Episodes Metadata
 // @Description	Get TvShow Season Episodes Metadata by TvShow TMDB ID and Season Number
 // @Tags			Media Data
@@ -406,4 +497,44 @@ func getEpisodeBaseByTMDB(c *gin.Context, mediaData *features.MediaData) {
 		return
 	}
 	c.JSON(200, toEpisodeMediaResponse(result))
+}
+
+// @Summary		Get episodes base info
+// @Description	Get episodes base info by TMDB ID
+// @Tags			TvEpisode Data
+// @Tags			Base
+// @Param			ids query []int true "TMDB IDs"
+// @Produce		json
+// @Success		200	{array} mediaResponse
+// @Failure		400	{object} errorResponse
+// @Failure		404	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/media/base/episodes [get]
+func getEpisodesBaseByTMDB(c *gin.Context, mediaData *features.MediaData) {
+	idsStr := c.QueryArray("ids")
+	ids := make([]int, len(idsStr))
+	for i, idStr := range idsStr {
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			c.JSON(400, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		ids[i] = id
+	}
+	result, err := mediaData.GetEpisodesByIDs(ids)
+	if err != nil {
+		if errors.Is(err, features.ErrMediaNotFound) {
+			c.JSON(404, errorResponse{
+				Error: err.Error(),
+			})
+			return
+		}
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, toEpisodesMediaResponse(result))
 }
