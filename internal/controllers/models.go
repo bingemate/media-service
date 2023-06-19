@@ -417,6 +417,14 @@ func toEpisodeMediaResponse(media *repository.Episode) *episodeMediaResponse {
 	}
 }
 
+func toEpisodesMediaResponse(media []*repository.Episode) []*episodeMediaResponse {
+	var episodes = make([]*episodeMediaResponse, len(media))
+	for i, episode := range media {
+		episodes[i] = toEpisodeMediaResponse(episode)
+	}
+	return episodes
+}
+
 func toMediaFileResponse(mediaFile *repository.MediaFile) *mediaFileResponse {
 	return &mediaFileResponse{
 		ID:        mediaFile.ID,
