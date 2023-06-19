@@ -219,6 +219,28 @@ func (m *MediaData) GetTvShowShortInfo(mediaID int) (*tmdb.TVShow, bool, error) 
 	return tvShow, m.mediaRepository.IsTvShowHasEpisodeFiles(mediaID), nil
 }
 
+// GetTvShowsShortInfo returns a list of tv shows given the mediaID (TMDB ID)
+func (m *MediaData) GetTvShowsShortInfo(ids []int) ([]*tmdb.TVShow, *[]bool, error) {
+	tvShows := make([]*tmdb.TVShow, len(ids))
+	presences := make([]bool, len(ids))
+	wg := sync.WaitGroup{}
+	wg.Add(len(ids))
+	for i, id := range ids {
+		go func(i, id int) {
+			defer wg.Done()
+			tvShow, present, err := m.GetTvShowShortInfo(id)
+			if err != nil {
+				tvShows[i] = nil
+				presences[i] = false
+			}
+			tvShows[i] = tvShow
+			presences[i] = present
+		}(i, id)
+	}
+	wg.Wait()
+	return tvShows, &presences, nil
+}
+
 // GetSeasonEpisodes returns a list of episodes given the tvID (TMDB ID) and season number
 func (m *MediaData) GetSeasonEpisodes(tvID, season int) ([]*tmdb.TVEpisode, *[]bool, error) {
 	episodes, err := m.mediaClient.GetTVSeasonEpisodes(tvID, season)
