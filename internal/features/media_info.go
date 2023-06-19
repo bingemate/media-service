@@ -6,6 +6,7 @@ import (
 	"github.com/bingemate/media-go-pkg/tmdb"
 	"github.com/bingemate/media-service/internal/repository"
 	"gorm.io/gorm"
+	"sync"
 )
 
 type MediaData struct {
@@ -52,6 +53,24 @@ func (m *MediaData) GetEpisodeByID(id int) (*repository2.Episode, error) {
 		return nil, err
 	}
 	return episode, nil
+}
+
+func (m *MediaData) GetEpisodesByIDs(ids []int) ([]*repository2.Episode, error) {
+	episodes := make([]*repository2.Episode, len(ids))
+	wg := sync.WaitGroup{}
+	wg.Add(len(ids))
+	for i, id := range ids {
+		go func(i, id int) {
+			defer wg.Done()
+			episode, err := m.GetEpisodeByID(id)
+			if err != nil {
+				episodes[i] = nil
+			}
+			episodes[i] = episode
+		}(i, id)
+	}
+	wg.Wait()
+	return episodes, nil
 }
 
 func (m *MediaData) GetTvShowByID(id int) (*repository2.TvShow, error) {
@@ -101,6 +120,28 @@ func (m *MediaData) GetMovieShortInfo(id int) (*tmdb.Movie, bool, error) {
 	return movie, m.mediaRepository.IsMovieFilePresent(id), nil
 }
 
+// GetMoviesShortInfo returns a list of movies given the mediaID (TMDB ID)
+func (m *MediaData) GetMoviesShortInfo(ids []int) ([]*tmdb.Movie, *[]bool, error) {
+	movies := make([]*tmdb.Movie, len(ids))
+	presences := make([]bool, len(ids))
+	wg := sync.WaitGroup{}
+	wg.Add(len(ids))
+	for i, id := range ids {
+		go func(i, id int) {
+			defer wg.Done()
+			movie, present, err := m.GetMovieShortInfo(id)
+			if err != nil {
+				movies[i] = nil
+				presences[i] = false
+			}
+			movies[i] = movie
+			presences[i] = present
+		}(i, id)
+	}
+	wg.Wait()
+	return movies, &presences, nil
+}
+
 // GetEpisodeInfo returns an episode info given the tvID (TMDB ID), season and episode number
 func (m *MediaData) GetEpisodeInfo(tvID, season, episodeNumber int) (*tmdb.TVEpisode, bool, error) {
 	episode, err := m.mediaClient.GetTVEpisode(tvID, season, episodeNumber)
@@ -124,6 +165,28 @@ func (m *MediaData) GetEpisodeInfoByID(episodeID int) (*tmdb.TVEpisode, bool, er
 		return nil, false, err
 	}
 	return m.GetEpisodeInfo(episode.TvShow.ID, episode.NbSeason, episode.NbEpisode)
+}
+
+// GetEpisodesInfoByIDs returns a list of episodes info given the episodeIDs (TMDB ID)
+func (m *MediaData) GetEpisodesInfoByIDs(episodeIDs []int) ([]*tmdb.TVEpisode, *[]bool, error) {
+	episodes := make([]*tmdb.TVEpisode, len(episodeIDs))
+	presences := make([]bool, len(episodeIDs))
+	wg := sync.WaitGroup{}
+	wg.Add(len(episodeIDs))
+	for i, id := range episodeIDs {
+		go func(i, id int) {
+			defer wg.Done()
+			episode, present, err := m.GetEpisodeInfoByID(id)
+			if err != nil {
+				episodes[i] = nil
+				presences[i] = false
+			}
+			episodes[i] = episode
+			presences[i] = present
+		}(i, id)
+	}
+	wg.Wait()
+	return episodes, &presences, nil
 }
 
 // GetTvShowInfo returns a tv show given the mediaID (TMDB ID)
