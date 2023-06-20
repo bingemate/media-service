@@ -27,7 +27,9 @@ ENV TZ=Europe/Paris \
     DB_PORT=5432 \
     DB_USER=bingemate \
     DB_PASSWORD=bingemate \
-    DB_NAME=bingemate
+    DB_NAME=bingemate \
+    REDIS_HOST="localhost:6379" \
+    REDIS_PASSWORD=""
 
 # Expose the port on which the application will listen
 EXPOSE $PORT

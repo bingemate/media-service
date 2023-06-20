@@ -138,6 +138,13 @@ definitions:
         example: Comédie
         type: string
     type: object
+  controllers.idsRequest:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    type: object
   controllers.mediaFileResponse:
     properties:
       audios:
@@ -2020,17 +2027,15 @@ paths:
       - TvEpisode Data
       - Base
   /media/base/episodes:
-    get:
+    post:
       description: Get episodes base info by TMDB ID
       parameters:
-      - collectionFormat: csv
-        description: TMDB IDs
-        in: query
-        items:
-          type: integer
+      - description: TMDB IDs
+        in: body
         name: ids
         required: true
-        type: array
+        schema:
+          $ref: '#/definitions/controllers.idsRequest'
       produces:
       - application/json
       responses:
@@ -2153,17 +2158,15 @@ paths:
       - Media Data
       - TvEpisode
   /media/episodes-tmdb:
-    get:
+    post:
       description: Get TvShow Episodes metadata by TMDB IDs
       parameters:
-      - collectionFormat: csv
-        description: TMDB IDs
-        in: query
-        items:
-          type: integer
+      - description: TMDB IDs
+        in: body
         name: ids
         required: true
-        type: array
+        schema:
+          $ref: '#/definitions/controllers.idsRequest'
       produces:
       - application/json
       responses:
@@ -2250,19 +2253,17 @@ paths:
       - Media Data
       - Movie
   /media/movies-tmdb:
-    get:
+    post:
       description: |-
         Get Movies Short Metadata by TMDB ID
         The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
       parameters:
-      - collectionFormat: csv
-        description: TMDB IDs
-        in: query
-        items:
-          type: integer
+      - description: TMDB IDs
+        in: body
         name: ids
         required: true
-        type: array
+        schema:
+          $ref: '#/definitions/controllers.idsRequest'
       produces:
       - application/json
       responses:
@@ -2324,6 +2325,74 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get TvShow Episode Metadata
+      tags:
+      - Media Data
+      - TvEpisode
+  /media/tvshow-episodes-tmdb/{id}:
+    get:
+      description: Get TvShow All Episodes by TvShow TMDB ID
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.tvEpisodeResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Episodes
+      tags:
+      - Media Data
+      - TvEpisode
+  /media/tvshow-episodes-tmdb/{id}/ids:
+    get:
+      description: Get TvShow All Episodes ids by TvShow TMDB ID
+      parameters:
+      - description: TMDB ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: integer
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get TvShow Episodes ids
       tags:
       - Media Data
       - TvEpisode
@@ -2428,19 +2497,17 @@ paths:
       - Media Data
       - TvShow
   /media/tvshows-tmdb:
-    get:
+    post:
       description: |-
         Get TvShows Short Metadata by TMDB ID
         The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
       parameters:
-      - collectionFormat: csv
-        description: TMDB IDs
-        in: query
-        items:
-          type: integer
+      - description: TMDB IDs
+        in: body
         name: ids
         required: true
-        type: array
+        schema:
+          $ref: '#/definitions/controllers.idsRequest'
       produces:
       - application/json
       responses:

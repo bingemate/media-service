@@ -18,6 +18,8 @@ type Env struct {
 	DBUser            string `env:"DB_USER" envDefault:"postgres"`
 	DBPassword        string `env:"DB_PASSWORD" envDefault:"postgres"`
 	DBName            string `env:"DB_NAME" envDefault:"postgres"`
+	RedisHost         string `env:"REDIS_HOST" envDefault:"localhost:6379"`
+	RedisPassword     string `env:"REDIS_PASSWORD" envDefault:""`
 }
 
 func LoadEnv() (Env, error) {
