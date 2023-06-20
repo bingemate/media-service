@@ -113,10 +113,10 @@ func (m *MediaData) GetMovieShortInfo(id int) (*tmdb.Movie, bool, error) {
 		movie.VoteAverage = voteAverage
 		movie.VoteCount = voteCount
 	}
-	err = m.mediaRepository.SaveMovie(movie)
-	if err != nil {
-		return nil, false, err
-	}
+	//err = m.mediaRepository.SaveMovie(movie)
+	//if err != nil {
+	//	return nil, false, err
+	//}
 	return movie, m.mediaRepository.IsMovieFilePresent(id), nil
 }
 
@@ -124,21 +124,15 @@ func (m *MediaData) GetMovieShortInfo(id int) (*tmdb.Movie, bool, error) {
 func (m *MediaData) GetMoviesShortInfo(ids []int) ([]*tmdb.Movie, *[]bool, error) {
 	movies := make([]*tmdb.Movie, len(ids))
 	presences := make([]bool, len(ids))
-	wg := sync.WaitGroup{}
-	wg.Add(len(ids))
 	for i, id := range ids {
-		go func(i, id int) {
-			defer wg.Done()
-			movie, present, err := m.GetMovieShortInfo(id)
-			if err != nil {
-				movies[i] = nil
-				presences[i] = false
-			}
-			movies[i] = movie
-			presences[i] = present
-		}(i, id)
+		movie, present, err := m.GetMovieShortInfo(id)
+		if err != nil {
+			movies[i] = nil
+			presences[i] = false
+		}
+		movies[i] = movie
+		presences[i] = present
 	}
-	wg.Wait()
 	return movies, &presences, nil
 }
 
@@ -148,10 +142,10 @@ func (m *MediaData) GetEpisodeInfo(tvID, season, episodeNumber int) (*tmdb.TVEpi
 	if err != nil {
 		return nil, false, err
 	}
-	err = m.mediaRepository.SaveEpisode(episode)
-	if err != nil {
-		return nil, false, err
-	}
+	//err = m.mediaRepository.SaveEpisode(episode)
+	//if err != nil {
+	//	return nil, false, err
+	//}
 	return episode, m.mediaRepository.IsEpisodeFilePresent(episode.ID), nil
 }
 
@@ -171,21 +165,15 @@ func (m *MediaData) GetEpisodeInfoByID(episodeID int) (*tmdb.TVEpisode, bool, er
 func (m *MediaData) GetEpisodesInfoByIDs(episodeIDs []int) ([]*tmdb.TVEpisode, *[]bool, error) {
 	episodes := make([]*tmdb.TVEpisode, len(episodeIDs))
 	presences := make([]bool, len(episodeIDs))
-	wg := sync.WaitGroup{}
-	wg.Add(len(episodeIDs))
 	for i, id := range episodeIDs {
-		go func(i, id int) {
-			defer wg.Done()
-			episode, present, err := m.GetEpisodeInfoByID(id)
-			if err != nil {
-				episodes[i] = nil
-				presences[i] = false
-			}
-			episodes[i] = episode
-			presences[i] = present
-		}(i, id)
+		episode, present, err := m.GetEpisodeInfoByID(id)
+		if err != nil {
+			episodes[i] = nil
+			presences[i] = false
+		}
+		episodes[i] = episode
+		presences[i] = present
 	}
-	wg.Wait()
 	return episodes, &presences, nil
 }
 
@@ -215,7 +203,7 @@ func (m *MediaData) GetTvShowShortInfo(mediaID int) (*tmdb.TVShow, bool, error) 
 		tvShow.VoteAverage = voteAverage
 		tvShow.VoteCount = voteCount
 	}
-	err = m.mediaRepository.SaveTvShow(tvShow)
+	//err = m.mediaRepository.SaveTvShow(tvShow)
 	return tvShow, m.mediaRepository.IsTvShowHasEpisodeFiles(mediaID), nil
 }
 
@@ -223,21 +211,15 @@ func (m *MediaData) GetTvShowShortInfo(mediaID int) (*tmdb.TVShow, bool, error) 
 func (m *MediaData) GetTvShowsShortInfo(ids []int) ([]*tmdb.TVShow, *[]bool, error) {
 	tvShows := make([]*tmdb.TVShow, len(ids))
 	presences := make([]bool, len(ids))
-	wg := sync.WaitGroup{}
-	wg.Add(len(ids))
 	for i, id := range ids {
-		go func(i, id int) {
-			defer wg.Done()
-			tvShow, present, err := m.GetTvShowShortInfo(id)
-			if err != nil {
-				tvShows[i] = nil
-				presences[i] = false
-			}
-			tvShows[i] = tvShow
-			presences[i] = present
-		}(i, id)
+		tvShow, present, err := m.GetTvShowShortInfo(id)
+		if err != nil {
+			tvShows[i] = nil
+			presences[i] = false
+		}
+		tvShows[i] = tvShow
+		presences[i] = present
 	}
-	wg.Wait()
 	return tvShows, &presences, nil
 }
 
