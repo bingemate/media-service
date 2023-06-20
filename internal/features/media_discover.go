@@ -1,12 +1,10 @@
 package features
 
 import (
-	repository2 "github.com/bingemate/media-go-pkg/repository"
 	"github.com/bingemate/media-go-pkg/tmdb"
 	"github.com/bingemate/media-service/internal/repository"
 	"log"
 	"math"
-	"sync"
 )
 
 type MediaDiscovery struct {
@@ -52,29 +50,20 @@ func (m *MediaDiscovery) searchAvailableMovie(query string, page int) (*tmdb.Pag
 	}
 	presence := make([]bool, len(movies))
 	results := make([]*tmdb.Movie, len(movies))
-	locker := make([]sync.Mutex, len(movies))
-	wg := sync.WaitGroup{}
 	for i, movie := range movies {
-		wg.Add(1)
-		go func(i int, movie repository2.Movie) {
-			defer wg.Done()
-			result, err := m.mediaClient.GetMovieShort(movie.ID)
-			if err != nil {
-				log.Println("error getting movie", movie.ID, err)
-				return
-			}
-			voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
-			if err == nil {
-				result.VoteAverage = voteAverage
-				result.VoteCount = voteCount
-			}
-			locker[i].Lock()
-			defer locker[i].Unlock()
-			results[i] = result
-			presence[i] = true
-		}(i, movie)
+		result, err := m.mediaClient.GetMovieShort(movie.ID)
+		if err != nil {
+			log.Println("error getting movie", movie.ID, err)
+			return nil, nil, err
+		}
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
+		if err == nil {
+			result.VoteAverage = voteAverage
+			result.VoteCount = voteCount
+		}
+		results[i] = result
+		presence[i] = true
 	}
-	wg.Wait()
 	return &tmdb.PaginatedMovieResults{
 		Results:     results,
 		TotalResult: total,
@@ -113,29 +102,21 @@ func (m *MediaDiscovery) searchAvailableShow(query string, page int) (*tmdb.Pagi
 	}
 	presence := make([]bool, len(shows))
 	results := make([]*tmdb.TVShow, len(shows))
-	locker := make([]sync.Mutex, len(shows))
-	wg := sync.WaitGroup{}
 	for i, show := range shows {
-		wg.Add(1)
-		go func(i int, show repository2.TvShow) {
-			defer wg.Done()
-			result, err := m.mediaClient.GetTVShowShort(show.ID)
-			if err != nil {
-				log.Println("error getting show", show.ID, err)
-				return
-			}
-			voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
-			if err == nil {
-				result.VoteAverage = voteAverage
-				result.VoteCount = voteCount
-			}
-			locker[i].Lock()
-			defer locker[i].Unlock()
-			results[i] = result
-			presence[i] = true
-		}(i, show)
+
+		result, err := m.mediaClient.GetTVShowShort(show.ID)
+		if err != nil {
+			log.Println("error getting show", show.ID, err)
+			return nil, nil, err
+		}
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
+		if err == nil {
+			result.VoteAverage = voteAverage
+			result.VoteCount = voteCount
+		}
+		results[i] = result
+		presence[i] = true
 	}
-	wg.Wait()
 	return &tmdb.PaginatedTVShowResults{
 		Results:     results,
 		TotalResult: total,
@@ -174,29 +155,20 @@ func (m *MediaDiscovery) getAvailablePopularMovies(page int) (*tmdb.PaginatedMov
 	}
 	presence := make([]bool, len(movies))
 	results := make([]*tmdb.Movie, len(movies))
-	locker := make([]sync.Mutex, len(movies))
-	wg := sync.WaitGroup{}
 	for i, movie := range movies {
-		wg.Add(1)
-		go func(i int, movie repository2.Movie) {
-			defer wg.Done()
-			result, err := m.mediaClient.GetMovieShort(movie.ID)
-			if err != nil {
-				log.Println("error getting movie", movie.ID, err)
-				return
-			}
-			voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
-			if err == nil {
-				result.VoteAverage = voteAverage
-				result.VoteCount = voteCount
-			}
-			locker[i].Lock()
-			defer locker[i].Unlock()
-			results[i] = result
-			presence[i] = true
-		}(i, movie)
+		result, err := m.mediaClient.GetMovieShort(movie.ID)
+		if err != nil {
+			log.Println("error getting movie", movie.ID, err)
+			return nil, nil, err
+		}
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
+		if err == nil {
+			result.VoteAverage = voteAverage
+			result.VoteCount = voteCount
+		}
+		results[i] = result
+		presence[i] = true
 	}
-	wg.Wait()
 	return &tmdb.PaginatedMovieResults{
 		Results:     results,
 		TotalResult: total,
@@ -235,29 +207,20 @@ func (m *MediaDiscovery) getAvailablePopularTVShows(page int) (*tmdb.PaginatedTV
 	}
 	presence := make([]bool, len(shows))
 	results := make([]*tmdb.TVShow, len(shows))
-	locker := make([]sync.Mutex, len(shows))
-	wg := sync.WaitGroup{}
 	for i, show := range shows {
-		wg.Add(1)
-		go func(i int, show repository2.TvShow) {
-			defer wg.Done()
-			result, err := m.mediaClient.GetTVShowShort(show.ID)
-			if err != nil {
-				log.Println("error getting show", show.ID, err)
-				return
-			}
-			voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
-			if err == nil {
-				result.VoteAverage = voteAverage
-				result.VoteCount = voteCount
-			}
-			locker[i].Lock()
-			defer locker[i].Unlock()
-			results[i] = result
-			presence[i] = true
-		}(i, show)
+		result, err := m.mediaClient.GetTVShowShort(show.ID)
+		if err != nil {
+			log.Println("error getting show", show.ID, err)
+			return nil, nil, err
+		}
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
+		if err == nil {
+			result.VoteAverage = voteAverage
+			result.VoteCount = voteCount
+		}
+		results[i] = result
+		presence[i] = true
 	}
-	wg.Wait()
 	return &tmdb.PaginatedTVShowResults{
 		Results:     results,
 		TotalResult: total,
@@ -296,29 +259,20 @@ func (m *MediaDiscovery) getAvailableRecentMovies() ([]*tmdb.Movie, *[]bool, err
 	}
 	presence := make([]bool, len(movies))
 	results := make([]*tmdb.Movie, len(movies))
-	locker := make([]sync.Mutex, len(movies))
-	wg := sync.WaitGroup{}
 	for i, movie := range movies {
-		wg.Add(1)
-		go func(i int, movie repository2.Movie) {
-			defer wg.Done()
-			result, err := m.mediaClient.GetMovieShort(movie.ID)
-			if err != nil {
-				log.Println("error getting movie", movie.ID, err)
-				return
-			}
-			voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
-			if err == nil {
-				result.VoteAverage = voteAverage
-				result.VoteCount = voteCount
-			}
-			locker[i].Lock()
-			defer locker[i].Unlock()
-			results[i] = result
-			presence[i] = true
-		}(i, movie)
+		result, err := m.mediaClient.GetMovieShort(movie.ID)
+		if err != nil {
+			log.Println("error getting movie", movie.ID, err)
+			return nil, nil, err
+		}
+		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
+		if err == nil {
+			result.VoteAverage = voteAverage
+			result.VoteCount = voteCount
+		}
+		results[i] = result
+		presence[i] = true
 	}
-	wg.Wait()
 	return results, &presence, nil
 }
 
@@ -353,29 +307,20 @@ func (m *MediaDiscovery) getAvailableRecentShows() ([]*tmdb.TVShow, *[]bool, err
 	}
 	presence := make([]bool, len(shows))
 	results := make([]*tmdb.TVShow, len(shows))
-	locker := make([]sync.Mutex, len(shows))
-	wg := sync.WaitGroup{}
 	for i, show := range shows {
-		wg.Add(1)
-		go func(i int, show repository2.TvShow) {
-			defer wg.Done()
-			result, err := m.mediaClient.GetTVShowShort(show.ID)
-			if err != nil {
-				log.Println("error getting show", show.ID, err)
-				return
-			}
-			voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
-			if err == nil {
-				result.VoteAverage = voteAverage
-				result.VoteCount = voteCount
-			}
-			locker[i].Lock()
-			defer locker[i].Unlock()
-			results[i] = result
-			presence[i] = true
-		}(i, show)
+		result, err := m.mediaClient.GetTVShowShort(show.ID)
+		if err != nil {
+			log.Println("error getting show", show.ID, err)
+			return nil, nil, err
+		}
+		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
+		if err == nil {
+			result.VoteAverage = voteAverage
+			result.VoteCount = voteCount
+		}
+		results[i] = result
+		presence[i] = true
 	}
-	wg.Wait()
 	return results, &presence, nil
 }
 
