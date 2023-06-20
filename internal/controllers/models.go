@@ -213,6 +213,10 @@ type tvReleasesResults struct {
 	TvShows  []*tvShowResponse    `json:"tvShows"`
 }
 
+type idsRequest struct {
+	IDs []int `json:"ids"`
+}
+
 func toMovieResponse(movie *tmdb.Movie, present bool) *movieResponse {
 	return &movieResponse{
 		ID:      movie.ID,

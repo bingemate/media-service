@@ -257,3 +257,22 @@ func (m *MediaData) GetSeasonEpisodes(tvID, season int) ([]*tmdb.TVEpisode, *[]b
 	}
 	return episodes, &presence, nil
 }
+
+// GetTvShowEpisodes returns a list of episodes given the tvID (TMDB ID)
+func (m *MediaData) GetTvShowEpisodes(tvID int) ([]*tmdb.TVEpisode, *[]bool, error) {
+	tvShow, _, err := m.GetTvShowInfo(tvID)
+	if err != nil {
+		return nil, nil, err
+	}
+	episodes := make([]*tmdb.TVEpisode, 0)
+	presence := make([]bool, 0)
+	for i := 1; i <= tvShow.SeasonsCount; i++ {
+		seasonEpisodes, seasonPresence, err := m.GetSeasonEpisodes(tvID, i)
+		if err != nil {
+			return nil, nil, err
+		}
+		episodes = append(episodes, seasonEpisodes...)
+		presence = append(presence, *seasonPresence...)
+	}
+	return episodes, &presence, nil
+}
