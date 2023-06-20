@@ -2368,7 +2368,7 @@ const docTemplate = `{
             }
         },
         "/media/base/episodes": {
-            "get": {
+            "post": {
                 "description": "Get episodes base info by TMDB ID",
                 "produces": [
                     "application/json"
@@ -2565,7 +2565,7 @@ const docTemplate = `{
             }
         },
         "/media/episodes-tmdb": {
-            "get": {
+            "post": {
                 "description": "Get TvShow Episodes metadata by TMDB IDs",
                 "produces": [
                     "application/json"
@@ -2702,7 +2702,7 @@ const docTemplate = `{
             }
         },
         "/media/movies-tmdb": {
-            "get": {
+            "post": {
                 "description": "Get Movies Short Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
                 "produces": [
                     "application/json"
@@ -3055,7 +3055,7 @@ const docTemplate = `{
             }
         },
         "/media/tvshows-tmdb": {
-            "get": {
+            "post": {
                 "description": "Get TvShows Short Metadata by TMDB ID\nThe rating is from BingeMate, not from TMDB (only if available, else from TMDB)",
                 "produces": [
                     "application/json"

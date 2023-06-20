@@ -14,7 +14,7 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/movie-tmdb/:id/short", func(c *gin.Context) {
 		getMovieShortByTMDB(c, mediaData)
 	})
-	engine.GET("/movies-tmdb", func(c *gin.Context) {
+	engine.POST("/movies-tmdb", func(c *gin.Context) {
 		getMoviesShortByTMDB(c, mediaData)
 	})
 	engine.GET("/tvshow-tmdb/:id", func(c *gin.Context) {
@@ -23,7 +23,7 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/tvshow-tmdb/:id/short", func(c *gin.Context) {
 		getTvShowShortByTMDB(c, mediaData)
 	})
-	engine.GET("/tvshows-tmdb", func(c *gin.Context) {
+	engine.POST("/tvshows-tmdb", func(c *gin.Context) {
 		getTvShowsShortByTMDB(c, mediaData)
 	})
 	engine.GET("/tvshow-episode-tmdb/:id/:season/:episode", func(c *gin.Context) {
@@ -41,7 +41,7 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/episode-tmdb/:id", func(c *gin.Context) {
 		getEpisodeByTMDB(c, mediaData)
 	})
-	engine.GET("/episodes-tmdb", func(c *gin.Context) {
+	engine.POST("/episodes-tmdb", func(c *gin.Context) {
 		getEpisodesByTMDB(c, mediaData)
 	})
 	engine.GET("/base/movie/:id", func(c *gin.Context) {
@@ -53,7 +53,7 @@ func InitMediaDataController(engine *gin.RouterGroup, mediaData *features.MediaD
 	engine.GET("/base/episode/:id", func(c *gin.Context) {
 		getEpisodeBaseByTMDB(c, mediaData)
 	})
-	engine.GET("/base/episodes", func(c *gin.Context) {
+	engine.POST("/base/episodes", func(c *gin.Context) {
 		getEpisodesBaseByTMDB(c, mediaData)
 	})
 }
@@ -126,7 +126,7 @@ func getMovieShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
 // @Success		200	{array} movieResponse
 // @Failure		400	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/media/movies-tmdb [get]
+// @Router			/media/movies-tmdb [post]
 func getMoviesShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
 	var ids idsRequest
 	if err := c.ShouldBindJSON(&ids); err != nil {
@@ -214,7 +214,7 @@ func getTvShowShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
 // @Success		200	{array} tvShowResponse
 // @Failure		400	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/media/tvshows-tmdb [get]
+// @Router			/media/tvshows-tmdb [post]
 func getTvShowsShortByTMDB(c *gin.Context, mediaData *features.MediaData) {
 	var ids idsRequest
 	if err := c.ShouldBindJSON(&ids); err != nil {
@@ -342,7 +342,7 @@ func getEpisodeByTMDB(c *gin.Context, mediaData *features.MediaData) {
 // @Failure		400	{object} errorResponse
 // @Failure		404	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/media/episodes-tmdb [get]
+// @Router			/media/episodes-tmdb [post]
 func getEpisodesByTMDB(c *gin.Context, mediaData *features.MediaData) {
 	var ids idsRequest
 	if err := c.ShouldBindJSON(&ids); err != nil {
@@ -625,7 +625,7 @@ func getEpisodeBaseByTMDB(c *gin.Context, mediaData *features.MediaData) {
 // @Failure		400	{object} errorResponse
 // @Failure		404	{object} errorResponse
 // @Failure		500	{object} errorResponse
-// @Router			/media/base/episodes [get]
+// @Router			/media/base/episodes [post]
 func getEpisodesBaseByTMDB(c *gin.Context, mediaData *features.MediaData) {
 	var ids idsRequest
 	if err := c.ShouldBindJSON(&ids); err != nil {

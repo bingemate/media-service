@@ -2027,7 +2027,7 @@ paths:
       - TvEpisode Data
       - Base
   /media/base/episodes:
-    get:
+    post:
       description: Get episodes base info by TMDB ID
       parameters:
       - description: TMDB IDs
@@ -2158,7 +2158,7 @@ paths:
       - Media Data
       - TvEpisode
   /media/episodes-tmdb:
-    get:
+    post:
       description: Get TvShow Episodes metadata by TMDB IDs
       parameters:
       - description: TMDB IDs
@@ -2253,7 +2253,7 @@ paths:
       - Media Data
       - Movie
   /media/movies-tmdb:
-    get:
+    post:
       description: |-
         Get Movies Short Metadata by TMDB ID
         The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
@@ -2497,7 +2497,7 @@ paths:
       - Media Data
       - TvShow
   /media/tvshows-tmdb:
-    get:
+    post:
       description: |-
         Get TvShows Short Metadata by TMDB ID
         The rating is from BingeMate, not from TMDB (only if available, else from TMDB)
