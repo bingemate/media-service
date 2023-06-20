@@ -11,7 +11,7 @@ import (
 
 func InitRouter(engine *gin.Engine, db *gorm.DB, env initializers.Env) {
 	var mediaServiceGroup = engine.Group("/media-service")
-	var mediaClient = tmdb.NewMediaClient(env.TMDBApiKey)
+	var mediaClient = tmdb.NewRedisMediaClient(env.TMDBApiKey, env.RedisHost, env.RedisPassword)
 	var mediaRepository = repository.NewMediaRepository(db)
 	var mediaData = features.NewMediaData(mediaClient, mediaRepository)
 	var mediaFile = features.NewMediaFile(env.MovieTargetFolder, env.TvTargetFolder, mediaRepository)
