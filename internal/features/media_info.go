@@ -226,10 +226,10 @@ func (m *MediaData) GetTvShowsShortInfo(ids []int) ([]*tmdb.TVShow, *[]bool, err
 // GetSeasonEpisodes returns a list of episodes given the tvID (TMDB ID) and season number
 func (m *MediaData) GetSeasonEpisodes(tvID, season int) ([]*tmdb.TVEpisode, *[]bool, error) {
 	episodes, err := m.mediaClient.GetTVSeasonEpisodes(tvID, season)
-	presence := make([]bool, len(episodes))
 	if err != nil {
 		return nil, nil, err
 	}
+	presence := make([]bool, len(episodes))
 	for i, episode := range episodes {
 		presence[i] = m.mediaRepository.IsEpisodeFilePresent(episode.ID)
 		err = m.mediaRepository.SaveEpisode(episode)
