@@ -30,10 +30,10 @@ func (m *MediaDiscovery) SearchMovie(query string, page int, available bool) (*t
 
 func (m *MediaDiscovery) searchAllMovie(query string, page int) (*tmdb.PaginatedMovieResults, *[]bool, error) {
 	movies, err := m.mediaClient.SearchMovies(query, page)
-	presence := make([]bool, len(movies.Results))
 	if err != nil {
 		return nil, nil, err
 	}
+	presence := make([]bool, len(movies.Results))
 	for i, movie := range movies.Results {
 		voteAverage, voteCount, err := m.mediaRepository.GetMovieRating(movie.ID)
 		if err == nil {
@@ -91,10 +91,10 @@ func (m *MediaDiscovery) SearchShow(query string, page int, available bool) (*tm
 
 func (m *MediaDiscovery) searchAllShow(query string, page int) (*tmdb.PaginatedTVShowResults, *[]bool, error) {
 	shows, err := m.mediaClient.SearchTVShows(query, page)
-	presence := make([]bool, len(shows.Results))
 	if err != nil {
 		return nil, nil, err
 	}
+	presence := make([]bool, len(shows.Results))
 	for i, show := range shows.Results {
 		voteAverage, voteCount, err := m.mediaRepository.GetTvShowRating(show.ID)
 		if err == nil {
