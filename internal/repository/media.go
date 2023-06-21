@@ -1091,7 +1091,8 @@ func (r *MediaRepository) SaveMovie(movie *tmdb.Movie) error {
 	}
 	releaseDate, err := time.Parse("2006-01-02", movie.ReleaseDate)
 	if err != nil {
-		return err
+		log.Printf("error parsing release date: %v", err)
+		releaseDate = time.Unix(0, 0)
 	}
 
 	movieEntity := &repository.Movie{
@@ -1117,7 +1118,8 @@ func (r *MediaRepository) SaveTvShow(tvShow *tmdb.TVShow) error {
 	}
 	releaseDate, err := time.Parse("2006-01-02", tvShow.ReleaseDate)
 	if err != nil {
-		return err
+		log.Printf("error parsing release date: %v", err)
+		releaseDate = time.Unix(0, 0)
 	}
 
 	tvShowEntity := &repository.TvShow{
@@ -1146,7 +1148,8 @@ func (r *MediaRepository) SaveEpisode(episode *tmdb.TVEpisode) error {
 	}
 	releaseDate, err := time.Parse("2006-01-02", episode.AirDate)
 	if err != nil {
-		return err
+		log.Printf("error parsing release date: %v", err)
+		releaseDate = time.Unix(0, 0)
 	}
 	episodeEntity := &repository.Episode{
 		ID:          episode.ID,
