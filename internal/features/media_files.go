@@ -2,11 +2,10 @@ package features
 
 import (
 	"errors"
+	objectStorage "github.com/bingemate/media-go-pkg/object-storage"
 	repository2 "github.com/bingemate/media-go-pkg/repository"
 	"github.com/bingemate/media-service/internal/repository"
 	"gorm.io/gorm"
-	"log"
-	"os"
 	"path"
 	"strconv"
 	"syscall"
@@ -16,44 +15,17 @@ type MediaFile struct {
 	moviePath       string
 	tvPath          string
 	mediaRepository *repository.MediaRepository
+	objectStorage   objectStorage.ObjectStorage // Object storage object to upload the media files.
 }
 
-func NewMediaFile(moviePath string, tvPath string, mediaRepository *repository.MediaRepository) *MediaFile {
+func NewMediaFile(moviePath string, tvPath string, mediaRepository *repository.MediaRepository, objectStorage objectStorage.ObjectStorage) *MediaFile {
 	return &MediaFile{
 		moviePath:       moviePath,
 		tvPath:          tvPath,
 		mediaRepository: mediaRepository,
+		objectStorage:   objectStorage,
 	}
 }
-
-//// GetMediaFileInfo returns a media file info given the mediaID (TMDB ID)
-//func (m *MediaFile) GetMediaFileInfo(mediaID int) (*repository2.MediaFile, error) {
-//	media, err := m.mediaRepository.GetMedia(mediaID)
-//	if err != nil {
-//		if errors.Is(err, gorm.ErrRecordNotFound) {
-//			return nil, ErrMediaNotFound
-//		}
-//		return nil, err
-//	}
-//	if media.MediaType == repository2.MediaTypeTvShow {
-//		return nil, ErrInvalidMediaType
-//	}
-//	if media.MediaType == repository2.MediaTypeMovie {
-//		file, err := m.mediaRepository.GetMovieFileInfo(mediaID)
-//		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-//			return nil, ErrMediaNotFound
-//		}
-//		return file, err
-//	}
-//	if media.MediaType == repository2.MediaTypeEpisode {
-//		file, err := m.mediaRepository.GetEpisodeFileInfo(mediaID)
-//		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-//			return nil, ErrMediaNotFound
-//		}
-//		return file, err
-//	}
-//	return nil, ErrInvalidMediaType
-//}
 
 // GetMovieFileInfo returns a movie file info given the movieID (TMDB ID)
 func (m *MediaFile) GetMovieFileInfo(movieID int) (*repository2.MediaFile, error) {
@@ -101,9 +73,8 @@ func (m *MediaFile) DeleteMediaFile(fileID string) error {
 		return err
 	}
 	if episode != nil {
-		tvPath := path.Join(m.tvPath, strconv.Itoa(episode.ID))
-		log.Println("Deleting folder: ", tvPath)
-		err = os.RemoveAll(tvPath)
+		tvPath := path.Join("tv-shows", strconv.Itoa(episode.ID))
+		err = m.objectStorage.DeleteMediaFiles(tvPath)
 		if err != nil {
 			return err
 		}
@@ -114,9 +85,8 @@ func (m *MediaFile) DeleteMediaFile(fileID string) error {
 		return err
 	}
 	if movie != nil {
-		moviePath := path.Join(m.moviePath, strconv.Itoa(movie.ID))
-		log.Println("Deleting folder: ", moviePath)
-		err = os.RemoveAll(moviePath)
+		moviePath := path.Join("movies", strconv.Itoa(movie.ID))
+		err = m.objectStorage.DeleteMediaFiles(moviePath)
 		if err != nil {
 			return err
 		}

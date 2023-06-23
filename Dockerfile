@@ -28,6 +28,10 @@ ENV TZ=Europe/Paris \
     DB_USER=bingemate \
     DB_PASSWORD=bingemate \
     DB_NAME=bingemate \
+    S3_ENDPOINT="http://localhost:9000" \
+    S3_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxxx \
+    S3_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
+    S3_BUCKET_NAME=media \
     REDIS_HOST="localhost:6379" \
     REDIS_PASSWORD=""
 
