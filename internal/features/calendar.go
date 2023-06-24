@@ -19,7 +19,7 @@ func NewCalendarService(mediaClient tmdb.MediaClient, mediaRepository *repositor
 func (s *CalendarService) GetMoviesCalendar(userID string, month int) ([]*tmdb.Movie, *[]bool, error) {
 	startOfMonth := time.Date(time.Now().Year(), time.Month(month), 1, 0, 0, 0, 0, time.UTC)
 	endOfMonth := startOfMonth.AddDate(0, 1, 0)
-	followedReleases, err := s.mediaRepository.GetFollowedMoviesReleases(userID, month)
+	followedReleases, err := s.mediaRepository.GetFollowedMoviesReleases(userID)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -39,7 +39,7 @@ func (s *CalendarService) GetMoviesCalendar(userID string, month int) ([]*tmdb.M
 func (s *CalendarService) GetTvShowCalendar(userID string, month int) ([]*tmdb.TVEpisode, []*tmdb.TVShow, *[]bool, error) {
 	startOfMonth := time.Date(time.Now().Year(), time.Month(month), 1, 0, 0, 0, 0, time.UTC)
 	endOfMonth := startOfMonth.AddDate(0, 1, 0)
-	followedReleases, err := s.mediaRepository.GetFollowedTvShowsReleases(userID, month)
+	followedReleases, err := s.mediaRepository.GetFollowedTvShowsReleases(userID)
 	if err != nil {
 		return nil, nil, nil, err
 	}
