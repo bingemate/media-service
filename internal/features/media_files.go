@@ -74,10 +74,7 @@ func (m *MediaFile) DeleteMediaFile(fileID string) error {
 	}
 	if episode != nil {
 		tvPath := path.Join("tv-shows", strconv.Itoa(episode.ID))
-		err = m.objectStorage.DeleteMediaFiles(tvPath)
-		if err != nil {
-			return err
-		}
+		go m.objectStorage.DeleteMediaFiles(tvPath)
 	}
 
 	movie, err := m.mediaRepository.GetMovieByFileID(fileID)
@@ -86,10 +83,7 @@ func (m *MediaFile) DeleteMediaFile(fileID string) error {
 	}
 	if movie != nil {
 		moviePath := path.Join("movies", strconv.Itoa(movie.ID))
-		err = m.objectStorage.DeleteMediaFiles(moviePath)
-		if err != nil {
-			return err
-		}
+		go m.objectStorage.DeleteMediaFiles(moviePath)
 	}
 	return m.mediaRepository.DeleteMediaFile(fileID)
 }
