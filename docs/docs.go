@@ -305,6 +305,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "integer",
+                        "description": "Year",
+                        "name": "year",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "User ID",
                         "name": "user-id",
@@ -404,6 +410,12 @@ const docTemplate = `{
                         "name": "month",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Year",
+                        "name": "year",
+                        "in": "query"
                     }
                 ],
                 "responses": {
