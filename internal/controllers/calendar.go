@@ -3,11 +3,9 @@ package controllers
 import (
 	"fmt"
 	ics "github.com/arran4/golang-ical"
-	"github.com/bingemate/media-go-pkg/tmdb"
 	"github.com/bingemate/media-service/internal/features"
 	"github.com/gin-gonic/gin"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -31,6 +29,7 @@ func InitCalendarController(engine *gin.RouterGroup, calendarService *features.C
 // @Tags  Calendar
 // @Tags Movie
 // @Param month query int true "Month"
+// @Param year query int false "Year"
 // @Param user-id header string true "User ID"
 // @Produce  json
 // @Success 200 {array} movieResults
@@ -48,7 +47,12 @@ func getMoviesCalendar(c *gin.Context, calendarService *features.CalendarService
 		c.JSON(400, gin.H{"error": "month query param is required"})
 		return
 	}
-	movies, presence, err := calendarService.GetMoviesCalendar(userID, month)
+	year, err := strconv.Atoi(c.Query("year"))
+	if err != nil {
+		year = time.Now().Year()
+	}
+
+	movies, presence, err := calendarService.GetMoviesCalendar(userID, month, year)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
@@ -62,6 +66,7 @@ func getMoviesCalendar(c *gin.Context, calendarService *features.CalendarService
 // @Tags TvShow
 // @Param user-id header string true "User ID"
 // @Param month query int true "Month"
+// @Param year query int false "Year"
 // @Produce  json
 // @Success 200 {object} tvReleasesResults
 // @Failure 400 {object} errorResponse
@@ -78,7 +83,11 @@ func getTvShowsCalendar(c *gin.Context, calendarService *features.CalendarServic
 		c.JSON(400, gin.H{"error": "month query param is required"})
 		return
 	}
-	episodes, tvShows, presence, err := calendarService.GetTvShowCalendar(userID, month)
+	year, err := strconv.Atoi(c.Query("year"))
+	if err != nil {
+		year = time.Now().Year()
+	}
+	episodes, tvShows, presence, err := calendarService.GetTvShowCalendar(userID, month, year)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
@@ -102,7 +111,7 @@ func getMoviesCalendarIcal(c *gin.Context, calendarService *features.CalendarSer
 		c.JSON(400, gin.H{"error": "user-id header is required"})
 		return
 	}
-	month := int(time.Now().Month())
+	/*month := int(time.Now().Month())
 	nextMonth := (month)%12 + 1
 	var movies []*tmdb.Movie
 	var lock sync.Mutex
@@ -131,7 +140,15 @@ func getMoviesCalendarIcal(c *gin.Context, calendarService *features.CalendarSer
 		movies = append(movies, results...)
 	}()
 
-	wg.Wait()
+	wg.Wait()*/
+	now := time.Now()
+	sixMonthAgo := now.AddDate(0, -6, 0)
+	sixMonthLater := now.AddDate(0, 6, 0)
+	movies, _, err := calendarService.GetMoviesCalendarInRange(userID, sixMonthAgo, sixMonthLater)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
 
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodRequest)
@@ -167,7 +184,7 @@ func getTvShowsCalendarIcal(c *gin.Context, calendarService *features.CalendarSe
 		c.JSON(400, gin.H{"error": "user-id header is required"})
 		return
 	}
-	month := int(time.Now().Month())
+	/*month := int(time.Now().Month())
 	nextMonth := (month)%12 + 1
 	var episodes []*tmdb.TVEpisode
 	var tvShowsMap = make(map[int]*tmdb.TVShow)
@@ -203,7 +220,15 @@ func getTvShowsCalendarIcal(c *gin.Context, calendarService *features.CalendarSe
 		}
 	}()
 
-	wg.Wait()
+	wg.Wait()*/
+	now := time.Now()
+	sixMonthAgo := now.AddDate(0, -6, 0)
+	sixMonthLater := now.AddDate(0, 6, 0)
+	episodes, tvShowsMap, _, err := calendarService.GetTvShowCalendarInRange(userID, sixMonthAgo, sixMonthLater)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
 
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodRequest)
