@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	ics "github.com/arran4/golang-ical"
+	"github.com/bingemate/media-go-pkg/tmdb"
 	"github.com/bingemate/media-service/internal/features"
 	"github.com/gin-gonic/gin"
 	"strconv"
@@ -221,13 +222,17 @@ func getTvShowsCalendarIcal(c *gin.Context, calendarService *features.CalendarSe
 	}()
 
 	wg.Wait()*/
+	var tvShowsMap = make(map[int]*tmdb.TVShow)
 	now := time.Now()
 	sixMonthAgo := now.AddDate(0, -6, 0)
 	sixMonthLater := now.AddDate(0, 6, 0)
-	episodes, tvShowsMap, _, err := calendarService.GetTvShowCalendarInRange(userID, sixMonthAgo, sixMonthLater)
+	episodes, tvShows, _, err := calendarService.GetTvShowCalendarInRange(userID, sixMonthAgo, sixMonthLater)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
+	}
+	for _, tvShow := range tvShows {
+		tvShowsMap[tvShow.ID] = tvShow
 	}
 
 	cal := ics.NewCalendar()
