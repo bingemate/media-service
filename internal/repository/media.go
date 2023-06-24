@@ -522,7 +522,7 @@ func (r *MediaRepository) GetTvShowsByComments(present bool) (*[]int, error) {
 //}
 
 // GetFollowedMoviesReleases returns a list of followed movies releases
-func (r *MediaRepository) GetFollowedMoviesReleases(userID string, month int) (*[]int, error) {
+func (r *MediaRepository) GetFollowedMoviesReleases(userID string) (*[]int, error) {
 	var followedMoviesReleases []int
 	result := r.db.Table("movie_watch_list_item").
 		Select("movie_id").
@@ -537,7 +537,7 @@ func (r *MediaRepository) GetFollowedMoviesReleases(userID string, month int) (*
 }
 
 // GetFollowedTvShowsReleases returns a list of followed tv shows releases
-func (r *MediaRepository) GetFollowedTvShowsReleases(userID string, month int) (*[]int, error) {
+func (r *MediaRepository) GetFollowedTvShowsReleases(userID string) (*[]int, error) {
 	var followedTvShowsReleases []int
 	result := r.db.Table("tv_show_watch_list_item").
 		Select("tv_show_id").

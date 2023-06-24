@@ -653,6 +653,10 @@ paths:
         name: month
         required: true
         type: integer
+      - description: Year
+        in: query
+        name: year
+        type: integer
       - description: User ID
         in: header
         name: user-id
@@ -720,6 +724,10 @@ paths:
         in: query
         name: month
         required: true
+        type: integer
+      - description: Year
+        in: query
+        name: year
         type: integer
       produces:
       - application/json

@@ -295,6 +295,12 @@
                         "required": true
                     },
                     {
+                        "type": "integer",
+                        "description": "Year",
+                        "name": "year",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "User ID",
                         "name": "user-id",
@@ -394,6 +400,12 @@
                         "name": "month",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Year",
+                        "name": "year",
+                        "in": "query"
                     }
                 ],
                 "responses": {
