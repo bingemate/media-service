@@ -6,6 +6,7 @@ import (
 	"github.com/bingemate/media-go-pkg/tmdb"
 	"gorm.io/gorm"
 	"log"
+	"math"
 	"time"
 )
 
@@ -1272,4 +1273,65 @@ func (r *MediaRepository) GetMovieByFileID(id string) (*repository.Movie, error)
 		return nil, result.Error
 	}
 	return &movie, nil
+}
+
+func (r *MediaRepository) CountAvailableMovies() (int64, error) {
+	var count int64
+	result := r.db.Model(&repository.Movie{}).
+		Where("media_file_id IS NOT NULL").
+		Count(&count)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return count, nil
+}
+
+func (r *MediaRepository) CountAvailableTvShows() (int64, error) {
+	var count int64
+	result := r.db.Model(&repository.TvShow{}).
+		Joins("JOIN episodes ON episodes.tv_show_id = tv_shows.id").
+		Where("episodes.media_file_id IS NOT NULL").
+		Group("tv_shows.id").
+		Count(&count)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return count, nil
+}
+
+func (r *MediaRepository) CountAvailableEpisodes() (int64, error) {
+	var count int64
+	result := r.db.Model(&repository.Episode{}).
+		Where("media_file_id IS NOT NULL").
+		Count(&count)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return count, nil
+}
+
+func (r *MediaRepository) CountMoviesTotalDuration() (int64, error) {
+	var duration float64
+	result := r.db.Model(&repository.Movie{}).
+		Joins("JOIN media_files ON media_files.id = movies.media_file_id").
+		Select("SUM(media_files.duration)").
+		Where("media_file_id IS NOT NULL").
+		Find(&duration)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int64(math.Round(duration)), nil
+}
+
+func (r *MediaRepository) CountEpisodesTotalDuration() (int64, error) {
+	var duration float64
+	result := r.db.Model(&repository.Episode{}).
+		Joins("JOIN media_files ON media_files.id = episodes.media_file_id").
+		Select("SUM(media_files.duration)").
+		Where("media_file_id IS NOT NULL").
+		Find(&duration)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int64(math.Round(duration)), nil
 }
