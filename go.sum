@@ -4,8 +4,8 @@ github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c h1:bmHPCBB1T8YZ
 github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c/go.mod h1:BSTTrYHuM12oAL8jDdcmPdw02SBThKYWNFHQlvEG6b0=
 github.com/aws/aws-sdk-go v1.44.289 h1:5CVEjiHFvdiVlKPBzv0rjG4zH/21W/onT18R5AH/qx0=
 github.com/aws/aws-sdk-go v1.44.289/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
-github.com/bingemate/media-go-pkg v1.5.8 h1:sdh1piD18A0/DVWMg8GvIk8RuO5BF1SBvE46te/QRjM=
-github.com/bingemate/media-go-pkg v1.5.8/go.mod h1:OmpUs7bI3ANXxkXGRNyuKeuXDrRh33sZU9r35r27mco=
+github.com/bingemate/media-go-pkg v1.6.14 h1:JjzglHPAV9tppmN412TBI6/6ph9RNFCMs57FHJvXvt8=
+github.com/bingemate/media-go-pkg v1.6.14/go.mod h1:OmpUs7bI3ANXxkXGRNyuKeuXDrRh33sZU9r35r27mco=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=
 github.com/bytedance/sonic v1.9.1 h1:6iJ6NqdoxCDr6mbY8h18oSO+cShGSMRGCEo7F2h0x8s=
 github.com/bytedance/sonic v1.9.1/go.mod h1:i736AoUSYt75HyZLoJW9ERYxcy6eaN6h4BZXU064P/U=
