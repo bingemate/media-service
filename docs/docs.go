@@ -2002,6 +2002,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/file/episode/count": {
+            "get": {
+                "description": "Count available episodes",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Count available episodes",
+                "responses": {
+                    "200": {
+                        "description": "Total number of available episodes",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/episode/duration": {
+            "get": {
+                "description": "Count episodes total duration",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Count episodes total duration",
+                "responses": {
+                    "200": {
+                        "description": "Total duration in seconds",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/file/episode/search": {
             "get": {
                 "description": "Search tv show episodes files",
@@ -2097,6 +2149,58 @@ const docTemplate = `{
                         "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/movie/count": {
+            "get": {
+                "description": "Count available movies",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Count available movies",
+                "responses": {
+                    "200": {
+                        "description": "Total number of available movies",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/movie/duration": {
+            "get": {
+                "description": "Count movies total duration",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Count movies total duration",
+                "responses": {
+                    "200": {
+                        "description": "Total duration in seconds",
+                        "schema": {
+                            "type": "int"
                         }
                     },
                     "500": {
@@ -2227,6 +2331,32 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Total size in bytes",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/file/tv/count": {
+            "get": {
+                "description": "Count available tv shows",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "File"
+                ],
+                "summary": "Count available tv shows",
+                "responses": {
+                    "200": {
+                        "description": "Total number of available tv shows",
                         "schema": {
                             "type": "int"
                         }
