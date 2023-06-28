@@ -6,6 +6,7 @@ import (
 	"github.com/bingemate/media-go-pkg/tmdb"
 	"gorm.io/gorm"
 	"log"
+	"math"
 	"time"
 )
 
@@ -1310,7 +1311,7 @@ func (r *MediaRepository) CountAvailableEpisodes() (int64, error) {
 }
 
 func (r *MediaRepository) CountMoviesTotalDuration() (int64, error) {
-	var duration int64
+	var duration float64
 	result := r.db.Model(&repository.Movie{}).
 		Joins("JOIN media_files ON media_files.id = movies.media_file_id").
 		Select("SUM(media_files.duration)").
@@ -1320,11 +1321,11 @@ func (r *MediaRepository) CountMoviesTotalDuration() (int64, error) {
 	if result.Error != nil {
 		return 0, result.Error
 	}
-	return duration, nil
+	return int64(math.Round(duration)), nil
 }
 
 func (r *MediaRepository) CountEpisodesTotalDuration() (int64, error) {
-	var duration int64
+	var duration float64
 	result := r.db.Model(&repository.Episode{}).
 		Joins("JOIN media_files ON media_files.id = episodes.media_file_id").
 		Select("SUM(media_files.duration)").
@@ -1334,5 +1335,5 @@ func (r *MediaRepository) CountEpisodesTotalDuration() (int64, error) {
 	if result.Error != nil {
 		return 0, result.Error
 	}
-	return duration, nil
+	return int64(math.Round(duration)), nil
 }
