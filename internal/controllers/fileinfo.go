@@ -14,14 +14,29 @@ func InitFileInfoController(engine *gin.RouterGroup, fileInfo *features.MediaFil
 	engine.GET("movie/search", func(c *gin.Context) {
 		searchMovies(c, fileInfo)
 	})
+	engine.GET("movie/count", func(c *gin.Context) {
+		countAvailableMovies(c, fileInfo)
+	})
+	engine.GET("/movie/duration", func(c *gin.Context) {
+		countMoviesTotalDuration(c, fileInfo)
+	})
 	engine.GET("episode/:id", func(c *gin.Context) {
 		getEpisodeFileInfo(c, fileInfo)
 	})
 	engine.GET("episode/search", func(c *gin.Context) {
 		searchEpisodes(c, fileInfo)
 	})
+	engine.GET("episode/count", func(c *gin.Context) {
+		countAvailableEpisodes(c, fileInfo)
+	})
+	engine.GET("episode/duration", func(c *gin.Context) {
+		countEpisodesTotalDuration(c, fileInfo)
+	})
 	engine.GET("tv/:id/available", func(c *gin.Context) {
 		getAvailableEpisodes(c, fileInfo)
+	})
+	engine.GET("tv/count", func(c *gin.Context) {
+		countAvailableTvShows(c, fileInfo)
 	})
 	engine.DELETE(":id", func(c *gin.Context) {
 		deleteFile(c, fileInfo)
@@ -303,4 +318,94 @@ func getAvailableSpace(c *gin.Context, mediaData *features.MediaFile) {
 		return
 	}
 	c.JSON(200, size)
+}
+
+// @Summary Count available movies
+// @Description Count available movies
+// @Tags File
+// @Produce json
+// @Success 200 {int} int "Total number of available movies"
+// @Failure 500 {object} errorResponse
+// @Router /file/movie/count [get]
+func countAvailableMovies(c *gin.Context, mediaData *features.MediaFile) {
+	count, err := mediaData.CountAvailableMovies()
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, count)
+}
+
+// @Summary Count available episodes
+// @Description Count available episodes
+// @Tags File
+// @Produce json
+// @Success 200 {int} int "Total number of available episodes"
+// @Failure 500 {object} errorResponse
+// @Router /file/episode/count [get]
+func countAvailableEpisodes(c *gin.Context, mediaData *features.MediaFile) {
+	count, err := mediaData.CountAvailableEpisodes()
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, count)
+}
+
+// @Summary Count available tv shows
+// @Description Count available tv shows
+// @Tags File
+// @Produce json
+// @Success 200 {int} int "Total number of available tv shows"
+// @Failure 500 {object} errorResponse
+// @Router /file/tv/count [get]
+func countAvailableTvShows(c *gin.Context, mediaData *features.MediaFile) {
+	count, err := mediaData.CountAvailableTvShows()
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, count)
+}
+
+// @Summary Count movies total duration
+// @Description Count movies total duration
+// @Tags File
+// @Produce json
+// @Success 200 {int} int "Total duration in seconds"
+// @Failure 500 {object} errorResponse
+// @Router /file/movie/duration [get]
+func countMoviesTotalDuration(c *gin.Context, mediaData *features.MediaFile) {
+	duration, err := mediaData.CountMoviesTotalDuration()
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, duration)
+}
+
+// @Summary Count episodes total duration
+// @Description Count episodes total duration
+// @Tags File
+// @Produce json
+// @Success 200 {int} int "Total duration in seconds"
+// @Failure 500 {object} errorResponse
+// @Router /file/episode/duration [get]
+func countEpisodesTotalDuration(c *gin.Context, mediaData *features.MediaFile) {
+	duration, err := mediaData.CountEpisodesTotalDuration()
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, duration)
 }
