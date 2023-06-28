@@ -1317,7 +1317,7 @@ func (r *MediaRepository) CountMoviesTotalDuration() (int64, error) {
 		Select("SUM(media_files.duration)").
 		Where("media_file_id IS NOT NULL").
 		Group("movies.id").
-		First(&duration)
+		Find(&duration)
 	if result.Error != nil {
 		return 0, result.Error
 	}
@@ -1331,7 +1331,7 @@ func (r *MediaRepository) CountEpisodesTotalDuration() (int64, error) {
 		Select("SUM(media_files.duration)").
 		Where("media_file_id IS NOT NULL").
 		Group("episodes.id").
-		First(&duration)
+		Find(&duration)
 	if result.Error != nil {
 		return 0, result.Error
 	}
