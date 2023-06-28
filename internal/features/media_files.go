@@ -98,6 +98,31 @@ func (m *MediaFile) MediaFilesCount() (int64, error) {
 	return m.mediaRepository.MediaFilesCount()
 }
 
+// CountAvailableMovies returns the total number of available movies
+func (m *MediaFile) CountAvailableMovies() (int64, error) {
+	return m.mediaRepository.CountAvailableMovies()
+}
+
+// CountAvailableEpisodes returns the total number of available episodes
+func (m *MediaFile) CountAvailableEpisodes() (int64, error) {
+	return m.mediaRepository.CountAvailableEpisodes()
+}
+
+// CountAvailableTvShows returns the total number of available tv shows
+func (m *MediaFile) CountAvailableTvShows() (int64, error) {
+	return m.mediaRepository.CountAvailableTvShows()
+}
+
+// CountMoviesTotalDuration returns the total duration of all movies
+func (m *MediaFile) CountMoviesTotalDuration() (int64, error) {
+	return m.mediaRepository.CountMoviesTotalDuration()
+}
+
+// CountEpisodesTotalDuration returns the total duration of all episodes
+func (m *MediaFile) CountEpisodesTotalDuration() (int64, error) {
+	return m.mediaRepository.CountEpisodesTotalDuration()
+}
+
 // AvailableSpace returns the available space in the media folder
 func (m *MediaFile) AvailableSpace() (uint64, error) {
 	fs := syscall.Statfs_t{}

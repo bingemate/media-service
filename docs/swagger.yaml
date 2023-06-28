@@ -1843,6 +1843,40 @@ paths:
       summary: Get episode file info by its Episode TMDB ID
       tags:
       - File
+  /file/episode/count:
+    get:
+      description: Count available episodes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total number of available episodes
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Count available episodes
+      tags:
+      - File
+  /file/episode/duration:
+    get:
+      description: Count episodes total duration
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total duration in seconds
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Count episodes total duration
+      tags:
+      - File
   /file/episode/search:
     get:
       description: Search tv show episodes files
@@ -1911,6 +1945,40 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get movie file info by its Movie TMDB ID
+      tags:
+      - File
+  /file/movie/count:
+    get:
+      description: Count available movies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total number of available movies
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Count available movies
+      tags:
+      - File
+  /file/movie/duration:
+    get:
+      description: Count movies total duration
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total duration in seconds
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Count movies total duration
       tags:
       - File
   /file/movie/search:
@@ -2000,6 +2068,23 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errorResponse'
       summary: Get tv show available episodes
+      tags:
+      - File
+  /file/tv/count:
+    get:
+      description: Count available tv shows
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Total number of available tv shows
+          schema:
+            type: int
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Count available tv shows
       tags:
       - File
   /media/base/episode/{id}:
