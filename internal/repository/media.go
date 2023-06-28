@@ -1315,6 +1315,7 @@ func (r *MediaRepository) CountMoviesTotalDuration() (int64, error) {
 		Joins("JOIN media_files ON media_files.id = movies.media_file_id").
 		Select("SUM(media_files.duration)").
 		Where("media_file_id IS NOT NULL").
+		Group("movies.id").
 		First(&duration)
 	if result.Error != nil {
 		return 0, result.Error
@@ -1328,6 +1329,7 @@ func (r *MediaRepository) CountEpisodesTotalDuration() (int64, error) {
 		Joins("JOIN media_files ON media_files.id = episodes.media_file_id").
 		Select("SUM(media_files.duration)").
 		Where("media_file_id IS NOT NULL").
+		Group("episodes.id").
 		First(&duration)
 	if result.Error != nil {
 		return 0, result.Error
