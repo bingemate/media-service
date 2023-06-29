@@ -418,9 +418,10 @@ func (r *MediaRepository) GetAvailableRecentTvShows(page, limit int) ([]reposito
 	result := r.db.Table("tv_shows").
 		Joins("JOIN episodes ON episodes.tv_show_id = tv_shows.id").
 		Where("episodes.media_file_id IS NOT NULL").
-		//Order("episodes.updated_at DESC, episodes.created_at DESC").
 		Group("tv_shows.id").
 		Having("COUNT(DISTINCT episodes.id) > 0").
+		Having("MAX(episodes.updated_at) IS NOT NULL").
+		Order("MAX(episodes.updated_at) DESC").
 		Count(&count).
 		Offset(offset).
 		Limit(limit).
@@ -429,6 +430,7 @@ func (r *MediaRepository) GetAvailableRecentTvShows(page, limit int) ([]reposito
 	if result.Error != nil {
 		return nil, 0, result.Error
 	}
+
 	return tvShows, int(count), nil
 }
 
