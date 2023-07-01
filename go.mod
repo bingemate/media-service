@@ -4,13 +4,13 @@ go 1.20
 
 require (
 	github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c
-	github.com/bingemate/media-go-pkg v1.6.17
+	github.com/bingemate/media-go-pkg v1.6.19
 	github.com/caarlos0/env/v8 v8.0.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/joho/godotenv v1.5.1
 	github.com/swaggo/swag v1.16.1
 	gorm.io/driver/postgres v1.5.2
-	gorm.io/gorm v1.25.1
+	gorm.io/gorm v1.25.2
 )
 
 require (
