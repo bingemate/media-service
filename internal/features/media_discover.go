@@ -19,15 +19,15 @@ func NewMediaDiscovery(mediaClient tmdb.MediaClient, mediaRepository *repository
 	}
 }
 
-func (m *MediaDiscovery) SearchMovie(query string, page int, available bool) (*tmdb.PaginatedMovieResults, *[]bool, error) {
+func (m *MediaDiscovery) SearchMovie(query string, page int, adult, available bool) (*tmdb.PaginatedMovieResults, *[]bool, error) {
 	if available {
 		return m.searchAvailableMovie(query, page)
 	}
-	return m.searchAllMovie(query, page)
+	return m.searchAllMovie(query, page, adult)
 }
 
-func (m *MediaDiscovery) searchAllMovie(query string, page int) (*tmdb.PaginatedMovieResults, *[]bool, error) {
-	movies, err := m.mediaClient.SearchMovies(query, page)
+func (m *MediaDiscovery) searchAllMovie(query string, page int, adult bool) (*tmdb.PaginatedMovieResults, *[]bool, error) {
+	movies, err := m.mediaClient.SearchMovies(query, page, adult)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -71,15 +71,15 @@ func (m *MediaDiscovery) searchAvailableMovie(query string, page int) (*tmdb.Pag
 	}, &presence, nil
 }
 
-func (m *MediaDiscovery) SearchShow(query string, page int, available bool) (*tmdb.PaginatedTVShowResults, *[]bool, error) {
+func (m *MediaDiscovery) SearchShow(query string, page int, adult, available bool) (*tmdb.PaginatedTVShowResults, *[]bool, error) {
 	if available {
 		return m.searchAvailableShow(query, page)
 	}
-	return m.searchAllShow(query, page)
+	return m.searchAllShow(query, page, adult)
 }
 
-func (m *MediaDiscovery) searchAllShow(query string, page int) (*tmdb.PaginatedTVShowResults, *[]bool, error) {
-	shows, err := m.mediaClient.SearchTVShows(query, page)
+func (m *MediaDiscovery) searchAllShow(query string, page int, adult bool) (*tmdb.PaginatedTVShowResults, *[]bool, error) {
+	shows, err := m.mediaClient.SearchTVShows(query, page, adult)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -93,6 +93,10 @@ func (m *MediaDiscovery) searchAllShow(query string, page int) (*tmdb.PaginatedT
 		presence[i] = m.mediaRepository.IsTvShowHasEpisodeFiles(show.ID)
 	}
 	return shows, &presence, nil
+}
+
+func (m *MediaDiscovery) SearchActor(query string, page int, adult bool) (*tmdb.PaginatedActorResults, error) {
+	return m.mediaClient.SearchActors(query, page, adult)
 }
 
 func (m *MediaDiscovery) searchAvailableShow(query string, page int) (*tmdb.PaginatedTVShowResults, *[]bool, error) {
