@@ -14,6 +14,9 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 	engine.GET("tv/search", func(c *gin.Context) {
 		searchTv(c, mediaDiscover)
 	})
+	engine.GET("actor/search", func(c *gin.Context) {
+		searchActor(c, mediaDiscover)
+	})
 	engine.GET("movie/popular", func(c *gin.Context) {
 		getPopularMovies(c, mediaDiscover)
 	})
@@ -68,6 +71,7 @@ func InitDiscoverController(engine *gin.RouterGroup, mediaDiscover *features.Med
 // @Param			query query string true "Search query"
 // @Param			page query int false "Page number"
 // @Param           available query bool false "Only available movies"
+// @Param 			adult query bool false "Include adult movies"
 // @Produce		json
 // @Success		200	{object} movieResults
 // @Failure		400	{object} errorResponse
@@ -83,13 +87,17 @@ func searchMovie(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		available = false
 	}
+	adult, err := strconv.ParseBool(c.Query("adult"))
+	if err != nil {
+		adult = false
+	}
 	if query == "" {
 		c.JSON(400, errorResponse{
 			Error: "query is required",
 		})
 		return
 	}
-	result, presence, err := mediaDiscover.SearchMovie(query, page, available)
+	result, presence, err := mediaDiscover.SearchMovie(query, page, adult, available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -110,6 +118,7 @@ func searchMovie(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 // @Param			query query string true "Search query"
 // @Param			page query int false "Page number"
 // @Param           available query bool false "Only available tv shows"
+// @Param 			adult query bool false "Include adult tv shows"
 // @Produce		json
 // @Success		200	{object} tvShowResults
 // @Failure		400	{object} errorResponse
@@ -125,13 +134,17 @@ func searchTv(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 	if err != nil {
 		available = false
 	}
+	adult, err := strconv.ParseBool(c.Query("adult"))
+	if err != nil {
+		adult = false
+	}
 	if query == "" {
 		c.JSON(400, errorResponse{
 			Error: "query is required",
 		})
 		return
 	}
-	result, presence, err := mediaDiscover.SearchShow(query, page, available)
+	result, presence, err := mediaDiscover.SearchShow(query, page, adult, available)
 	if err != nil {
 		c.JSON(500, errorResponse{
 			Error: err.Error(),
@@ -142,6 +155,48 @@ func searchTv(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
 		TotalPage:   result.TotalPage,
 		TotalResult: result.TotalResult,
 		Results:     toTVShowsResponse(result.Results, presence),
+	})
+}
+
+// @Summary		Search Actors
+// @Description	Search actors by query
+// @Tags			Discover
+// @Tags			Actor
+// @Param			query query string true "Search query"
+// @Param			page query int false "Page number"
+// @Param           adult query bool false "Include adult actors"
+// @Produce		json
+// @Success		200	{object} actorResults
+// @Failure		400	{object} errorResponse
+// @Failure		500	{object} errorResponse
+// @Router			/discover/actor/search [get]
+func searchActor(c *gin.Context, mediaDiscover *features.MediaDiscovery) {
+	query := strings.TrimSpace(c.Query("query"))
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		page = 1
+	}
+	adult, err := strconv.ParseBool(c.Query("adult"))
+	if err != nil {
+		adult = false
+	}
+	if query == "" {
+		c.JSON(400, errorResponse{
+			Error: "query is required",
+		})
+		return
+	}
+	result, err := mediaDiscover.SearchActor(query, page, adult)
+	if err != nil {
+		c.JSON(500, errorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(200, actorResults{
+		TotalPage:   result.TotalPage,
+		TotalResult: result.TotalResult,
+		Results:     toActorsResponse(result.Results),
 	})
 }
 
