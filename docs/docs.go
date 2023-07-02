@@ -1182,6 +1182,60 @@ const docTemplate = `{
                 }
             }
         },
+        "/discover/actor/search": {
+            "get": {
+                "description": "Search actors by query",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Discover",
+                    "Actor"
+                ],
+                "summary": "Search Actors",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "query",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Include adult actors",
+                        "name": "adult",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.actorResults"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/discover/movie/actor": {
             "get": {
                 "description": "Get movies by actor",
@@ -1517,6 +1571,12 @@ const docTemplate = `{
                         "type": "boolean",
                         "description": "Only available movies",
                         "name": "available",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Include adult movies",
+                        "name": "adult",
                         "in": "query"
                     }
                 ],
@@ -1925,6 +1985,12 @@ const docTemplate = `{
                         "type": "boolean",
                         "description": "Only available tv shows",
                         "name": "available",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Include adult tv shows",
+                        "name": "adult",
                         "in": "query"
                     }
                 ],
@@ -3747,6 +3813,25 @@ const docTemplate = `{
                 "profileUrl": {
                     "type": "string",
                     "example": "https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg"
+                }
+            }
+        },
+        "controllers.actorResults": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.actor"
+                    }
+                },
+                "totalPage": {
+                    "type": "integer",
+                    "example": 71
+                },
+                "totalResult": {
+                    "type": "integer",
+                    "example": 1412
                 }
             }
         },

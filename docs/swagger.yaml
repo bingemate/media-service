@@ -18,6 +18,19 @@ definitions:
         example: https://image.tmdb.org/t/p/original/rbyi6sOw0dGV3wJzKXDopm2h0NO.jpg
         type: string
     type: object
+  controllers.actorResults:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/controllers.actor'
+        type: array
+      totalPage:
+        example: 71
+        type: integer
+      totalResult:
+        example: 1412
+        type: integer
+    type: object
   controllers.audioResponse:
     properties:
       filename:
@@ -1241,6 +1254,42 @@ paths:
       summary: Get User's comments history
       tags:
       - Comment
+  /discover/actor/search:
+    get:
+      description: Search actors by query
+      parameters:
+      - description: Search query
+        in: query
+        name: query
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Include adult actors
+        in: query
+        name: adult
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.actorResults'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Search Actors
+      tags:
+      - Discover
+      - Actor
   /discover/movie/actor:
     get:
       description: Get movies by actor
@@ -1460,6 +1509,10 @@ paths:
       - description: Only available movies
         in: query
         name: available
+        type: boolean
+      - description: Include adult movies
+        in: query
+        name: adult
         type: boolean
       produces:
       - application/json
@@ -1731,6 +1784,10 @@ paths:
       - description: Only available tv shows
         in: query
         name: available
+        type: boolean
+      - description: Include adult tv shows
+        in: query
+        name: adult
         type: boolean
       produces:
       - application/json

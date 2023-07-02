@@ -213,6 +213,12 @@ type tvReleasesResults struct {
 	TvShows  []*tvShowResponse    `json:"tvShows"`
 }
 
+type actorResults struct {
+	Results     []*actor `json:"results"`
+	TotalPage   int      `json:"totalPage" example:"71"`
+	TotalResult int      `json:"totalResult" example:"1412"`
+}
+
 type idsRequest struct {
 	IDs []int `json:"ids"`
 }
@@ -490,6 +496,14 @@ func toActorResponse(tmdbActor *tmdb.Actor) *actor {
 		ProfileURL: tmdbActor.ProfileURL,
 		Overview:   tmdbActor.Overview,
 	}
+}
+
+func toActorsResponse(tmdbActors []*tmdb.Actor) []*actor {
+	var actors = make([]*actor, len(tmdbActors))
+	for i, tmdbActor := range tmdbActors {
+		actors[i] = toActorResponse(tmdbActor)
+	}
+	return actors
 }
 
 func toMovieCommentResponse(comment *repository.MovieComment) *commentResponse {
