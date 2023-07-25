@@ -3,7 +3,7 @@ module github.com/bingemate/media-service
 go 1.20
 
 require (
-	github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c
+	github.com/arran4/golang-ical v0.1.0
 	github.com/bingemate/media-go-pkg v1.7.3
 	github.com/caarlos0/env/v8 v8.0.0
 	github.com/gin-gonic/gin v1.9.1
