@@ -1,7 +1,7 @@
 github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc=
 github.com/KyleBanks/depth v1.2.1/go.mod h1:jzSb9d0L43HxTQfT+oSA1EEp2q+ne2uh6XgeJcm8brE=
-github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c h1:bmHPCBB1T8YZpQI+Ch0RuICrozVFmPAjiBQZvAjtpRI=
-github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c/go.mod h1:BSTTrYHuM12oAL8jDdcmPdw02SBThKYWNFHQlvEG6b0=
+github.com/arran4/golang-ical v0.1.0 h1:Oz0Rd5fpeNoHNFF9B9H5uYZyt1ubuZSZ3LVdHD5KvZI=
+github.com/arran4/golang-ical v0.1.0/go.mod h1:BSTTrYHuM12oAL8jDdcmPdw02SBThKYWNFHQlvEG6b0=
 github.com/aws/aws-sdk-go v1.44.289 h1:5CVEjiHFvdiVlKPBzv0rjG4zH/21W/onT18R5AH/qx0=
 github.com/aws/aws-sdk-go v1.44.289/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
 github.com/bingemate/media-go-pkg v1.7.3 h1:N7wlDAmpmGsN80Kr43LLygZz+eZFMW3RWuvY0Wxr9ew=
